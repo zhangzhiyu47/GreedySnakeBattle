@@ -1,0 +1,5 @@
+<map id="GameAllRunningData" name="GameAllRunningData">
+<area shape="rect" id="Node000001" title="Include all the game&#45;running data." alt="" coords="5,149,167,177"/>
+<area shape="rect" id="Node000002" href="$structPoint.html" title="Describe the location of a point at Terminal." alt="" coords="59,5,113,33"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,49,89,149,83,149,83,49"/>
+</map>

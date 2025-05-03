@@ -1,0 +1,26 @@
+var structGameAllRunningData =
+[
+    [ "food", "structGameAllRunningData.html#a28ad2ecad88da0d425f2ec2cede034f6", null ],
+    [ "foodNum", "structGameAllRunningData.html#abb8cb398b68ca2533dc09dd1bc10d907", null ],
+    [ "histryHighestScr", "structGameAllRunningData.html#a2908ecf7c3357a7bdbb1ad51f57c05fe", null ],
+    [ "isEnableEatSlfGmOver", "structGameAllRunningData.html#a70a0d1a0bad3b425fc5dc94bd0931c8c", null ],
+    [ "isEnableObs", "structGameAllRunningData.html#a416fb5fb0fbeb677bb50fff85841a4d2", null ],
+    [ "minScrOpnVctryPnt", "structGameAllRunningData.html#aabc5256cac299889271ed7df850a4616", null ],
+    [ "obsClosestFood", "structGameAllRunningData.html#ac41407256d869f2fae1ff4fcb45e35c9", null ],
+    [ "obsSnkBody", "structGameAllRunningData.html#a5581e89a990dbe4e49d850f59aa45d6d", null ],
+    [ "obsSnkLeng", "structGameAllRunningData.html#ad518195cd557b7d47876c17e53fe5883", null ],
+    [ "obsSnkNxtXDrc", "structGameAllRunningData.html#abe1d920c98dd00b5c98dfb8e8a2fb18e", null ],
+    [ "obsSnkNxtYDrc", "structGameAllRunningData.html#ab56d03129caa85ebe087d35eced272db", null ],
+    [ "obsState", "structGameAllRunningData.html#a35f0a19fe856f913e0a400ac22f4d820", null ],
+    [ "speed", "structGameAllRunningData.html#a1ef29fc3e880901b3828e335cc23dba7", null ],
+    [ "usrSnkBody", "structGameAllRunningData.html#ad849df05c5275e274dc2035a72298b86", null ],
+    [ "usrSnkGameEndState", "structGameAllRunningData.html#a49344e21253ffac8e1496a1d85c9931c", null ],
+    [ "usrSnkIsEatingObsSnk", "structGameAllRunningData.html#a3ca410f863abb14938ece020b45549df", null ],
+    [ "usrSnkIsJumping", "structGameAllRunningData.html#a93f0f7965619c03acd8df91690c33623", null ],
+    [ "usrSnkLeng", "structGameAllRunningData.html#adfedf2bd899089b99f5a69caaa41e0ce", null ],
+    [ "usrSnkNxtXDrc", "structGameAllRunningData.html#a62bbd5ffebf9dd2f3afb5dbeb7726e8a", null ],
+    [ "usrSnkNxtYDrc", "structGameAllRunningData.html#a8a3fdc16b93c0437e64e84d36053689e", null ],
+    [ "usrSrc", "structGameAllRunningData.html#af1a0f3e4fcf0e9b80af79bcd10e21445", null ],
+    [ "wall", "structGameAllRunningData.html#a7621a344931807695dfd367c5136dac4", null ],
+    [ "wallNum", "structGameAllRunningData.html#a64eca1b0c8768080e8b90a5f58d36866", null ]
+];
