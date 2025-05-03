@@ -395,10 +395,10 @@ The game provides a standardized external interface function `GreedySnakeBattleG
 ### Parameters
 
 `isBlockRunning`: Whether the game blocks the calling process.  
-    | Macro (Global Constant) | Behavior |
-    | :----: | :-----: |
-    | SNAKE_BLOCK | Blocking operation |
-    | SNAKE_UNBLOCK | Non-blocking operation |
+| Macro (Global Constant) | Behavior |
+| :----: | :-----: |
+| SNAKE_BLOCK | Blocking operation |
+| SNAKE_UNBLOCK | Non-blocking operation |
 
 ### Return Values
 
@@ -1072,10 +1072,10 @@ fi
 ### 参数
 
 `isBlockRunning`: 贪吃蛇大作战游戏运行是否阻塞调用该函数的进程。 
-    | 宏(实为全局常量) | 行为 |
-    | :----: | :-----: |
-    | SNAKE_BLOCK | 阻塞运行 |
-    | SNAKE_UNBLOCK | 非阻塞运行 |
+| 宏(实为全局常量) | 行为 |
+| :----: | :-----: |
+| SNAKE_BLOCK | 阻塞运行 |
+| SNAKE_UNBLOCK | 非阻塞运行 |
 
 ### 返回值
 
