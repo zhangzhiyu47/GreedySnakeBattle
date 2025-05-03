@@ -133,12 +133,10 @@ add_custom_target(API_documents
     
 # 检测Termux环境
 if(ANDROID)
-    if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-        if(DEFINED ENV{PREFIX})
-            set(CMAKE_INSTALL_PREFIX $ENV{PREFIX})
-        else()
-            set(CMAKE_INSTALL_PREFIX "/data/data/com.termux/files/usr")
-        endif()
+    if(DEFINED ENV{PREFIX})
+        set(CMAKE_INSTALL_PREFIX $ENV{PREFIX})
+    else()
+        set(CMAKE_INSTALL_PREFIX "/data/data/com.termux/files/usr")
     endif()
 endif()
 
