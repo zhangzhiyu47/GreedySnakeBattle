@@ -482,7 +482,7 @@ cmake ..    # Run CMake
               ```
          - 2. Without Doxygen
               ```bash
-              mv ../pre_generated_API_documents ../API_documents # Rename ../pre_generated_API_documents to ../API_documents
+              mv ../pre_generated_API_documents API_documents # Rename ../pre_generated_API_documents to API_documents
               ```
 
     - 3. Install
@@ -1159,7 +1159,7 @@ cmake ..    # 执行CMake
               ```
          - 2. 无Doxygen命令程序
               ```bash
-              mv ../pre_generated_API_documents ../API_documents # 将 ../pre_generated_API_documents 重命名为 ../API_documents
+              mv ../pre_generated_API_documents API_documents # 将 ../pre_generated_API_documents 重命名为 API_documents
               ```
 
     - 3. 执行Make进行安装
