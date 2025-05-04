@@ -1,8 +1,0 @@
-var searchData=
-[
-  ['childprocesscatchint_0',['childProcessCatchINT',['../group__SignalCapture.html#ga5189450f8a7310458ba777d7abb28b0a',1,'childProcessCatchINT(int signum):&#160;signalCapture.c'],['../group__SignalCapture.html#ga5189450f8a7310458ba777d7abb28b0a',1,'childProcessCatchINT(int signum):&#160;signalCapture.c']]],
-  ['childprocesscatchusr1_1',['childProcessCatchUSR1',['../group__SignalCapture.html#ga15e11345e0ed0f8bc838055b83392eff',1,'childProcessCatchUSR1(int signum):&#160;signalCapture.c'],['../group__SignalCapture.html#ga15e11345e0ed0f8bc838055b83392eff',1,'childProcessCatchUSR1(int signum):&#160;signalCapture.c']]],
-  ['childprocesscatchusr2_2',['childProcessCatchUSR2',['../group__SignalCapture.html#ga99a6a57550bc51d984b4d72af68c8793',1,'childProcessCatchUSR2(int signum):&#160;signalCapture.c'],['../group__SignalCapture.html#ga99a6a57550bc51d984b4d72af68c8793',1,'childProcessCatchUSR2(int signum):&#160;signalCapture.c']]],
-  ['confgfileinitandgameintrfcrndrng_3',['confgFileInitAndGameIntrfcRndrng',['../gameApplicationStartupRelated_8c.html#af07605bfe51839e013f8228f6846568d',1,'confgFileInitAndGameIntrfcRndrng():&#160;gameApplicationStartupRelated.c'],['../gameApplicationStartupRelated_8h.html#af07605bfe51839e013f8228f6846568d',1,'confgFileInitAndGameIntrfcRndrng():&#160;gameApplicationStartupRelated.c']]],
-  ['configuregame_4',['configureGame',['../userInterfaceBeforeGameStarts_8h.html#af2a1d489174d001b9c268b16378a174c',1,'configureGame():&#160;userInterfaceBeforeGameStarts.c'],['../userInterfaceBeforeGameStarts_8c.html#af2a1d489174d001b9c268b16378a174c',1,'configureGame():&#160;userInterfaceBeforeGameStarts.c']]]
-];

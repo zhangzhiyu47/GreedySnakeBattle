@@ -230,3 +230,16 @@ endif()
 install(DIRECTORY ${CMAKE_BINARY_DIR}/API_documents/
     DESTINATION share/doc/GreedySnakeBattle
     PATTERN ".svn" EXCLUDE)
+
+# 配置卸载脚本
+configure_file(
+    "${CMAKE_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+    "${CMAKE_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY
+)
+
+# 添加uninstall目标
+add_custom_target(uninstall
+    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/cmake_uninstall.cmake
+    COMMENT "Uninstalling..."
+)

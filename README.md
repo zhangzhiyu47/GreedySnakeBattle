@@ -79,34 +79,41 @@ Windows Version (GPG4Win): [https://gpg4win.org](https://gpg4win.org)
     ```shell
     brew install gnupg
     ```
+### 1. Extracting the Signature Files  
 
-### 1. Import Public Key (located in the project root directory):
+- 1. Linux/MacOS Operating Systems  
+    ```bash  
+    unzip signatures.zip        # Directly extracts to the "signatures" directory, no need to create a separate directory  
+    ```  
+- 2. Windows Operating System  
+    Use the built-in Windows functionality.  
+    - 1. Open File Explorer and locate the `signatures.zip` file in the project's root directory.  
+    - 2. Double-click `signatures.zip`, and the system will automatically open it in *File Explorer*.  
+    - 3. Click "Extract All" in the top menu, select the current directory, and then click "Extract."  
+
+### 2. Import Public Key (located in the project root directory):
 
 ```bash
 gpg --import ./signatures/PublicKey/GreedySnakeBattle_PublicKey.asc
 ```
 
-### 2. Verify Signatures:
+### 3. Verify Signatures:
 
-- Single File Verification (using README.md as an example)
+- Single File Verification (using LICENSE.txt as an example)
     ```bash
-    gpg --verify signatures/README.md.asc README.md
+    gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
     ```
 - Batch Verification
     - Source Files (Unix-Like)
         ```bash
         find source/ -type f \( -name "*.c" -o -name "*.h" \) -exec sh -c 'gpg --verify signatures/$(basename {}).asc {}' \;
         ```
-    - README.md Verification
-        ```bash
-        gpg --verify signatures/README.md.asc README.md
-        ```
     - LICENSE.txt Verification
         ```bash
         gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
         ```
 - Expected Output
-    1. `Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>` indicates the file and signature are untampered.
+    1. `Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>` indicates the file and signature are untampered.  
         ```txt
         gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
         gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
@@ -114,7 +121,7 @@ gpg --import ./signatures/PublicKey/GreedySnakeBattle_PublicKey.asc
         ```
     
     2. `BAD signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>` indicates **the file or signature has been tampered with**.  
-        **It is not recommended to use these files as they may pose unknown risks!**
+        **It is not recommended to use these files as they may pose unknown risks!**  
         ```txt
         gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
         gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
@@ -147,8 +154,7 @@ Get-ChildItem -Path .\source -Recurse -Include *.c, *.h | ForEach-Object {
     }
 }
 
-# Verify README.md and LICENSE.txt
-gpg --verify .\signatures\README.md.asc .\README.md
+# Verify LICENSE.txt
 gpg --verify .\signatures\LICENSE.txt.asc .\LICENSE.txt
 
 Write-Host "Verification complete! Check for 'BAD signature' outputs." -ForegroundColor Green
@@ -172,7 +178,7 @@ Save the following code as `verify_signatures.sh` in the project root directory:
 
 # ------------------------------------------
 # GreedySnakeBattle Signature Verification Script (Linux/macOS)
-# Function: Automatically verify GPG signatures for all .c/.h/README.md/LICENSE.txt files
+# Function: Automatically verify GPG signatures for all .c/.h/LICENSE.txt files
 # Usage: ./verify_signatures.sh
 # ------------------------------------------
 
@@ -225,9 +231,9 @@ for file in $(find ./source -type f \( -name "*.c" -o -name "*.h" \)); do
     fi
 done
 
-# Verify README.md and LICENSE.txt
+# Verify LICENSE.txt
 echo "📜 Verifying document files..."
-for file in "README.md" "LICENSE.txt"; do
+for file in "LICENSE.txt"; do
     sig_file="$SIGNATURES_DIR/$file.asc"
     if [ -f "$sig_file" ]; then
         echo "📄 Verifying: $file"
@@ -275,7 +281,6 @@ fi
 
 ##### **3. Script Features**
 
-✅ **Cross-platform compatibility**: Supports **Linux** and **macOS** (requires `gnupg`).  
 ✅ **Automatic dependency check**: Prompts the user to install GPG if not found.  
 ✅ **Batch verification**: Automatically scans all `.c` and `.h` files in `./source/`.  
 ✅ **Error handling**:  
@@ -476,19 +481,39 @@ cmake ..    # Run CMake
          Generates the GreedySnakeBattle(.exe) executable, libgsnakebg.so dynamic library, and libgsnakebg.a static library.
     
     - 2. Generate API documentation
-         - 1. With Doxygen installed
-              ```bash
-              make API_documents     # Generate API documentation
-              ```
-         - 2. Without Doxygen
-              ```bash
-              mv ../pre_generated_API_documents API_documents # Rename ../pre_generated_API_documents to API_documents
-              ```
+         - 1.With Doxygen installed
+             ```bash
+             make API_documents     # Generate API documentation
+             ```
+         - 2.Without Doxygen
+             - 1.Extracting the Pre-generated API Documentation Files.
+                 - 1.Linux/MacOS Operating Systems
+                     ```bash
+                     unzip ../pre_generated_API_documents.zip     # Directly extracts to the "./pre_generated_API_documents" directory, you don't need to create or move directories yourself. 
+                     ```
+                 - 2.Windows Operating System  
+                     Use the built-in Windows functionality.  
+                     - 1. Open *File Explorer* and locate the `pre_generated_API_documents.zip` file in the project's root directory.  
+                     - 2. Double-click `pre_generated_API_documents.zip`, and the system will automatically open it in *File Explorer*.  
+                     - 3. Click "Extract All" in the top menu, select the `build` directory, and then click "Extract".  
+             - 2.Rename.
+                 ```bash
+                 mv pre_generated_API_documents API_documents          # Rename pre_generated_API_documents to API_documents.
+                 ```
 
-    - 3. Install
-         ```bash
-         sudo make install           # Install (requires admin rights) (Termux does not require admin rights)
-         ```
+###  Install & Uninstall
+
+#### Install
+
+```bash
+sudo make install           # Install (requires admin rights) (Termux does not require admin rights)
+```
+
+#### Uninstall
+
+```bash
+sudo make uninstall         # Uninstall (requires admin rights) (Termux does not require admin rights)
+```
 
 ### Installation Contents
 
@@ -757,33 +782,43 @@ Windows版本(GPG4Win) [https://gpg4win.org](https://gpg4win.org)
     brew install gnupg
     ```
 
-### 1.导入公钥(位于项目根目录下)：
+### 1.解压签名文件
+
+- 1.Linux/MacOS操作系统
+    ```bash
+    unzip signatures.zip        # 直接解压到signatures目录，无需单独创建目录
+    ```
+- 2.Windows操作系统
+    使用Windows内置功能。  
+    - 1. 打开文件资源管理器，找到项目根目录下的`signatures.zip`文件。  
+    - 2. 双击`signatures.zip`，系统会自动用*“文件资源管理器”*打开。  
+    - 3. 点击顶部菜单的“解压全部”，选择当前目录后点击“解压”。  
+
+### 2.导入公钥(位于项目根目录下)：
 
 ```bash
 gpg --import ./signatures/PublicKey/GreedySnakeBattle_PublicKey.asc
 ```
 
-### 2.验证签名：
+### 3.验证签名：
 
-- 单个文件验证(以README.md文件为例)
+- 单个文件验证(以LICENSE.txt文件为例)
     ```bash
-    gpg --verify signatures/README.md.asc README.md
+    gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
     ```
+
 - 批量验证
     - 源文件验证(Unix-Like)
         ```bash
         find source/ -type f \( -name "*.c" -o -name "*.h" \) -exec sh -c 'gpg --verify signatures/$(basename {}).asc {}' \;
         ```
-    - README.md文档验证
-        ```bash
-        gpg --verify signatures/README.md.asc README.md
-        ```
     - LICENSE.txt许可证文档验证
         ```bash
         gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
         ```
+
 - 确认输出
-    1. 包含`Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>`表示源文件和签名未被修改。
+    1. 包含`Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>`表示源文件和签名未被修改。 b
         ```txt
         gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
         gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
@@ -791,7 +826,7 @@ gpg --import ./signatures/PublicKey/GreedySnakeBattle_PublicKey.asc
         ```
     
     2. 包含`BAD signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>`表示**源文件和签名被篡改**。  
-        **此时不建议再使用这些文件，因为这些文件可能被篡改过，可能存在未知风险！！！**
+        **此时不建议再使用这些文件，因为这些文件可能被篡改过，可能存在未知风险！！！**  
         ```txt
         gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
         gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
@@ -824,8 +859,7 @@ Get-ChildItem -Path .\source -Recurse -Include *.c, *.h | ForEach-Object {
     }
 }
 
-# 验证 README.md 和 LICENSE.txt
-gpg --verify .\signatures\README.md.asc .\README.md
+# 验证 LICENSE.txt
 gpg --verify .\signatures\LICENSE.txt.asc .\LICENSE.txt
 
 Write-Host "验证完成！检查是否有 'BAD signature' 输出。" -ForegroundColor Green
@@ -902,9 +936,9 @@ for file in $(find ./source -type f \( -name "*.c" -o -name "*.h" \)); do
     fi
 done
 
-# 验证 README.md 和 LICENSE.txt
+# 验证 LICENSE.txt
 echo "📜 验证文档文件..."
-for file in "README.md" "LICENSE.txt"; do
+for file in "LICENSE.txt"; do
     sig_file="$SIGNATURES_DIR/$file.asc"
     if [ -f "$sig_file" ]; then
         echo "📄 验证: $file"
@@ -952,7 +986,6 @@ fi
 
 ##### **3. 脚本特点**
 
-✅ **跨平台兼容**：支持 **Linux** 和 **macOS**（需安装 `gnupg`）。  
 ✅ **自动检查依赖**：如果未安装 GPG，会提示用户安装。  
 ✅ **批量验证**：自动遍历 `./source/` 下的所有 `.c` 和 `.h` 文件。  
 ✅ **错误处理**：  
@@ -1158,14 +1191,34 @@ cmake ..    # 执行CMake
               make API_documents     # 生成API文档
               ```
          - 2. 无Doxygen命令程序
-              ```bash
-              mv ../pre_generated_API_documents API_documents # 将 ../pre_generated_API_documents 重命名为 API_documents
-              ```
+              - 1.解压API文档文件.  
+                  - 1.Linux/MacOS操作系统
+                      ```bash
+                      unzip ../pre_generated_API_documents.zip      # 直接解压到./pre_generated_API_documents目录，无需自行创建目录或移动目录
+                      ```
+                  - 2.Windows操作系统
+                      使用Windows内置功能。  
+                      - 1. 打开*文件资源管理器*，找到项目根目录下的`pre_generated_API_document.zip`文件。
+                      - 2. 双击`pre_generated_API_documents.zip`，系统会自动用*“文件资源管理器”*打开。
+                      - 3. 点击顶部菜单的*“解压全部”*，选择`build`目录后点击*“解压”*。
+              - 2.重命名
+                  ```bash
+                  mv pre_generated_API_documents API_documents          # 把 pre_generated_API_documents 重命名为 API_documents
+                  ```
 
-    - 3. 执行Make进行安装
-         ```bash
-         sudo make install           # 安装(需要管理员权限)(Termux无需管理员权限)
-         ```
+### 执行Make进行安装/卸载
+
+#### 安装
+
+```bash
+sudo make install         # 安装(需要管理员权限)(Termux无需管理员权限)
+```
+
+#### 卸载
+
+```bash
+sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员权限)
+```
 
 ### 安装内容
 
