@@ -23,4 +23,9 @@ extern int HIGH,WIDE;
  */
 extern GameConfig outlineModeConfig;
 
+/**
+ * @brief Original terminal settings.
+ */
+extern struct termios originalTermios;
+
 #endif

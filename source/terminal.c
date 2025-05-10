@@ -3,16 +3,52 @@
  * @brief This source realizes the functions about the terminal.
  */
 
-#include "Include/Compat/snakeFullCompat.h"
-#include "Include/Struct/GameConfig.h"
-#include "Include/Struct/Point.h"
-#include "Include/Functions/standardIO.h"
+#include "GSnakeBInclude/GlobalVariable/globalVariable.h"
+#include "GSnakeBInclude/Struct/GameConfig.h"
+#include "GSnakeBInclude/Struct/Point.h"
+#include "GSnakeBInclude/Functions/standardIO.h"
+#include <sys/ioctl.h>
+#include <termios.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+/**
+ * @brief Clear the screen display content.
+ */
+void clearScreen() {
+    #if defined(_WIN32) || defined(_WIN64)
+        system("cls");
+    #elif defined(__unix__) || defined(__linux__) || defined(__APPLE__) || defined(__MACH__)
+        system("clear");
+    #else
+        printf("\033[H\033[J");
+    #endif
+}
+
+/**
+ * @brief Initialize terminal settings
+ */
+void initTerminalSettings() {
+    tcgetattr(STDIN_FILENO, &originalTermios);
+
+    struct termios newt = originalTermios;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+}
+
+/**
+ * @brief Restore original terminal settings
+ */
+void restoreTerminalSettings() {
+    tcsetattr(STDIN_FILENO, TCSANOW, &originalTermios);
+}
 
 /**
  * @brief Get the size of the terminal.
  *
  * Get the size of the terminal. In error,
- * both Point.x and Point.y are set to 15.
+ * both Point.x and Point.y are set to 24.
  *
  * @return Point The size of the terminal.
  */
@@ -23,8 +59,8 @@ Point terminalSize() {
         termSize.x = w.ws_row;
         termSize.y = w.ws_col;
     } else {
-        termSize.x = 15;
-        termSize.y = 15;
+        termSize.x = 24;
+        termSize.y = 24;
     }
     return termSize;
 }
@@ -42,7 +78,7 @@ Point terminalSize() {
  *                       and writing configuration files.
  */
 void terminal256ColorTablePainting(const GameConfig *config) {
-    clearAll();
+    clearScreen();
     Point termSize=terminalSize();
     int paintingNumberCount=1;
     int MaxNumPaintPerLine=(termSize.y-termSize.y%5)/5;

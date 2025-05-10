@@ -3,8 +3,8 @@
  * @brief This source realizes the functions about snake's foods.
  */
 
-#include "Include/Struct/GameAllRunningData.h"
-#include "Include/GlobalVariable/globalVariable.h"
+#include "GSnakeBInclude/Struct/GameAllRunningData.h"
+#include "GSnakeBInclude/GlobalVariable/globalVariable.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>

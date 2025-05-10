@@ -1,705 +1,3 @@
-# Greedy Snake Battle
-
-![Greedy Snake Battle LOGO](./picture/greedy_snake_battle_logo.jpg)
-
-## Table of Contents
-
-- [Project Overview](#project-overview)
-- [Project License](#project-license)
-- [Signature Verification](#signature-verification)
-- [Game Features](#game-features)
-- [Game Controls](#game-controls)
-- [Game Elements](#game-elements)
-- [Game Flow](#game-flow)
-- [Offline Mode](#offline-mode)
-- [Game Interface](#game-interface)
-- [Build & Installation](#build--installation)
-- [Cross-Platform Support](#cross-platform-support)
-- [Known Issues](#known-issues)
-- [Future Plans](#future-plans)
-- [Code Style Summary & Contribution Guidelines](#code-style-summary--contribution-guidelines)
-
----
-## Project Overview
-
-This is a cross-platform snake battle game implemented in C, featuring rich configuration options and complete game functionality. The project adopts a modular design and supports multiple operating systems.  
-
-Author: Zhang Zhiyu  
-License: MIT License: [LICENSE.txt](./LICENSE.txt)  
-Contributions, suggestions, and issues are welcome.
-
-## Project License
-
-### MIT License
-
-**MIT License**.
-
-### Authorization Scope
-
-- **Free Authorization**: Anyone who obtains a copy of this software and its associated documentation files ("Software") can use it for free.
-
-- **Usage Rights**: Licensees are free to handle the software, including but not limited to using, copying, modifying, merging, publishing, distributing, sublicensing, and selling copies of the software.
-
-### Conditions
-
-- **Retain Copyright and License Notices**: All copies or significant portions of the software must include the above copyright and license notices.
-
-### Disclaimer
-
-- **No Warranty**: The software is provided "as is," without any warranty, express or implied, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement.
-
-- **No Liability**: Under no circumstances shall the authors or copyright holders be liable for any claims, damages, or other liabilities arising from the software or its use.
-
-### View License
-
-MIT License: [LICENSE.txt](./LICENSE.txt)
-
----
-## Signature Verification
-
-### Prerequisites
-
-Required: GPG: GPG Official Website: [https://gnupg.org](https://gnupg.org)  
-Windows Version (GPG4Win): [https://gpg4win.org](https://gpg4win.org)  
-
-#### **Install GPG**
-
-##### **Windows**
-1. Download and install [GPG4Win](https://gpg4win.org/download.html).
-2. Ensure **"GPG (GnuPG) Command Line"** is selected during installation to make `gpg.exe` available.
-
-##### **Linux/macOS**
-
-- Linux
-    ```bash
-    sudo (package manager) install gnupg
-    ```
-    Replace `(package manager)` with your system's package manager (e.g., `apt` for Ubuntu/Debian).
-- macOS
-    ```shell
-    brew install gnupg
-    ```
-### 1. Extracting the Signature Files  
-
-- 1. Linux/MacOS Operating Systems  
-    ```bash  
-    unzip signatures.zip        # Directly extracts to the "signatures" directory, no need to create a separate directory  
-    ```  
-- 2. Windows Operating System  
-    Use the built-in Windows functionality.  
-    - 1. Open File Explorer and locate the `signatures.zip` file in the project's root directory.  
-    - 2. Double-click `signatures.zip`, and the system will automatically open it in *File Explorer*.  
-    - 3. Click "Extract All" in the top menu, select the current directory, and then click "Extract."  
-
-### 2. Import Public Key (located in the project root directory):
-
-```bash
-gpg --import ./signatures/PublicKey/GreedySnakeBattle_PublicKey.asc
-```
-
-### 3. Verify Signatures:
-
-- Single File Verification (using LICENSE.txt as an example)
-    ```bash
-    gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
-    ```
-- Batch Verification
-    - Source Files (Unix-Like)
-        ```bash
-        find source/ -type f \( -name "*.c" -o -name "*.h" \) -exec sh -c 'gpg --verify signatures/$(basename {}).asc {}' \;
-        ```
-    - LICENSE.txt Verification
-        ```bash
-        gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
-        ```
-- Expected Output
-    1. `Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>` indicates the file and signature are untampered.  
-        ```txt
-        gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
-        gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
-        gpg: Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>" [ultimate]
-        ```
-    
-    2. `BAD signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>` indicates **the file or signature has been tampered with**.  
-        **It is not recommended to use these files as they may pose unknown risks!**  
-        ```txt
-        gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
-        gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
-        gpg: BAD signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>" [ultimate]
-        ```
-
----
-### Automated Verification Scripts
-
-#### Windows
-
-Save the following script as `verify_all.ps1` in the project root directory and run it:
-```powershell
-# Import public key (if not already imported)
-$publicKey = ".\signatures\PublicKey\GreedySnakeBattle_PublicKey.asc"
-gpg --import $publicKey
-
-# Verify source files
-Get-ChildItem -Path .\source -Recurse -Include *.c, *.h | ForEach-Object {
-    $sigFile = ".\signatures\" + $_.Name + ".asc"
-    if (Test-Path $sigFile) {
-        Write-Host "Verifying file: $($_.FullName)"
-        gpg --verify $sigFile $_.FullName
-        
-        # Error check
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "Error: $($_.FullName) verification failed!" -ForegroundColor Red
-            exit 1
-        }
-    }
-}
-
-# Verify LICENSE.txt
-gpg --verify .\signatures\LICENSE.txt.asc .\LICENSE.txt
-
-Write-Host "Verification complete! Check for 'BAD signature' outputs." -ForegroundColor Green
-```
-
-Run PowerShell as administrator and execute:
-```powershell
-Set-ExecutionPolicy RemoteSigned -Scope Process  # Allow script execution
-```
-```powershell
-.\verify_all.ps1
-```
-
-#### Linux/macOS
-
-##### **1. Script Content**  
-
-Save the following code as `verify_signatures.sh` in the project root directory:  
-```bash
-#!/bin/bash
-
-# ------------------------------------------
-# GreedySnakeBattle Signature Verification Script (Linux/macOS)
-# Function: Automatically verify GPG signatures for all .c/.h/LICENSE.txt files
-# Usage: ./verify_signatures.sh
-# ------------------------------------------
-
-# Check if GPG is installed
-if ! command -v gpg &> /dev/null; then
-    echo "❌ Error: GPG is not installed! Please install it first:"
-    echo "  - Debian/Ubuntu: sudo apt install gnupg"
-    echo "  - macOS: brew install gnupg"
-    exit 1
-fi
-
-# Define signature directory and public key path
-SIGNATURES_DIR="./signatures"
-PUBLIC_KEY="$SIGNATURES_DIR/PublicKey/GreedySnakeBattle_PublicKey.asc"
-
-# Check if the signature directory exists
-if [ ! -d "$SIGNATURES_DIR" ]; then
-    echo "❌ Error: Signature directory $SIGNATURES_DIR does not exist!"
-    exit 1
-fi
-
-# Check if the public key exists
-if [ ! -f "$PUBLIC_KEY" ]; then
-    echo "❌ Error: Public key file $PUBLIC_KEY not found!"
-    exit 1
-fi
-
-# Import public key
-echo "🔑 Importing public key..."
-gpg --import "$PUBLIC_KEY" 2> /dev/null
-if [ $? -ne 0 ]; then
-    echo "❌ Error: Public key import failed!"
-    exit 1
-fi
-
-# Verify all source files (.c and .h)
-echo "🔍 Verifying source files..."
-FAILED=0
-for file in $(find ./source -type f \( -name "*.c" -o -name "*.h" \)); do
-    sig_file="$SIGNATURES_DIR/$(basename $file).asc"
-    if [ -f "$sig_file" ]; then
-        echo "📄 Verifying: $file"
-        gpg --verify "$sig_file" "$file" 2> /dev/null
-        if [ $? -ne 0 ]; then
-            echo "❌ Verification failed: $file"
-            FAILED=1
-        fi
-    else
-        echo "⚠️ Warning: Signature file not found: $sig_file"
-    fi
-done
-
-# Verify LICENSE.txt
-echo "📜 Verifying document files..."
-for file in "LICENSE.txt"; do
-    sig_file="$SIGNATURES_DIR/$file.asc"
-    if [ -f "$sig_file" ]; then
-        echo "📄 Verifying: $file"
-        gpg --verify "$sig_file" "$file" 2> /dev/null
-        if [ $? -ne 0 ]; then
-            echo "❌ Verification failed: $file"
-            FAILED=1
-        fi
-    else
-        echo "⚠️ Warning: Signature file not found: $sig_file"
-    fi
-done
-
-# Final result
-if [ $FAILED -eq 0 ]; then
-    echo "✅ All files verified successfully!"
-else
-    echo "❌ Some files failed verification. Please check the logs!"
-    exit 1
-fi
-```
-
-##### **2. Usage**
-
-1. **Grant execution permissions**:  
-   ```bash
-   chmod +x verify_signatures.sh
-   ```
-
-2. **Run the script**:  
-   ```bash
-   ./verify_signatures.sh
-   ```
-
-3. **Expected Output**:  
-   - If all files pass verification:  
-     ```txt
-     ✅ All files verified successfully!
-     ```
-   - If some files fail verification:  
-     ```txt
-     ❌ Verification failed: ./source/main.c
-     ❌ Some files failed verification. Please check the logs!
-     ```
-
-##### **3. Script Features**
-
-✅ **Automatic dependency check**: Prompts the user to install GPG if not found.  
-✅ **Batch verification**: Automatically scans all `.c` and `.h` files in `./source/`.  
-✅ **Error handling**:  
-   - Warns if a signature file is missing (`⚠️`).  
-   - Marks failures (`❌`) and exits if signatures do not match.  
-
----
-## Game Features
-
-- Classic snake game mechanics
-- Customizable game settings
-- Cross-platform support (Windows/Linux/macOS/Termux)
-- Blocking and non-blocking operation modes
-- Comprehensive API interface
-- Detailed documentation
-
-## Game Controls
-
-![Game in Progress](./picture/game_running.jpg)  
-| Key | Function |
-| :--: | :--: |
-| W | Move Up |
-| A | Move Left |
-| S | Move Down |
-| D | Move Right |
-| E | Exit Game Immediately |
-| O | Exit Current Match |
-
-## Game Elements
-
-![Game Introduction](./picture/introduction.jpg)
-| Symbol | Element |
-|------|----------|
-| @ | Snake Head |
-| * | Snake Body |
-| # | Food |
-| + | Wall |
-| $ | Victory Point |
-
-## Game Flow
-
-- 1. **Client Resource Loading** (Can be retained if modifying and recompiling the source code)  
-   ![Client Resource Loading Screen](./picture/client_resource_loading.jpg)  
-- 2. **First-Time Login Screen** (Only displayed on the first run; can be retained if modifying and recompiling the source code)  
-   ![First-Time Loading Screen](./picture/first_login_loading.jpg)  
-
-- 3. **Main Menu**
-
-   ![Main Menu](./picture/menu.jpg)
-
-   | Option | Function |
-   | :--: | :--: |
-   | 1 | Start Game |
-   | 2 | Game Instructions |
-   | 3 | Game Settings |
-   | 4 | Exit Game |
-
-- 4. **Game Settings**
-
-   ![Settings Screen](./picture/set_game.jpg)
-
-   Configurable options include:
-   - Whether the game ends if the snake bites itself
-   - Snake movement speed
-   - Points required for victory
-   - Number of food items
-   - Number of walls
-   - Whether to enable system-controlled snakes
-   - Game screen size
-   - Game background color
-   - Restore all default settings, etc.
-
-- 5. **Gameplay Screen**
-
-   ![Gameplay Screen](./picture/game_running.jpg)
-
-- 6. **Game Over** (Victory or Defeat)
-
----
-## Offline Mode
-
-When the configuration file cannot be opened, the game automatically enters offline mode:
-
-- **Features**:
-    - Does not read the configuration file
-    - Uses built-in default settings
-    - Changes to settings are not saved
-    - Settings revert to defaults after the game ends
-
-- **Notes**:
-    - Settings can be adjusted in offline mode but will not be saved
-    - It is not recommended to modify settings in offline mode
-    - Once enabled, offline mode cannot be disabled until the game ends
-
----
-## Game Interface
-
-> Skip this section if you are not a *developer* or do not need to review the game interface.
-
-The game provides a standardized external interface function `GreedySnakeBattleGameExternalInterface`, defined in [GreedySnakeBattleGameExternalInterface.h](./source/Include/GreedySnakeBattleGameExternalInterface.h).
-
-### Linking Options
-
-| Type | Library Name | Linking Command |
-| :--: | :----: | :------: |
-| Static Library | libgsnakebg.a | `gcc ... -lgsnakebg` |
-| Dynamic Library | libgsnakebg.so | `gcc ... -lgsnakebg` |
-
-### Function Prototype
-
-```c
-#include <GreedySnakeBattleGameExternalInterface.h>
-
-    int GreedySnakeBattleGameExternalInterface(int isBlockRunning);
-```
-
-### Parameters
-
-`isBlockRunning`: Whether the game blocks the calling process.  
-| Macro (Global Constant) | Behavior |
-| :----: | :-----: |
-| SNAKE_BLOCK | Blocking operation |
-| SNAKE_UNBLOCK | Non-blocking operation |
-
-### Return Values
-
-| Return Value | Description |
-| :----: | :--: |
-| -2 | Invalid parameter |
-| -1 | System call failed |
-| 0 | Game ended (blocking mode) |
-| 1 | Game started successfully (non-blocking mode) |
-
-### Example
-
-```c
-#include "GreedySnakeBattleGameExternalInterface.h"
-
-int main() {
-    int ret = GreedySnakeBattleGameExternalInterface(SNAKE_BLOCK);
-    
-    switch (ret) {
-        case -2:
-            printf("Invalid parameter!\n");
-            break;
-        case -1:
-            printf("Failed to start the game!\n");
-            break;
-        case 0:
-            printf("Game over.\n");
-            break;
-        case 1:
-            printf("Game running in the background.\n");
-            break;
-    }
-    
-    return 0;
-}
-```
-
-### Code Standards
-
-| Item | Standard |
-| :--: | :--: |
-| Programming Language | C Language - C99 (ISO/IEC 9899:1999) |
-| Unix-like Systems | POSIX.1-2008 |
-| Windows Systems | Win32 API |
-
----
-## Build & Installation
-
-### Build Requirements
-
-- CMake 3.10+
-- C Compiler (GCC/Clang/MSVC)
-- Doxygen (for documentation generation) (optional)
-
-### Build Steps
-
-- 1. Create and enter the build directory (to keep the root directory clean)
-```bash
-mkdir build # Create build directory
-```
-```bash
-cd build    # Enter build directory
-```
-
-- 2. Run CMake
-```bash
-cmake ..    # Run CMake
-```
-
-- 3. Run Make
-    - 1. Compile source files  
-         ```bash
-         make                        # Compile source files
-         ```
-         Generates the GreedySnakeBattle(.exe) executable, libgsnakebg.so dynamic library, and libgsnakebg.a static library.
-    
-    - 2. Generate API documentation
-         - 1.With Doxygen installed
-             ```bash
-             make API_documents     # Generate API documentation
-             ```
-         - 2.Without Doxygen
-             - 1.Extracting the Pre-generated API Documentation Files.
-                 - 1.Linux/MacOS Operating Systems
-                     ```bash
-                     unzip ../pre_generated_API_documents.zip     # Directly extracts to the "./pre_generated_API_documents" directory, you don't need to create or move directories yourself. 
-                     ```
-                 - 2.Windows Operating System  
-                     Use the built-in Windows functionality.  
-                     - 1. Open *File Explorer* and locate the `pre_generated_API_documents.zip` file in the project's root directory.  
-                     - 2. Double-click `pre_generated_API_documents.zip`, and the system will automatically open it in *File Explorer*.  
-                     - 3. Click "Extract All" in the top menu, select the `build` directory, and then click "Extract".  
-             - 2.Rename.
-                 ```bash
-                 mv pre_generated_API_documents API_documents          # Rename pre_generated_API_documents to API_documents.
-                 ```
-
-###  Install & Uninstall
-
-#### Install
-
-```bash
-sudo make install           # Install (requires admin rights) (Termux does not require admin rights)
-```
-
-#### Uninstall
-
-```bash
-sudo make uninstall         # Uninstall (requires admin rights) (Termux does not require admin rights)
-```
-
-### Installation Contents
-
-1. **Executable**: `GreedySnakeBattle` (`GreedySnakeBattle.exe` on Windows)
-2. **Libraries**:
-   - Static Library: `libgsnakebg.a`
-   - Dynamic Library: `libgsnakebg.so` (`libgsnakebg.dll` on Windows)
-3. **Header Files**: All header files in the `Include/` directory
-4. **API Documentation**: HTML-formatted API documentation
-
----
-## Cross-Platform Support
-
-The game supports the following platforms:
-
-1. **Windows**:
-    - Automatically creates a desktop shortcut
-    - Sets the application icon
-    - Uses Win32 API for terminal control
-
-2. **Linux**:
-    - Standard Unix installation paths
-    - Creates a .desktop desktop shortcut
-    - Uses termios for terminal control
-
-3. **Termux (Android)**:
-    - Special installation path adaptation
-    - Optimized for mobile terminals
-
-4. **macOS**:
-    - Standard Unix installation paths
-    - Uses termios for terminal control
-
----
-## Known Issues
-
-1. **Performance Issues**:
-    - The game may lag when the snake grows very large.
-
-2. **Functional Limitations**:
-    - Obstacle snakes cannot automatically avoid user snakes and walls.
-    - Logic for user snakes eating obstacle snake bodies is not precise.
-
-For a detailed list of issues, see the BUGs section in [GreedySnakeBattleGameExternalInterface.c](./source/GreedySnakeBattleGameExternalInterface.c).
-
-## Future Plans
-
-1. **New Features**:
-    - Add portals.
-    - Infinite food mode.
-
-2. **Improvements**:
-    - Optimize obstacle snake AI.
-    - Improve snake body rendering logic.
-
-For detailed plans, see the TODOs section in [GreedySnakeBattleGameExternalInterface.c](./source/GreedySnakeBattleGameExternalInterface.c).
-
-## Code Style Summary & Contribution Guidelines
-
-Based on the project, the following **comment style**, **naming conventions**, and **code style** are summarized for contributors.  
-
-### **1. Comment Style (Javadoc Style)**  
-The code primarily uses **Doxygen/Javadoc-style comments** for API documentation generation.  
-
-#### **Rules**:
-
-✅ **File Comments** (at the beginning of the file):  
-```c
-/**
- * @file GreedySnakeBattleGameExternalInterface.c
- * @brief This file implements the @ref GreedySnakeBattleGameExternalInterface function.
- * @author Zhang Zhiyu
- */
-```
-
-✅ **Function Comments** (detailed description of function purpose, parameters, and return value):  
-```c
-/**
- * @brief Initialize terminal settings
- * @ingroup OSAdapt
- * 
- * Save the original terminal mode and enable ANSI escape code support.
- */
-static void _windows_init_console() {
-    // ...
-}
-```
-
-✅ **Struct/Enum Comments**:  
-```c
-/**
- * @struct GameAllRunningData
- * @brief Stores all runtime data for the game.
- */
-typedef struct {
-    int score;  /**< Current score */
-    // ...
-} GameAllRunningData;
-```
-
-❌ **Avoid**:
-- Single-line comments `//` should only be used for temporary debugging; use `/** */` or `/* */` in formal code.  
-- Meaningless comments like `// This is a variable`.  
-
-#### **Contributor Notes**:
-- **New functions/files** must include complete Doxygen comments.  
-- **Modify functions** by updating the corresponding `@brief` and `@param` descriptions.  
-- **Critical logic** should include `@note` or `@attention` for special cases.  
-
----
-### **2. Naming Conventions (Qt Style)**
-
-Adopts a **Qt-like naming style** with minor adjustments:  
-
-#### **Rules**:
-| Type | Naming Style | Example |
-| :--: | :------: | :--: |
-| **Functions** | Snake case (`snake_case`) for OS-adaptation functions and special function groups; otherwise, lowerCamelCase | `init_terminal_settings()`, `setConfig_isEnableObs`, `foodInit` |
-| **Variables** | `lowerCamelCase` | `gameScore` |
-| **Structs** | Struct name: `UpperCamelCase`; member variables: `lowerCamelCase` | `GameConfig`, `isEnableObs` |
-| **Macros/Enums/Global Constants** | `UPPER_CASE` | `SNAKE_BLOCK`, `ENABLE_ECHO_INPUT` |
-| **Global Variables** | `lowerCamelCase` | `isConfigFileOpenFail` |
-| **Type Definitions** | `PascalCase` + `_t` (optional) | `GameAllRunningData`, `muint_t` |
-
-#### **Contributor Notes**:
-- **New variables/functions/...** should follow the above naming conventions.
-- **Avoid** Hungarian notation (e.g., `bIsRunning`, `iCount`).  
-- **Macros** must be in uppercase, e.g., `#define MAX_SNAKE_LENGTH 100`.  
-
----
-### **3. Code Style (Qt Style)**  
-The code style resembles **Qt/C++** but adapts to C language limitations.  
-
-#### **Rules**:
-✅ **Indentation**:
-- **4-space indentation** (no tabs).  
-- Function bodies and `if/for/while` blocks must be indented.  
-
-✅ **Braces `{}`**:
-- **K&R style** (opening brace on the same line):  
-```c
-if (condition) {
-    // code
-}
-```
-
-✅ **Spacing**:
-- Spaces around operators:  
-```c
-int sum = a + b;
-if (score > 100) { ... }
-```
-- Space after commas in function parameters:  
-```c
-void foo(int a, int b, int c);
-```
-
-✅ **Pointer `*` Placement**:  
-```c
-GameAllRunningData *data = malloc(sizeof(GameAllRunningData));
-```
-
-❌ **Avoid**:
-- Multiple statements per line, e.g., `a=1; b=2;`.  
-- Excessively long lines (recommended to wrap at 80~120 characters).  
-
-#### **Contributor Notes**:
-- **New code** must follow existing indentation and brace styles.  
-- **Modify code** consistently; do not mix `if (x){` and `if (x) {`.  
-- **Complex logic** should be split into smaller functions to avoid overly long functions.  
-
----
-### **Summary: Rules for Contributors**  
-| Item | Rule |
-| :--: | :--: |
-| **Comments** | Doxygen/Javadoc style; mandatory for functions, files, and critical variables |
-| **Naming** | As above |
-| **Code Style** | 4-space indentation, K&R braces, pointer `*` adjacent to variable name |
-
-### **How to Check?**  
-1. **Clang-Format** (configured via `.clang-format` file).  
-2. **Doxygen** to generate documentation and check comment completeness.  
-3. **Code review** for naming and style consistency.  
-
-Contributors are encouraged to maintain code style uniformity for better maintainability! 🚀
-
 # 贪吃蛇大作战
 
 ![贪吃蛇大作战LOGO](./picture/greedy_snake_battle_logo.jpg)
@@ -708,12 +6,13 @@ Contributors are encouraged to maintain code style uniformity for better maintai
 
 - [项目概述](#项目概述)
 - [项目许可证](#项目许可证)
-- [签名验证](#签名验证)
 - [游戏特点](#游戏特点)
 - [游戏控制](#游戏控制)
 - [游戏元素](#游戏元素)
 - [游戏流程](#游戏流程)
 - [离线模式](#离线模式)
+- [签名验证](#签名验证)
+- [Windows下游戏需要](Windows下游戏需要)
 - [游戏接口](#游戏接口)
 - [构建与安装](#构建与安装)
 - [跨平台支持](#跨平台支持)
@@ -724,10 +23,11 @@ Contributors are encouraged to maintain code style uniformity for better maintai
 ---
 ## 项目概述
 
-这是一个用C语言实现的跨平台贪吃蛇对战游戏，具有丰富的配置选项和完整的游戏功能。项目采用模块化设计，支持多种操作系统平台。  
+这是一个用C语言实现的跨平台(Linux-Like，Windows需要Cygwin)贪吃蛇对战游戏，具有丰富的配置选项和完整的游戏功能。项目采用模块化设计，支持多种操作系统平台。  
   
 作者: 张志宇  
 许可证: MIT许可证: [LICENSE.txt](./LICENSE.txt)  
+版本：3.0.1  
 欢迎提交修改，建议和Issues。
 
 ## 项目许可证
@@ -757,247 +57,11 @@ Contributors are encouraged to maintain code style uniformity for better maintai
 MIT许可证：[LICENSE.txt](./LICENSE.txt)
 
 ---
-## 签名验证
-
-### 预备
-
-需要：GPG：GPG官网：[https://gnupg.org](https://gnupg.org)  
-Windows版本(GPG4Win) [https://gpg4win.org](https://gpg4win.org)  
-
-#### **安装GPG**
-
-##### **Windows**
-1. 下载安装 [GPG4Win](https://gpg4win.org/download.html)。
-2. 安装时勾选**"GPG (GnuPG) Command Line"** 以确保 `gpg.exe` 可用。
-
-##### **Linux/macOS**
-
-- Linux
-    ```bash
-    sudo (安装包管理器) install gnupg
-    ```
-    把`(安装包管理器)`替换为系统的安装包管理器(如，Ubuntu/Debian替换为apt)
-- MacOS
-    ```shell
-    brew install gnupg
-    ```
-
-### 1.解压签名文件
-
-- 1.Linux/MacOS操作系统
-    ```bash
-    unzip signatures.zip        # 直接解压到signatures目录，无需单独创建目录
-    ```
-- 2.Windows操作系统
-    使用Windows内置功能。  
-    - 1. 打开文件资源管理器，找到项目根目录下的`signatures.zip`文件。  
-    - 2. 双击`signatures.zip`，系统会自动用*“文件资源管理器”*打开。  
-    - 3. 点击顶部菜单的“解压全部”，选择当前目录后点击“解压”。  
-
-### 2.导入公钥(位于项目根目录下)：
-
-```bash
-gpg --import ./signatures/PublicKey/GreedySnakeBattle_PublicKey.asc
-```
-
-### 3.验证签名：
-
-- 单个文件验证(以LICENSE.txt文件为例)
-    ```bash
-    gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
-    ```
-
-- 批量验证
-    - 源文件验证(Unix-Like)
-        ```bash
-        find source/ -type f \( -name "*.c" -o -name "*.h" \) -exec sh -c 'gpg --verify signatures/$(basename {}).asc {}' \;
-        ```
-    - LICENSE.txt许可证文档验证
-        ```bash
-        gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
-        ```
-
-- 确认输出
-    1. 包含`Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>`表示源文件和签名未被修改。 b
-        ```txt
-        gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
-        gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
-        gpg: Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>" [ultimate]
-        ```
-    
-    2. 包含`BAD signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>`表示**源文件和签名被篡改**。  
-        **此时不建议再使用这些文件，因为这些文件可能被篡改过，可能存在未知风险！！！**  
-        ```txt
-        gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
-        gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
-        gpg: BAD signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>" [ultimate]
-        ```
-
----
-### 自动化检查脚本
-
-#### Windows
-
-将以下脚本保存为 `verify_all.ps1`，放在项目根目录运行：
-```powershell
-# 导入公钥（如果尚未导入）
-$publicKey = ".\signatures\PublicKey\GreedySnakeBattle_PublicKey.asc"
-gpg --import $publicKey
-
-# 验证源码文件
-Get-ChildItem -Path .\source -Recurse -Include *.c, *.h | ForEach-Object {
-    $sigFile = ".\signatures\" + $_.Name + ".asc"
-    if (Test-Path $sigFile) {
-        Write-Host "验证文件: $($_.FullName)"
-        gpg --verify $sigFile $_.FullName
-        
-        # 错误检查
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "错误: $($_.FullName) 验证失败！" -ForegroundColor Red
-            exit 1
-        }
-    }
-}
-
-# 验证 LICENSE.txt
-gpg --verify .\signatures\LICENSE.txt.asc .\LICENSE.txt
-
-Write-Host "验证完成！检查是否有 'BAD signature' 输出。" -ForegroundColor Green
-```
-
-以管理员身份运行PowerShell，然后执行：
-```powershell
-Set-ExecutionPolicy RemoteSigned -Scope Process  # 允许运行脚本
-```
-```powershell
-.\verify_all.ps1
-```
-
-#### Linux/macOS
-
-##### **1. 脚本内容**  
-
-将以下代码保存为 `verify_signatures.sh`，并放在项目根目录：  
-```bash
-#!/bin/bash
-
-# ------------------------------------------
-# GreedySnakeBattle 签名验证脚本 (Linux/macOS)
-# 功能：自动验证所有 .c/.h/README.md/LICENSE.txt 的 GPG 签名
-# 用法：./verify_signatures.sh
-# ------------------------------------------
-
-# 检查是否安装了 GPG
-if ! command -v gpg &> /dev/null; then
-    echo "❌ 错误：GPG 未安装！请先安装："
-    echo "  - Debian/Ubuntu: sudo apt install gnupg"
-    echo "  - macOS: brew install gnupg"
-    exit 1
-fi
-
-# 定义签名目录和公钥路径
-SIGNATURES_DIR="./signatures"
-PUBLIC_KEY="$SIGNATURES_DIR/PublicKey/GreedySnakeBattle_PublicKey.asc"
-
-# 检查签名目录是否存在
-if [ ! -d "$SIGNATURES_DIR" ]; then
-    echo "❌ 错误：签名目录 $SIGNATURES_DIR 不存在！"
-    exit 1
-fi
-
-# 检查公钥是否存在
-if [ ! -f "$PUBLIC_KEY" ]; then
-    echo "❌ 错误：公钥文件 $PUBLIC_KEY 未找到！"
-    exit 1
-fi
-
-# 导入公钥
-echo "🔑 导入公钥..."
-gpg --import "$PUBLIC_KEY" 2> /dev/null
-if [ $? -ne 0 ]; then
-    echo "❌ 错误：公钥导入失败！"
-    exit 1
-fi
-
-# 验证所有源码文件（.c 和 .h）
-echo "🔍 开始验证源码文件..."
-FAILED=0
-for file in $(find ./source -type f \( -name "*.c" -o -name "*.h" \)); do
-    sig_file="$SIGNATURES_DIR/$(basename $file).asc"
-    if [ -f "$sig_file" ]; then
-        echo "📄 验证: $file"
-        gpg --verify "$sig_file" "$file" 2> /dev/null
-        if [ $? -ne 0 ]; then
-            echo "❌ 验证失败: $file"
-            FAILED=1
-        fi
-    else
-        echo "⚠️ 警告: 未找到签名文件: $sig_file"
-    fi
-done
-
-# 验证 LICENSE.txt
-echo "📜 验证文档文件..."
-for file in "LICENSE.txt"; do
-    sig_file="$SIGNATURES_DIR/$file.asc"
-    if [ -f "$sig_file" ]; then
-        echo "📄 验证: $file"
-        gpg --verify "$sig_file" "$file" 2> /dev/null
-        if [ $? -ne 0 ]; then
-            echo "❌ 验证失败: $file"
-            FAILED=1
-        fi
-    else
-        echo "⚠️ 警告: 未找到签名文件: $sig_file"
-    fi
-done
-
-# 最终结果
-if [ $FAILED -eq 0 ]; then
-    echo "✅ 所有文件验证通过！"
-else
-    echo "❌ 部分文件验证失败，请检查日志！"
-    exit 1
-fi
-```
-
-##### **2. 使用方法**
-
-1. **赋予脚本执行权限**：  
-   ```bash
-   chmod +x verify_signatures.sh
-   ```
-
-2. **运行脚本**：  
-   ```bash
-   ./verify_signatures.sh
-   ```
-
-3. **预期输出**：  
-   - 如果所有文件验证通过：  
-     ```txt
-     ✅ 所有文件验证通过！
-     ```
-   - 如果某些文件验证失败：  
-     ```txt
-     ❌ 验证失败: ./source/main.c
-     ❌ 部分文件验证失败，请检查日志！
-     ```
-
-##### **3. 脚本特点**
-
-✅ **自动检查依赖**：如果未安装 GPG，会提示用户安装。  
-✅ **批量验证**：自动遍历 `./source/` 下的所有 `.c` 和 `.h` 文件。  
-✅ **错误处理**：  
-   - 如果签名文件缺失，会提示警告（`⚠️`）。  
-   - 如果签名不匹配，会标记失败（`❌`）并退出。  
-
----
 ## 游戏特点
 
 - 经典贪吃蛇游戏玩法
 - 支持自定义游戏设置
-- 跨平台支持（Windows/Linux/macOS/Termux
+- 跨平台支持（Windows(需要Cygwin)/Linux/MacOS/Termux)
 - 提供阻塞和非阻塞两种运行模式
 - 完善的API接口
 - 详细的文档支持
@@ -1081,9 +145,415 @@ fi
     - 离线模式一旦开启，在游戏结束前无法关闭
 
 ---
-## 游戏接口
+## 签名验证
 
 > 若您不是*开发人员*或*无查看游戏接口的需要*，则无需阅读以下内容。
+
+### 预备
+
+需要：GPG：GPG官网：[https://gnupg.org](https://gnupg.org)  
+Windows版本(GPG4Win) [https://gpg4win.org](https://gpg4win.org)  
+
+#### **安装GPG**
+
+##### **Windows**
+1. 下载安装 [GPG4Win](https://gpg4win.org/download.html)。
+2. 安装时勾选**"GPG (GnuPG) Command Line"** 以确保 `gpg.exe` 可用。
+
+##### **Linux/MacOS**
+
+- Linux
+    ```bash
+    sudo (安装包管理器) install gnupg
+    ```
+    把`(安装包管理器)`替换为系统的安装包管理器(如，Ubuntu/Debian替换为apt)
+- MacOS
+    ```shell
+    brew install gnupg
+    ```
+
+### 1.解压签名文件
+
+- 1.Linux/MacOS操作系统
+    ```bash
+    unzip signatures.zip        # 直接解压到signatures目录，无需单独创建目录
+    ```
+- 2.Windows操作系统
+    使用Windows内置功能。  
+    - 1. 打开文件资源管理器，找到项目根目录下的`signatures.zip`文件。  
+    - 2. 双击`signatures.zip`，系统会自动用“*文件资源管理器*”打开。  
+    - 3. 点击顶部菜单的“*解压全部*”，选择当前目录后点击“解压”。  
+
+### 2.导入公钥(位于项目根目录下)：
+
+```bash
+gpg --import ./signatures/PublicKey/GreedySnakeBattle_PublicKey.asc
+```
+
+### 3.验证签名：
+
+- 单个文件验证(以LICENSE.txt文件为例)
+    ```bash
+    gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
+    ```
+
+- 批量验证
+    - 源文件验证(Unix-Like)
+        ```bash
+        find source/ -type f \( -name "*.c" -o -name "*.h" \) -exec sh -c 'gpg --verify signatures/$(basename {}).asc {}' \;
+        ```
+    - LICENSE.txt许可证文档验证
+        ```bash
+        gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
+        ```
+
+- 确认输出
+    1. 包含`Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>`表示源文件和签名未被修改。 b
+        ```txt
+        gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
+        gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
+        gpg: Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>" [ultimate]
+        ```
+    
+    2. 包含`BAD signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>`表示**源文件和签名被篡改**。  
+        **此时不建议再使用这些文件，因为这些文件可能被篡改过，可能存在未知风险！！！**  
+        ```txt
+        gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
+        gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
+        gpg: BAD signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>" [ultimate]
+        ```
+
+---
+### 自动化检查脚本
+
+#### Windows
+
+将以下脚本保存为 `verify_all.ps1`，放在项目根目录运行：
+```powershell
+# 导入公钥（如果尚未导入）
+$publicKey = ".\signatures\PublicKey\GreedySnakeBattle_PublicKey.asc"
+gpg --import $publicKey
+
+# 验证源码文件
+Get-ChildItem -Path .\source -Recurse -Include *.c, *.h | ForEach-Object {
+    $sigFile = ".\signatures\" + $_.Name + ".asc"
+    if (Test-Path $sigFile) {
+        Write-Host "验证文件: $($_.FullName)"
+        gpg --verify $sigFile $_.FullName
+        
+        # 错误检查
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "错误: $($_.FullName) 验证失败！" -ForegroundColor Red
+            exit 1
+        }
+    }
+}
+
+# 验证 LICENSE.txt
+gpg --verify .\signatures\LICENSE.txt.asc .\LICENSE.txt
+
+Write-Host "验证完成！检查是否有 'BAD signature' 输出。" -ForegroundColor Green
+```
+
+以管理员身份运行PowerShell，然后执行：
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope Process  # 允许运行脚本
+```
+```powershell
+.\verify_all.ps1
+```
+
+#### Linux/MacOS
+
+##### **1. 脚本内容**  
+
+将以下代码保存为 `verify_signatures.sh`，并放在项目根目录：  
+```bash
+#!/bin/bash
+
+# ------------------------------------------
+# GreedySnakeBattle 签名验证脚本 (Linux/MacOS)
+# 功能：自动验证所有 .c/.h/README.md/LICENSE.txt 的 GPG 签名
+# 用法：./verify_signatures.sh
+# ------------------------------------------
+
+# 检查是否安装了 GPG
+if ! command -v gpg &> /dev/null; then
+    echo "❌ 错误：GPG 未安装！请先安装："
+    echo "  - Debian/Ubuntu: sudo apt install gnupg"
+    echo "  - MacOS: brew install gnupg"
+    exit 1
+fi
+
+# 定义签名目录和公钥路径
+SIGNATURES_DIR="./signatures"
+PUBLIC_KEY="$SIGNATURES_DIR/PublicKey/GreedySnakeBattle_PublicKey.asc"
+
+# 检查签名目录是否存在
+if [ ! -d "$SIGNATURES_DIR" ]; then
+    echo "❌ 错误：签名目录 $SIGNATURES_DIR 不存在！"
+    exit 1
+fi
+
+# 检查公钥是否存在
+if [ ! -f "$PUBLIC_KEY" ]; then
+    echo "❌ 错误：公钥文件 $PUBLIC_KEY 未找到！"
+    exit 1
+fi
+
+# 导入公钥
+echo "🔑 导入公钥..."
+gpg --import "$PUBLIC_KEY" 2> /dev/null
+if [ $? -ne 0 ]; then
+    echo "❌ 错误：公钥导入失败！"
+    exit 1
+fi
+
+# 验证所有源码文件（.c 和 .h）
+echo "🔍 开始验证源码文件..."
+FAILED=0
+for file in $(find ./source -type f \( -name "*.c" -o -name "*.h" \)); do
+    sig_file="$SIGNATURES_DIR/$(basename $file).asc"
+    if [ -f "$sig_file" ]; then
+        echo "📄 验证: $file"
+        gpg --verify "$sig_file" "$file" 2> /dev/null
+        if [ $? -ne 0 ]; then
+            echo "❌ 验证失败: $file"
+            FAILED=1
+        fi
+    else
+        echo "⚠️ 警告: 未找到签名文件: $sig_file"
+    fi
+done
+
+# 验证 LICENSE.txt
+echo "📜 验证文档文件..."
+for file in "LICENSE.txt"; do
+    sig_file="$SIGNATURES_DIR/$file.asc"
+    if [ -f "$sig_file" ]; then
+        echo "📄 验证: $file"
+        gpg --verify "$sig_file" "$file" 2> /dev/null
+        if [ $? -ne 0 ]; then
+            echo "❌ 验证失败: $file"
+            FAILED=1
+        fi
+    else
+        echo "⚠️ 警告: 未找到签名文件: $sig_file"
+    fi
+done
+
+# 最终结果
+if [ $FAILED -eq 0 ]; then
+    echo "✅ 所有文件验证通过！"
+else
+    echo "❌ 部分文件验证失败，请检查日志！"
+    exit 1
+fi
+```
+
+##### **2. 使用方法**
+
+1. **赋予脚本执行权限**：  
+   ```bash
+   chmod +x verify_signatures.sh
+   ```
+
+2. **运行脚本**：  
+   ```bash
+   ./verify_signatures.sh
+   ```
+
+3. **预期输出**：  
+   - 自动检查依赖：
+     如果未安装 GPG，会提示用户安装  
+   - 批量验证：
+    ;自动遍历 `./source/` 下的所有 `.c` 和 `.h` 文件  
+   - 如果所有文件验证通过：  
+     ```txt
+     ✅ 所有文件验证通过！
+     ```
+   - 如果某些文件验证失败：  
+     ```txt
+     ❌ 验证失败: ./source/main.c
+     ❌ 部分文件验证失败，请检查日志！
+     ```
+   - 如果签名文件缺失：
+     会提示警告（`⚠️`）。  
+
+---
+## Windows下游戏需要
+
+Cygwin是一个在Windows上提供完整Linux-like环境的工具，它允许你在Windows上使用大多数Linux命令和工具。以下是获取和安装Cygwin的详细步骤：
+
+### 1. 下载Cygwin
+
+访问Cygwin官方网站获取安装程序：
+- 官方网站：[https://cygwin.com/](https://cygwin.com/)
+- 直接下载链接：[https://cygwin.com/setup-x86_64.exe](https://cygwin.com/setup-x86_64.exe) (64位版本)
+
+### 2. 安装Cygwin
+
+#### 基本安装步骤
+
+1. **运行安装程序**：
+   - 双击下载的`setup-x86_64.exe`文件
+
+2. **选择安装类型**：
+   ```
+   Install from Internet (推荐)
+   Download Without Installing
+   Install from Local Directory
+   ```
+   选择第一个选项"Install from Internet"
+
+3. **选择安装目录**（默认通常是）：
+   ```
+   C:\cygwin64\
+   ```
+   注意：路径最好不要包含空格或中文
+
+4. **选择本地包目录**（用于存储下载的包）：
+   ```
+   C:\Users\<你的用户名>\Downloads\cygwin-packages\
+   ```
+
+5. **选择连接方式**：
+   - 如果你使用代理，在此处配置
+   - 否则选择"Direct Connection"
+
+#### 选择镜像站点
+
+1. 从列表中选择一个镜像站点，例如：
+   ```
+   http://mirrors.163.com/cygwin/ (中国镜像)
+   http://mirrors.kernel.org/sourceware/cygwin/
+   ```
+
+2. 点击"Next"继续
+
+#### 选择要安装的包
+
+1. 在搜索框中输入你需要的包，例如：
+   - `gcc` (GNU编译器集合)
+   - `make` (构建工具)
+   - `gdb` (调试器)
+   - `vim` 或 `emacs` (编辑器)
+   - `openssh` (SSH客户端/服务器)
+   - `git` (版本控制)
+
+2. 点击每个包旁边的"Skip"将其变为版本号，表示要安装
+
+3. **重要开发包**：
+   - `gcc-core`：C编译器
+   - `gcc-g++`：C++编译器
+   - `make`：构建工具
+   - `gdb`：调试器
+   - `libncurses-devel`：终端处理库
+   - `git`：版本控制
+
+4. 点击"Next"开始下载和安装
+
+### 3. 安装后的配置
+
+#### 环境变量设置
+
+1. 将Cygwin的bin目录添加到系统PATH：
+   ```
+   C:\cygwin64\bin
+   ```
+
+2. 方法：
+   - 右键"此电脑" → 属性 → 高级系统设置 → 环境变量
+   - 在"系统变量"中找到Path，点击编辑
+   - 添加新条目：`C:\cygwin64\bin`
+
+#### 启动Cygwin
+
+1. 通过开始菜单找到"Cygwin64 Terminal"并启动
+2. 或者创建桌面快捷方式
+
+### 4. 验证安装
+
+在Cygwin终端中运行以下命令验证基本功能：
+
+- 检查bash版本
+```bash
+bash --version
+```
+
+- 检查gcc是否安装
+```bash
+gcc --version
+```
+
+- 检查make工具
+```bash
+make --version
+```
+
+- 测试Linux命令
+```bash
+ls -l
+```
+```bash
+uname -a
+```
+
+### 5. 安装额外包（后续）
+
+如果需要安装更多包：
+
+1. 重新运行`setup-x86_64.exe`
+2. 选择"Install from Internet"
+3. 在包选择界面搜索并选择新包
+4. 完成安装
+
+或者使用Cygwin的命令行安装工具`apt-cyg`：
+
+```bash
+# 首先安装apt-cyg
+lynx -source rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg
+install apt-cyg /bin
+
+# 然后使用apt-cyg安装包
+apt-cyg install nano
+```
+
+### 6. 使用Cygwin开发
+
+现在你可以在Cygwin中使用`unistd.h`和其他POSIX功能了：
+
+```c
+#include <unistd.h>  // 现在可用
+
+int main() {
+    pid_t pid = fork();  // 支持fork()
+    if (pid == 0) {
+        printf("Child process\n");
+    } else {
+        printf("Parent process\n");
+    }
+    return 0;
+}
+```
+
+编译命令：
+```bash
+gcc program.c -o program
+./program
+```
+
+### 注意事项
+
+1. Cygwin的性能略低于原生Linux系统
+2. 某些Linux特有功能可能不完全支持
+3. 对于高性能需求，考虑使用WSL2
+4. 文件路径在Windows和Cygwin间转换：
+   - Windows路径：`C:\path\to\file`
+   - Cygwin路径：`/cygdrive/c/path/to/file`
+
+---
+## 游戏接口
 
 游戏提供标准化的外部接口`GreedySnakeBattleGameExternalInterface`函数，定义在 [GreedySnakeBattleGameExternalInterface.h](./source/Include/GreedySnakeBattleGameExternalInterface.h) 中。
 
@@ -1152,7 +622,6 @@ int main() {
 | :--: | :--: |
 | 编程语言 | C程序语言 - C99(ISO/IEC 9899:1999) |
 | Unix-like系统 | POSIX.1-2008(Portable Operating System Interface of UNIX) |
-| Windows系统 | Win32 API(Windows Application Programming Interface) |
 
 ---
 ## 构建与安装
@@ -1235,6 +704,7 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
 游戏支持以下平台：
 
 1. **Windows**:
+    - 需要Cygwin
     - 自动创建桌面快捷方式
     - 设置应用图标
     - 使用Win32 API实现终端控制
@@ -1244,11 +714,11 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
     - 创建.desktop桌面快捷方式
     - 使用termios实现终端控制
 
-3. **Termux (Android)**:
+3. **Termux(Android)**:
     - 特殊安装路径适配
     - 针对移动终端优化
 
-4. **macOS**:
+4. **MacOS**:
     - Unix标准安装路径
     - 使用termios实现终端控制
 
@@ -1256,7 +726,7 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
 ## 已知问题
 
 1. **性能问题**：
-    - 当蛇身足够大时，游戏可能会出现卡顿现象
+    - 当蛇身足够大时，游戏可能会出现卡死现象
 
 2. **功能限制**：
     - 障碍蛇无法自动避开用户蛇和墙壁
@@ -1273,8 +743,6 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
 2. **改进**：
     - 优化障碍蛇AI
     - 改进蛇身绘制逻辑
-
-详细计划见 [GreedySnakeBattleGameExternalInterface.c](./source/GreedySnakeBattleGameExternalInterface.c) 中的TODOs部分
 
 ## 代码风格总结与贡献指南
 
@@ -1302,7 +770,7 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
  * 
  * 保存原始终端模式并启用 ANSI 转义码支持。
  */
-static void _windows_init_console() {
+static void windowsInitConsole() {
     // ...
 }
 ```
@@ -1331,17 +799,17 @@ typedef struct {
 ---
 ### **2.命名规则（Qt风格）**
 
-采用**类似 Qt 的命名风格**，但略有调整：  
+采用**Qt的命名风格**，但略有调整：  
 
 #### **规则**：
 | 类型 | 命名风格 | 示例 |
 | :--: | :------: | :--: |
-| **函数** | 除构造及析构函数、用于适配不同操作系统(蛇形命名法:`_snake_case`)和特别要求的函数组(蛇形命名法+小驼峰命名法_`lowerCamelCase_snake_case`外，其他函数都采用小驼峰命名法：`lowerCamelCase` | `init_terminal_settings()`，`setConfig_isEnableObs`，`foodInit` |
-| **变量** | `lowerCamelCase` | `gameScore` |
-| **结构体** | 结构体名: `UpperCamelCase`，成员变量: `lowerCamelCase` | `GameConfig`，`isEnableObs` |
-| **宏/枚举/全局常量** | `UPPER_CASE` | `SNAKE_BLOCK`, `ENABLE_ECHO_INPUT` |
-| **全局变量** | `lowerCamelCase` | `isConfigFileOpenFail` |
-| **类型定义** | `PascalCase` + `_t`（可选） | `GameAllRunningData`, `muint_t` |
+| **函数** | 除特别要求的函数组(蛇形命名法+小驼峰命名法:`lowerCamelCase_snake_case`外，其他函数都采用小驼峰命名法：`lowerCamelCase` | `setConfig_isEnableObs`，`foodInit` |
+| **变量** | 小驼峰命名法:`lowerCamelCase` | `gameScore` |
+| **结构体** | 结构体名: 大驼峰命名法: `UpperCamelCase`。成员变量: 小驼峰命名法: `lowerCamelCase` | `GameConfig`，`isEnableObs` |
+| **宏/枚举/全局常量** | 大驼峰命名法: `UPPER_CASE` | `SNAKE_BLOCK`, `ENABLE_ECHO_INPUT` |
+| **全局变量** | 小驼峰命名法：`lowerCamelCase` | `isConfigFileOpenFail` |
+| **类型定义** | `PascalCase` + `_t`（当该类型为typedef已有类型时必须要加该后缀） | `GameAllRunningData`, `muint_t` |
 
 #### **贡献者注意事项**：
 - **新变量/函数/...** 采用上述命名方式。
@@ -1350,8 +818,6 @@ typedef struct {
 
 ---
 ### **3. 代码风格（Qt风格）**  
-代码风格接近**Qt/C++**，但适应了 C 语言的限制。  
-
 #### **规则**：
 ✅ **缩进**：
 - **4 空格缩进**（非Tab）。  
@@ -1360,7 +826,7 @@ typedef struct {
 ✅ **大括号`{}`**：
 - **K&R 风格**（左大括号不换行）：  
 ```c
-if (condition) {
+if ( condition ) {
     // code
 }
 ```
@@ -1369,16 +835,11 @@ if (condition) {
 - 运算符两侧加空格：  
 ```c
 int sum = a + b;
-if (score > 100) { ... }
+if ( score > 100 ) { ... }
 ```
 - 函数参数逗号后加空格：  
 ```c
 void foo(int a, int b, int c);
-```
-
-✅ **指针 `*` 靠近变量名**：  
-```c
-GameAllRunningData *data = malloc(sizeof(GameAllRunningData));
 ```
 
 ❌ **避免**：
@@ -1403,4 +864,4 @@ GameAllRunningData *data = malloc(sizeof(GameAllRunningData));
 2. **Doxygen**生成文档，检查注释完整性。  
 3. **代码审查**时人工核对命名和风格。  
 
-希望贡献者能保持代码风格统一，提高可维护性！ 🚀
+希望贡献者能保持代码风格统一，提高可维护性！

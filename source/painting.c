@@ -3,10 +3,10 @@
  * @brief This source realizes the functions about painting interface.
  */
 
-#include "Include/Struct/GameAllRunningData.h"
-#include "Include/GlobalVariable/globalVariable.h"
-#include "Include/Functions/standardIO.h"
-#include "Include/Functions/painting.h"
+#include "GSnakeBInclude/Struct/GameAllRunningData.h"
+#include "GSnakeBInclude/GlobalVariable/globalVariable.h"
+#include "GSnakeBInclude/Functions/standardIO.h"
+#include "GSnakeBInclude/Functions/painting.h"
 #include <stdio.h>
 
 /**

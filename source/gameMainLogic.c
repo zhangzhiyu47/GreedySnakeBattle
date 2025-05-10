@@ -3,13 +3,13 @@
  * @brief This source realizes the functions about game main logic.
  */
 
-#include "Include/Compat/snakeFullCompat.h"
+#include "GSnakeBInclude/GlobalVariable/globalVariable.h"
+#include "GSnakeBInclude/Struct/GameAllRunningData.h"
+#include "GSnakeBInclude/Functions/obstacleSnake.h"
+#include "GSnakeBInclude/Functions/userSnake.h"
+#include "GSnakeBInclude/Functions/painting.h"
 
-#include "Include/GlobalVariable/globalVariable.h"
-#include "Include/Struct/GameAllRunningData.h"
-#include "Include/Functions/obstacleSnake.h"
-#include "Include/Functions/userSnake.h"
-#include "Include/Functions/painting.h"
+#include <unistd.h>
 #include <stdio.h>
 
 /**

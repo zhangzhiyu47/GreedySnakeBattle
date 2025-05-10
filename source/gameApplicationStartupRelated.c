@@ -3,11 +3,11 @@
  * @brief This source realizes the functions about launching game app.
  */
 
-#include "Include/Struct/GameConfig.h"
-#include "Include/Struct/Point.h"
-#include "Include/GlobalVariable/globalVariable.h"
-#include "Include/Compat/snakeFullCompat.h"
-#include "Include/Functions/terminal.h"
+#include "GSnakeBInclude/Struct/GameConfig.h"
+#include "GSnakeBInclude/Struct/Point.h"
+#include "GSnakeBInclude/GlobalVariable/globalVariable.h"
+#include "GSnakeBInclude/Functions/terminal.h"
+#include <stdio.h>
 
 /**
  * @brief Configuration file initialization and game interface
@@ -51,7 +51,7 @@ int confgFileInitAndGameIntrfcRndrng() {
             }
         }
         printf("Loading...\n");
-        clearAll();
+        clearScreen();
         
         HIGH=config.scrnHigh;
         WIDE=config.scrnWide;
@@ -69,7 +69,7 @@ int confgFileInitAndGameIntrfcRndrng() {
             }
         }
         printf("Loading...\n");
-        clearAll();
+        clearScreen();
 
         if ( fp==NULL ) {
             outlineModeConfig.wallNum=0;

@@ -10,6 +10,21 @@
 #include "../Struct/Point.h"
 
 /**
+ * @brief Clear the screen display content.
+ */
+void clearScreen();
+
+/**
+ * @brief Initialize terminal settings
+ */
+void initTerminalSettings();
+
+/**
+ * @brief Restore original terminal settings
+ */
+void restoreTerminalSettings();
+
+/**
  * @brief Get the size of the terminal.
  *
  * Get the size of the terminal. In error,

@@ -5,21 +5,24 @@
  * @author Zhang Zhiyu
  */
 
-#include "Include/Compat/snakeFullCompat.h"
-#include "Include/Functions/painting.h"
-#include "Include/GlobalVariable/globalVariable.h"
-#include "Include/Functions/userInterfaceBeforeGameStarts.h"
-#include "Include/Functions/gameApplicationStartupRelated.h"
-#include "Include/Functions/gameStartupRelated.h"
-#include "Include/Functions/signalCapture.h"
-#include "Include/Functions/gameMainLogic.h"
-#include "Include/Functions/standardIO.h"
-#include "Include/Functions/exitApp.h"
+#include "GSnakeBInclude/Functions/painting.h"
+#include "GSnakeBInclude/GlobalVariable/globalVariable.h"
+#include "GSnakeBInclude/Functions/userInterfaceBeforeGameStarts.h"
+#include "GSnakeBInclude/Functions/gameApplicationStartupRelated.h"
+#include "GSnakeBInclude/Functions/gameStartupRelated.h"
+#include "GSnakeBInclude/Functions/signalCapture.h"
+#include "GSnakeBInclude/Functions/gameMainLogic.h"
+#include "GSnakeBInclude/Functions/standardIO.h"
+#include "GSnakeBInclude/Functions/terminal.h"
+#include "GSnakeBInclude/Functions/exitApp.h"
 
-#include "Include/GreedySnakeBattleGameExternalInterface.h"
+#include "GSnakeBInclude/GreedySnakeBattleGameExternalInterface.h"
 
+#include <linux/prctl.h>
+#include <sys/prctl.h>
+#include <sys/wait.h>
+#include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
 
 /**
  * @brief Block running game.
@@ -47,7 +50,6 @@ const int SNAKE_UNBLOCK=0; /* value:0 */
  * @brief The Snake Battle Game opens the only suggested
  *        interface for game applications.
  * @author Zhang Zhiyu
- * @version 2.13.14
  *  
  * ## Header file and function prototype 
  * ```c
@@ -70,7 +72,6 @@ const int SNAKE_UNBLOCK=0; /* value:0 */
  * | :-----: | :------: |
  * | Code language | the C programming language - C99(ISO/IEC 9899:1999) |
  * | Unix-like OS | POSIX.1-2008(Portable Operating System Interface of UNIX) |
- * | Windows OS | Win32 API(Windows Application Programming Interface) |
  *  
  * ## Introduction
  * **The Snake Battle Game opens the only suggested
@@ -249,7 +250,7 @@ int GreedySnakeBattleGameExternalInterface(int isBlockRunning) {
             printf("错误，游戏无法启动，正在退出！\n");
             exit(1);
         } else if (pid==0) {
-            init_terminal_settings();
+            initTerminalSettings();
 
             close(fd[0]);
             prctl(PR_SET_PDEATHSIG,SIGINT);
@@ -334,7 +335,7 @@ int GreedySnakeBattleGameExternalInterface(int isBlockRunning) {
             }
 
             printf("\033[?25l"); // 隐藏光标
-            clearAll();
+            clearScreen();
 
             printf("\033[48;5;");
             gameStartupLoading();

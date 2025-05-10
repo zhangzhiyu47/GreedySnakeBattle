@@ -4,17 +4,22 @@
  * @author Zhang Zhiyu
  */
 
-#include "Include/Compat/snakeFullCompat.h"
-#include "Include/Functions/painting.h"
-#include "Include/GlobalVariable/globalVariable.h"
-#include "Include/Functions/userInterfaceBeforeGameStarts.h"
-#include "Include/Functions/gameApplicationStartupRelated.h"
-#include "Include/Functions/gameStartupRelated.h"
-#include "Include/Functions/signalCapture.h"
-#include "Include/Functions/gameMainLogic.h"
-#include "Include/Functions/standardIO.h"
-#include "Include/Functions/exitApp.h"
-#include <time.h>
+#include "GSnakeBInclude/Functions/painting.h"
+#include "GSnakeBInclude/GlobalVariable/globalVariable.h"
+#include "GSnakeBInclude/Functions/userInterfaceBeforeGameStarts.h"
+#include "GSnakeBInclude/Functions/gameApplicationStartupRelated.h"
+#include "GSnakeBInclude/Functions/gameStartupRelated.h"
+#include "GSnakeBInclude/Functions/signalCapture.h"
+#include "GSnakeBInclude/Functions/gameMainLogic.h"
+#include "GSnakeBInclude/Functions/standardIO.h"
+#include "GSnakeBInclude/Functions/terminal.h"
+#include "GSnakeBInclude/Functions/exitApp.h"
+
+#include <linux/prctl.h>
+#include <sys/prctl.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
 
 int main(int argc,char* argv[]) {
     int fd[2]={0};
@@ -31,7 +36,7 @@ int main(int argc,char* argv[]) {
         printf("错误，游戏无法启动，正在退出！\n");
         exit(1);
     } else if (pid==0) {
-        init_terminal_settings();
+        initTerminalSettings();
 
         close(fd[0]);
         prctl(PR_SET_PDEATHSIG,SIGINT);
@@ -116,7 +121,7 @@ int main(int argc,char* argv[]) {
         }
 
         printf("\033[?25l"); // 隐藏光标
-        clearAll();
+        clearScreen();
 
         printf("\033[48;5;");
         gameStartupLoading();

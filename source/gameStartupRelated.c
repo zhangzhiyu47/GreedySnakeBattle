@@ -3,12 +3,12 @@
  * @brief This source realizes the functions about launching game.
  */
 
-#include "Include/GlobalVariable/globalVariable.h"
-#include "Include/Struct/GameAllRunningData.h"
-#include "Include/Struct/GameConfig.h"
-#include "Include/Functions/obstacleSnake.h"
-#include "Include/Functions/wall.h"
-#include "Include/Functions/food.h"
+#include "GSnakeBInclude/GlobalVariable/globalVariable.h"
+#include "GSnakeBInclude/Struct/GameAllRunningData.h"
+#include "GSnakeBInclude/Struct/GameConfig.h"
+#include "GSnakeBInclude/Functions/obstacleSnake.h"
+#include "GSnakeBInclude/Functions/wall.h"
+#include "GSnakeBInclude/Functions/food.h"
 #include <stdio.h>
 
 /**

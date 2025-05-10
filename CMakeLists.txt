@@ -42,7 +42,6 @@ set(MAIN_SOURCES
     source/obstacleSnake.c
     source/painting.c
     source/signalCapture.c
-    source/snakeFullCompat.c
     source/standardIO.c
     source/terminal.c
     source/userInterfaceBeforeGameStarts.c
@@ -96,28 +95,25 @@ set_target_properties(gsnakebg_shared PROPERTIES OUTPUT_NAME "gsnakebg")
 
 # 包含目录
 target_include_directories(GreedySnakeBattle PRIVATE 
-    source/Include
-    source/Include/Compat
-    source/Include/Functions
-    source/Include/GlobalVariable
-    source/Include/Struct
-    source/Include/TypeDefine)
+    source/GSnakeBInclude
+    source/GSnakeBInclude/Functions
+    source/GSnakeBInclude/GlobalVariable
+    source/GSnakeBInclude/Struct
+    source/GSnakeBInclude/TypeDefine)
 
 target_include_directories(gsnakebg_static PRIVATE 
-    source/Include
-    source/Include/Compat
-    source/Include/Functions
-    source/Include/GlobalVariable
-    source/Include/Struct
-    source/Include/TypeDefine)
+    source/GSnakeBInclude
+    source/GSnakeBInclude/Functions
+    source/GSnakeBInclude/GlobalVariable
+    source/GSnakeBInclude/Struct
+    source/GSnakeBInclude/TypeDefine)
 
 target_include_directories(gsnakebg_shared PRIVATE 
-    source/Include
-    source/Include/Compat
-    source/Include/Functions
-    source/Include/GlobalVariable
-    source/Include/Struct
-    source/Include/TypeDefine)
+    source/GSnakeBInclude
+    source/GSnakeBInclude/Functions
+    source/GSnakeBInclude/GlobalVariable
+    source/GSnakeBInclude/Struct
+    source/GSnakeBInclude/TypeDefine)
 
 # 链接库
 if(WIN32)
@@ -155,7 +151,7 @@ if(WIN32)
         LIBRARY DESTINATION lib
         ARCHIVE DESTINATION lib)
     
-    install(DIRECTORY source/Include/
+    install(DIRECTORY source/GSnakeBInclude/
         DESTINATION include/GreedySnakeBattle
         FILES_MATCHING PATTERN "*.h")
     
@@ -179,7 +175,7 @@ elseif(ANDROID)  # Termux安装规则
         LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
         ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
     
-    install(DIRECTORY source/Include/
+    install(DIRECTORY source/GSnakeBInclude/
         DESTINATION ${CMAKE_INSTALL_PREFIX}/include/GreedySnakeBattle
         FILES_MATCHING PATTERN "*.h")
     
@@ -197,7 +193,7 @@ else()  # Linux/macOS安装规则
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
     
-    install(DIRECTORY source/Include/
+    install(DIRECTORY source/GSnakeBInclude/
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/GreedySnakeBattle
         FILES_MATCHING PATTERN "*.h")
     

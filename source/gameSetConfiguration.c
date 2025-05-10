@@ -4,9 +4,9 @@
  *        about game settings and configurations.
  */
 
-#include "Include/Struct/GameConfig.h"
-#include "Include/GlobalVariable/globalVariable.h"
-#include "Include/Functions/terminal.h"
+#include "GSnakeBInclude/Struct/GameConfig.h"
+#include "GSnakeBInclude/GlobalVariable/globalVariable.h"
+#include "GSnakeBInclude/Functions/terminal.h"
 #include <stdio.h>
 
 /**

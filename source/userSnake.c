@@ -3,9 +3,11 @@
  * @brief This source realizes the functions about snake's snake.
  */
 
-#include "Include/Struct/GameAllRunningData.h"
-#include "Include/Compat/snakeFullCompat.h"
-#include "Include/Functions/food.h"
+#include "GSnakeBInclude/Struct/GameAllRunningData.h"
+#include "GSnakeBInclude/Functions/standardIO.h"
+#include "GSnakeBInclude/Functions/food.h"
+
+#include <stdio.h>
 
 /**
  * @brief Move user's snake.
@@ -59,9 +61,11 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
         }
         data->usrSnkIsJumping=0;
     }
-    while ( linux_kbhit() ) {
-        key=linux_getch();
+
+    while ( linuxKbhit() > 0 ) {
+        key=getchar();
     }
+
     switch (key) {
     case 'a':
     case 'A':

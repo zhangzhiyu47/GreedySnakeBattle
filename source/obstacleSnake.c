@@ -3,9 +3,9 @@
  * @brief This source realizes the functions about obstacle snake.
  */
 
-#include "Include/Struct/GameAllRunningData.h"
-#include "Include/GlobalVariable/globalVariable.h"
-#include "Include/Functions/food.h"
+#include "GSnakeBInclude/Struct/GameAllRunningData.h"
+#include "GSnakeBInclude/GlobalVariable/globalVariable.h"
+#include "GSnakeBInclude/Functions/food.h"
 #include <stdbool.h>
 #include <time.h>
 #include <stdlib.h>

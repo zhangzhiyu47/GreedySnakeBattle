@@ -6,8 +6,8 @@
 #ifndef USER_INTERFACE_BEFORE_GAME_STARTS_H
 #define USER_INTERFACE_BEFORE_GAME_STARTS_H
 
-#include "../Compat/snakeFullCompat.h"
 #include "../Struct/GameAllRunningData.h"
+#include <unistd.h>
 
 /**
  * @brief Introduce and explain the game in detail.

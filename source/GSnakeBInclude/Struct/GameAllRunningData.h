@@ -10,7 +10,7 @@
 #include <stdbool.h>
 
 /**
- * @brief Include all the game-running data.
+ * @brief GSnakeBInclude all the game-running data.
  */
 typedef struct GameAllRunningData {
     /**

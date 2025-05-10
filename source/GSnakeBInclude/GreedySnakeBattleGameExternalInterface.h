@@ -42,7 +42,6 @@ extern const int SNAKE_UNBLOCK; /* value:0 */
  * @brief The Snake Battle Game opens the only suggested
  *        interface for game applications.
  * @author Zhang Zhiyu
- * @version 2.13.14
  *  
  * ## Header file and function prototype 
  * ```c
@@ -65,7 +64,6 @@ extern const int SNAKE_UNBLOCK; /* value:0 */
  * | :-----: | :------: |
  * | Code language | the C programming language - C99(ISO/IEC 9899:1999) |
  * | Unix-like OS | POSIX.1-2008(Portable Operating System Interface of UNIX) |
- * | Windows OS | Win32 API(Windows Application Programming Interface) |
  *  
  * ## Introduction
  * **The Snake Battle Game opens the only suggested

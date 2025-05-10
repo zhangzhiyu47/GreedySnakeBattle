@@ -3,7 +3,7 @@
  * @brief This source realizes the @ref exitAll function.
  */
 
-#include "Include/Struct/GameAllRunningData.h"
+#include "GSnakeBInclude/Struct/GameAllRunningData.h"
 #include <stdio.h>
 #include <stdlib.h>
 

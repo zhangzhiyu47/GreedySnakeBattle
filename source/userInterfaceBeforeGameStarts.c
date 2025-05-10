@@ -4,14 +4,14 @@
  *        interface before the game starts.
  */
 
-#include "Include/Compat/snakeFullCompat.h"
-#include "Include/Struct/GameAllRunningData.h"
-#include "Include/Struct/GameConfig.h"
-#include "Include/Struct/Point.h"
-#include "Include/GlobalVariable/globalVariable.h"
-#include "Include/Functions/gameSetConfiguration.h"
-#include "Include/Functions/standardIO.h"
-#include "Include/Functions/terminal.h"
+#include "GSnakeBInclude/Struct/GameAllRunningData.h"
+#include "GSnakeBInclude/Struct/GameConfig.h"
+#include "GSnakeBInclude/Struct/Point.h"
+#include "GSnakeBInclude/GlobalVariable/globalVariable.h"
+#include "GSnakeBInclude/Functions/gameSetConfiguration.h"
+#include "GSnakeBInclude/Functions/standardIO.h"
+#include "GSnakeBInclude/Functions/terminal.h"
+#include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 
@@ -41,7 +41,7 @@ void gameIntroduction() {
         "设置只能持续到游戏结束，并且不能自动恢复玩家设置的内容，不建议在该模式下更改游戏设置。\n"
     ;
 
-    clearAll();
+    clearScreen();
     printf("%s",gameIntroText);
     blockWaitUserEnter();
 }
@@ -130,7 +130,7 @@ void configureGame() {
             setConfig_wordColr_scrnColr(&config);
             break;
         }
-        clearAll();
+        clearScreen();
     }
 
     if ( isConfigFileOpenFail==false ) {
@@ -172,7 +172,7 @@ void configureGame() {
  * @retval false No.Then start the game.
  */
 bool showGameMenu(GameAllRunningData *data,const pid_t childProcess) {
-    clearAll();
+    clearScreen();
 
     for ( muint_t menuOptionCode=0; menuOptionCode!=1; ) {
         menuOptionCode=0;
@@ -196,13 +196,13 @@ bool showGameMenu(GameAllRunningData *data,const pid_t childProcess) {
             gameIntroduction();
             break;
         case 3:
-            clearAll();
+            clearScreen();
             configureGame();
             break;
         case 4:
             return true;
         default:
-            clearAll();
+            clearScreen();
         }
     }
     
@@ -215,7 +215,7 @@ bool showGameMenu(GameAllRunningData *data,const pid_t childProcess) {
         fflush(stdout);
         usleep(300*1000u);
     }
-    clearAll();
+    clearScreen();
     return false;
 }
 
@@ -244,7 +244,7 @@ void firstLoginToGameLoading() {
     fflush(stdout);
     
     while ( getchar()!='\n' );
-    clearAll();
+    clearScreen();
 }
 
 /**

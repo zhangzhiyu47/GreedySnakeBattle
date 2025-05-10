@@ -3,7 +3,11 @@
  * @brief This source realizes the functions about signal capturing.
  */
 
-#include "Include/Compat/snakeFullCompat.h"
+
+#include "GSnakeBInclude/Functions/standardIO.h"
+#include "GSnakeBInclude/Functions/terminal.h"
+
+#include <sys/wait.h>
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -42,23 +46,23 @@ void fatherProcessCatchCHLD(int signum) {
 /**
  * @brief Child process captures signal **SIGUSR1**.
  *
- * Invoking function @ref disable_normal_input.
+ * Invoking function @ref trulyDisableNormalInput.
  *
  * @param[in] signum The number of the captured signal.
  */
 void childProcessCatchUSR1(int signum) {
-    disable_normal_input();
+    trulyDisableNormalInput();
 }
 
 /**
  * @brief Child process captures signal **SIGUSR2**.
  *
- * Invoking function @ref enable_normal_input.
+ * Invoking function @ref trulyEnableNormalInput.
  *
  * @param[in] signum The number of the captured signal.
  */
 void childProcessCatchUSR2(int signum) {
-    enable_normal_input();
+    trulyEnableNormalInput();
 }
 
 /**
@@ -70,6 +74,6 @@ void childProcessCatchUSR2(int signum) {
  * @param[in] signum The number of the captured signal.
  */
 void childProcessCatchINT(int signum) {
-    restore_terminal_settings();
+    restoreTerminalSettings();
     exit(0);
 }
