@@ -42,6 +42,22 @@ Point terminalSize();
  * Konsole of KDE, and all terminals based on libvte
  * (including GNOM)) for interface color setting and
  * terminal support color viewing.
+ *
+ * The printed color is divided into three parts.
+ *
+ * 1. Standard color
+ *    1. Standard
+ *    2. Highlight
+ *
+ * 2. 216 colors
+ *    It is divided into six color block groups, and the color
+ *    system of the color in the corresponding position of each
+ *    group is the same, and the color from group 1 to group 6
+ *    is getting lighter and lighter.
+ *
+ * 3. Gray scale color
+ *    1. Dark grey
+ *    2. Light grey
  * 
  * @param[in] config Game configuration of program reading
  *                       and writing configuration files.

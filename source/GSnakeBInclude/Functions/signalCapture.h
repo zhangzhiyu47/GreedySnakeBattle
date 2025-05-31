@@ -41,26 +41,6 @@ void fatherProcessCatchINT(int signum);
 void fatherProcessCatchCHLD(int signum);
 
 /**
- * @brief Child process captures signal **SIGUSR1**.
- * @ingroup SignalCapture
- *
- * Invoking function @ref trulyDisableNormalInput.
- *
- * @param[in] signum The number of the captured signal.
- */
-void childProcessCatchUSR1(int signum);
-
-/**
- * @brief Child process captures signal **SIGUSR2**.
- * @ingroup SignalCapture
- *
- * Invoking function @ref trulyEnableNormalInput.
- *
- * @param[in] signum The number of the captured signal.
- */
-void childProcessCatchUSR2(int signum);
-
-/**
  * @brief Child process captures signal **SIGINT**.
  * @ingroup SignalCapture
  *

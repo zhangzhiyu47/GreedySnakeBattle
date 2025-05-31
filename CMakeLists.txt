@@ -26,9 +26,6 @@ else()  # 其他Linux系统
     add_definitions(-DSNAKE_OS_LINUX=1)
 endif()
 
-# 查找需要的包
-find_package(Doxygen REQUIRED)
-
 # 设置源文件
 set(MAIN_SOURCES
     source/main.c
@@ -36,9 +33,9 @@ set(MAIN_SOURCES
     source/food.c
     source/gameApplicationStartupRelated.c
     source/gameMainLogic.c
-    source/gameSetConfiguration.c
     source/gameStartupRelated.c
     source/globalVariable.c
+    source/logFileWrite.c
     source/obstacleSnake.c
     source/painting.c
     source/signalCapture.c
@@ -51,7 +48,21 @@ set(MAIN_SOURCES
 
 set(LIB_SOURCES
     source/GreedySnakeBattleGameExternalInterface.c
-    ${MAIN_SOURCES}
+    source/exitApp.c
+    source/food.c
+    source/gameApplicationStartupRelated.c
+    source/gameMainLogic.c
+    source/gameStartupRelated.c
+    source/globalVariable.c
+    source/logFileWrite.c
+    source/obstacleSnake.c
+    source/painting.c
+    source/signalCapture.c
+    source/standardIO.c
+    source/terminal.c
+    source/userInterfaceBeforeGameStarts.c
+    source/userSnake.c
+    source/wall.c
 )
 
 # 添加可执行文件
@@ -82,7 +93,7 @@ if(WIN32)
                 ${CMAKE_CURRENT_BINARY_DIR}/app.rc
                 ${CMAKE_CURRENT_BINARY_DIR}/greedy_snake_battle_logo.ico)
         endif()
-    endif()
+        endif()
 endif()
 
 # 添加静态库
@@ -98,6 +109,7 @@ target_include_directories(GreedySnakeBattle PRIVATE
     source/GSnakeBInclude
     source/GSnakeBInclude/Functions
     source/GSnakeBInclude/GlobalVariable
+    source/GSnakeBInclude/LogFile
     source/GSnakeBInclude/Struct
     source/GSnakeBInclude/TypeDefine)
 
@@ -105,6 +117,7 @@ target_include_directories(gsnakebg_static PRIVATE
     source/GSnakeBInclude
     source/GSnakeBInclude/Functions
     source/GSnakeBInclude/GlobalVariable
+    source/GSnakeBInclude/LogFile
     source/GSnakeBInclude/Struct
     source/GSnakeBInclude/TypeDefine)
 
@@ -112,21 +125,21 @@ target_include_directories(gsnakebg_shared PRIVATE
     source/GSnakeBInclude
     source/GSnakeBInclude/Functions
     source/GSnakeBInclude/GlobalVariable
+    source/GSnakeBInclude/LogFile
     source/GSnakeBInclude/Struct
     source/GSnakeBInclude/TypeDefine)
 
 # 链接库
 if(WIN32)
-    target_link_libraries(GreedySnakeBattle PRIVATE kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib)
+    target_link_libraries(GreedySnakeBattle PRIVATE kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib m)
+    target_link_libraries(gsnakebg_static PRIVATE m)
+    target_link_libraries(gsnakebg_shared PRIVATE m)
+else()
+    target_link_libraries(GreedySnakeBattle PRIVATE m)
+    target_link_libraries(gsnakebg_static PRIVATE m)
+    target_link_libraries(gsnakebg_shared PRIVATE m)
 endif()
 
-# Doxygen文档生成
-add_custom_target(API_documents
-    COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_SOURCE_DIR}/Doxyfile.txt
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    COMMENT "Generating API documentation with Doxygen"
-    VERBATIM)
-    
 # 检测Termux环境
 if(ANDROID)
     if(DEFINED ENV{PREFIX})
@@ -221,11 +234,6 @@ else()  # Linux/macOS安装规则
         ")
     endif()
 endif()
-
-# 文档安装(通用)
-install(DIRECTORY ${CMAKE_BINARY_DIR}/API_documents/
-    DESTINATION share/doc/GreedySnakeBattle
-    PATTERN ".svn" EXCLUDE)
 
 # 配置卸载脚本
 configure_file(

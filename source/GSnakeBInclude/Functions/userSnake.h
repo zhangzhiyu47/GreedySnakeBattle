@@ -24,12 +24,15 @@ void userSnakeMove(GameAllRunningData *data);
  *
  * | input | action |
  * | :---: | :----: |
- * | A/7 | ← |
- * | W/5 | ↑ |
- * | S/8 | ↓ |
- * | D/9 | → |
+ * | ←/A/7 | ← |
+ * | ↑/W/5 | ↑ |
+ * | ↓/S/8 | ↓ |
+ * | →/D/9 | → |
  * | j/J | Jump |
- * | f/F | Fly |
+ * | f/F/Tab | Fly |
+ * | p/P | Pause |
+ * | r/R | Repaint |
+ * | Esc | Block game |
  * | o/O | Game over |
  *
  * @param[in,out] data All the game's data when the game is running.

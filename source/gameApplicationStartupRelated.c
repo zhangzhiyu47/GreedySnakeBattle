@@ -7,6 +7,7 @@
 #include "GSnakeBInclude/Struct/Point.h"
 #include "GSnakeBInclude/GlobalVariable/globalVariable.h"
 #include "GSnakeBInclude/Functions/terminal.h"
+#include "GSnakeBInclude/Functions/standardIO.h"
 #include <stdio.h>
 
 /**
@@ -73,18 +74,24 @@ int confgFileInitAndGameIntrfcRndrng() {
 
         if ( fp==NULL ) {
             outlineModeConfig.wallNum=0;
-            outlineModeConfig.isEnableEatSlfGmOver=0;
-            outlineModeConfig.speed=450000u;
-            outlineModeConfig.isEnableObs=0;
-            outlineModeConfig.minScrOpnVctryPnt=5;
             outlineModeConfig.foodNum=1;
+
+            outlineModeConfig.isEnableEatSlfGmOver=0;
+            outlineModeConfig.isEnableObs=0;
+
+            outlineModeConfig.speed=450000u;
+            outlineModeConfig.minScrOpnVctryPnt=5;
             outlineModeConfig.histryHighestScr=0;
+
             outlineModeConfig.wordColr=0;
             outlineModeConfig.scrnColr=231;
+
             WIDE=outlineModeConfig.scrnWide=termSize.y;
-            HIGH=outlineModeConfig.scrnHigh=termSize.x/2-3;
+            HIGH=outlineModeConfig.scrnHigh=termSize.x-5;
 
             printf("配置文件打开失败，马上开启离线模式(您的设置信息可能会丢失)\n");
+            blockWaitUserEnter();
+            clearScreen();
             ret=-1;
         } else {
             GameConfig config= {0};

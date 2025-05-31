@@ -11,7 +11,6 @@
 #include "GSnakeBInclude/Functions/gameStartupRelated.h"
 #include "GSnakeBInclude/Functions/signalCapture.h"
 #include "GSnakeBInclude/Functions/gameMainLogic.h"
-#include "GSnakeBInclude/Functions/standardIO.h"
 #include "GSnakeBInclude/Functions/terminal.h"
 #include "GSnakeBInclude/Functions/exitApp.h"
 
@@ -37,6 +36,7 @@ int main(int argc,char* argv[]) {
         exit(1);
     } else if (pid==0) {
         initTerminalSettings();
+        atexit(restoreTerminalSettings);
 
         close(fd[0]);
         prctl(PR_SET_PDEATHSIG,SIGINT);
@@ -51,26 +51,6 @@ int main(int argc,char* argv[]) {
             return 1;
         }
         
-        struct sigaction saUSR1;
-        saUSR1.sa_handler = &childProcessCatchUSR1;
-        sigemptyset(&saUSR1.sa_mask);
-        saUSR1.sa_flags = 0;
-        if (sigaction(SIGUSR1, &saUSR1, NULL) == -1) {
-            perror("sigaction error");
-            printf("错误，游戏无法启动，正在退出！\n");
-            return 1;
-        }
-        
-        struct sigaction saUSR2;
-        saUSR2.sa_handler = &childProcessCatchUSR2;
-        sigemptyset(&saUSR2.sa_mask);
-        saUSR2.sa_flags = 0;
-        if (sigaction(SIGUSR2, &saUSR2, NULL) == -1) {
-            perror("sigaction error");
-            printf("错误，游戏无法启动，正在退出！\n");
-            return 1;
-        }
-
         char buf[4096];
         int ret=0;
         while (1) {
@@ -80,13 +60,17 @@ int main(int argc,char* argv[]) {
                 if (buf[i]=='e' || buf[i]=='E') {
                     kill(getppid(),SIGINT);
                     close(fd[1]);
-                    while (1);
+                    while (1) {
+                        pause();
+                    }
                 }
             }
 
             write(fd[1],buf,ret);
         }
     } else if (pid>0) {
+        childPid = pid;
+        
         close(fd[1]);
         dup2(fd[0],STDIN_FILENO);
 
@@ -120,7 +104,7 @@ int main(int argc,char* argv[]) {
             return 1;
         }
 
-        printf("\033[?25l"); // 隐藏光标
+        printf("\033[?25l");
         clearScreen();
 
         printf("\033[48;5;");
@@ -138,8 +122,6 @@ int main(int argc,char* argv[]) {
         }
 
         do {
-            enableNormalInput(pid);
-
             memset(data,0,sizeof(GameAllRunningData));
             if ( showGameMenu(data,pid) ) break;
             

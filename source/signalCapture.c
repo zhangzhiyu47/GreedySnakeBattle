@@ -4,7 +4,6 @@
  */
 
 
-#include "GSnakeBInclude/Functions/standardIO.h"
 #include "GSnakeBInclude/Functions/terminal.h"
 
 #include <sys/wait.h>
@@ -23,6 +22,7 @@ void fatherProcessCatchINT(int signum) {
     printf("\n游戏结束\n");
     printf("\033[?25h\033[0m");
     fflush(stdout);
+
     exit(0);
 }
 
@@ -41,28 +41,6 @@ void fatherProcessCatchCHLD(int signum) {
         printf("警告，子进程死亡，游戏出错，正在退出游戏！\n");
         exit(1);
     }
-}
-
-/**
- * @brief Child process captures signal **SIGUSR1**.
- *
- * Invoking function @ref trulyDisableNormalInput.
- *
- * @param[in] signum The number of the captured signal.
- */
-void childProcessCatchUSR1(int signum) {
-    trulyDisableNormalInput();
-}
-
-/**
- * @brief Child process captures signal **SIGUSR2**.
- *
- * Invoking function @ref trulyEnableNormalInput.
- *
- * @param[in] signum The number of the captured signal.
- */
-void childProcessCatchUSR2(int signum) {
-    trulyEnableNormalInput();
 }
 
 /**

@@ -7,6 +7,8 @@
 #include "GSnakeBInclude/Struct/GameAllRunningData.h"
 #include "GSnakeBInclude/Struct/GameConfig.h"
 #include "GSnakeBInclude/Functions/obstacleSnake.h"
+#include "GSnakeBInclude/Functions/standardIO.h"
+#include "GSnakeBInclude/Functions/terminal.h"
 #include "GSnakeBInclude/Functions/wall.h"
 #include "GSnakeBInclude/Functions/food.h"
 #include <stdio.h>
@@ -29,8 +31,13 @@ void initAllGameData(GameAllRunningData *data) {
         FILE *fp=fopen("./.贪_吃_蛇_大_作_战_的_所_有_设_置_信_息_勿_动.data","r");
         if ( fp==NULL ) {
             printf("配置文件打开失败，马上开启离线模式(您的设置信息可能会丢失)\n");
+
             isConfigFileOpenFail=true;
+
             config=outlineModeConfig;
+
+            blockWaitUserEnter();
+            clearScreen();
         } else {
             fread(&config,sizeof(GameConfig),1,fp);
             fclose(fp);

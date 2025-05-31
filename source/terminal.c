@@ -73,26 +73,89 @@ Point terminalSize() {
  * Konsole of KDE, and all terminals based on libvte
  * (including GNOM)) for interface color setting and
  * terminal support color viewing.
+ *
+ * The printed color is divided into three parts.
+ *
+ * 1. Standard color
+ *    1. Standard
+ *    2. Highlight
+ *
+ * 2. 216 colors
+ *    It is divided into six color block groups, and the color
+ *    system of the color in the corresponding position of each
+ *    group is the same, and the color from group 1 to group 6
+ *    is getting lighter and lighter.
+ *
+ * 3. Gray scale color
+ *    1. Dark grey
+ *    2. Light grey
  * 
  * @param[in] config Game configuration of program reading
  *                       and writing configuration files.
  */
-void terminal256ColorTablePainting(const GameConfig *config) {
+void terminal256ColorTablePainting(const GameConfig* config) {
+    const int colorGroup[] = {
+        16, 17, 18, 19, 20, 21,
+        52, 53, 54, 55, 56, 57,
+        88, 89, 90, 91, 92, 93,
+        124, 125, 126, 127, 128, 129,
+        160, 161, 162, 163, 164, 165,
+        196, 197, 198, 199, 200, 201,
+    };
+    
     clearScreen();
-    Point termSize=terminalSize();
-    int paintingNumberCount=1;
-    int MaxNumPaintPerLine=(termSize.y-termSize.y%5)/5;
 
-    for ( int i=0; i<=255; i++,paintingNumberCount++ ) {
-        printf("\033[48;5;%dm",i);
-        printf("\033[38;5;%dm %3d ",i==15 || i==231 || i==255 || i==254?0:15,i);
-        if ( paintingNumberCount==MaxNumPaintPerLine ) {
-            printf("\n");
-            paintingNumberCount=0;
+    for (int i = 0; i <= 15; ++i) {
+        if (i == 0) {
+            printf("标准颜色\n");
+            printf("\033[38;5;%dm", 15);
+        } else if (i == 8) {
+            printf("\033[48;5;%dm", config->scrnColr);
+            printf("\033[38;5;%dm", config->wordColr);
+            printf("\n\n高强度颜色\n");
+            printf("\033[38;5;%dm", 0);
+        }
+        printf("\033[48;5;%dm %3d ", i, i);
+    }
+
+    printf("\033[48;5;%dm", config->scrnColr);
+    printf("\033[38;5;%dm", config->wordColr);
+    printf("\n\n216种颜色\n");
+
+    for (int i = 0; i < 6; ++i) {
+        printf("\033[48;5;%dm", config->scrnColr);
+        printf("\033[38;5;%dm", config->wordColr);
+        printf("\n第%d颜色块组\n", i + 1);
+
+        if (i <= 4) {
+            printf("\033[38;5;15m");
+        } else {
+            printf("\033[38;5;0m");
+        }
+
+        for (int j = 0; j < 36; ++j) {
+            printf("\033[48;5;%dm %3d ", colorGroup[j] + i * 6, colorGroup[j] + i * 6);
+            if ((j + 1) % 6 == 0) {
+                printf("\033[48;5;%dm\n", config->scrnColr);
+            }
         }
     }
     
-    printf("\033[48;5;%dm",config->scrnColr);
-    printf("\033[38;5;%dm",config->wordColr);
+    for (int i = 232; i <= 255; ++i) {
+        if (i == 232) {
+            printf("\n\n深灰度颜色\n");
+            printf("\033[38;5;%dm", 15);
+        } else if (i == 244) {
+            printf("\033[48;5;%dm", config->scrnColr);
+            printf("\033[38;5;%dm", config->wordColr);
+            printf("\n\n浅灰度颜色\n");
+            printf("\033[38;5;%dm", 0);
+        }
+        printf("\033[48;5;%dm %3d ", i, i);
+    }
+
+    printf("\033[48;5;%dm", config->scrnColr);
+    printf("\033[38;5;%dm", config->wordColr);
+    putchar('\n');
     blockWaitUserEnter();
 }

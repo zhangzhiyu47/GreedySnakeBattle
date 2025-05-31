@@ -6,13 +6,11 @@
 
 - [项目概述](#项目概述)
 - [项目许可证](#项目许可证)
-- [游戏特点](#游戏特点)
 - [游戏控制](#游戏控制)
 - [游戏元素](#游戏元素)
 - [游戏流程](#游戏流程)
 - [离线模式](#离线模式)
-- [签名验证](#签名验证)
-- [Windows下游戏需要](Windows下游戏需要)
+- [Windows下需要](Windows下需要)
 - [游戏接口](#游戏接口)
 - [构建与安装](#构建与安装)
 - [跨平台支持](#跨平台支持)
@@ -56,19 +54,8 @@
 
 MIT许可证：[LICENSE.txt](./LICENSE.txt)
 
----
-## 游戏特点
-
-- 经典贪吃蛇游戏玩法
-- 支持自定义游戏设置
-- 跨平台支持（Windows(需要Cygwin)/Linux/MacOS/Termux)
-- 提供阻塞和非阻塞两种运行模式
-- 完善的API接口
-- 详细的文档支持
-
 ## 游戏控制
 
-![游戏对局中](./picture/game_running.jpg)  
 | 按键 | 功能 |
 | :--: | :--: |
 | W | 向上移动 |
@@ -77,10 +64,12 @@ MIT许可证：[LICENSE.txt](./LICENSE.txt)
 | D | 向右移动 |
 | E | 立即退出游戏 |
 | O | 退出当前对局 |
+| J | 跳跃一格 |
+| F | 持续跳跃 |
+| P | 暂停当前对局 |
 
 ## 游戏元素
 
-![游戏介绍](./picture/introduction.jpg)
 | 符号 | 代表元素 |
 |------|----------|
 | @ | 蛇头 |
@@ -92,41 +81,46 @@ MIT许可证：[LICENSE.txt](./LICENSE.txt)
 ## 游戏流程
 
 - 1. **客户端资源加载**（如果自行修改源代码后编译，可选择是否保留  
-   ![客户端资源加载界面](./picture/client_resource_loading.jpg)  
+
 - 2. **首次登录加载界面**（仅第一次运行游戏时显示，如果自行修改源代码后编译，可选择是否保留  
-   ![首次加载界面](./picture/first_login_loading.jpg)  
 
 - 3. **主菜单界面**
-
-   ![主菜单界面](./picture/menu.jpg)
-
-   | 选项 | 功能 |
-   | :--: | :--: |
-   | 1 | 开始游戏 |
-   | 2 | 游戏说明 |
-   | 3 | 游戏设置 |
-   | 4 | 退出游戏 |
+    按*上下键(或W,S)*移动**>**进行选择，按下*Tab*或*回车*表示确认选择
+    | 功能 |
+    | :--: |
+    | 开始游戏 |
+    | 游戏说明 |
+    | 游戏设置 |
+    | 退出游戏 |
 
 - 4. **游戏设置界面**
-
-   ![设置界面](./picture/set_game.jpg)
-
-   可配置选项包括：
-   - 蛇吃到自己是否退出
-   - 蛇移动速度
-   - 胜利点所需积分
-   - 食物数量
-   - 围墙数量
-   - 是否开启系统小蛇
-   - 游戏界面大小
-   - 游戏背景颜色
-   - 全部设置默认等
+    按*上下键(或W,S)*移动**>**进行选择，按下*Tab*或*回车*表示确认选择  
+    进行设置时，下划线所在且高亮的数字为当前调整的一个数字，可以通过*上下键(或W,S)或直接输入数字调整*。可以通过*左右键(或A,D)*移动要调整的数字  
+    可配置选项包括：
+    - 蛇吃到自己是否退出
+    - 蛇移动速度
+    - 胜利点所需积分
+    - 食物数量
+    - 围墙数量
+    - 是否开启系统小蛇
+    - 游戏界面大小
+    - 游戏背景颜色
+    - 全部设置默认等
 
 - 5. **游戏运行界面**
 
-   ![游戏运行界面](./picture/game_running.jpg)
+| 按键 | 功能 |
+| :--: | :--: |
+| W | 向上移动 |
+| A | 向左移动 |
+| S | 向下移动 |
+| D | 向右移动 |
+| E | 立即退出游戏 |
+| O | 退出当前对局 |
+| J | 跳跃一格 |
+| F | 持续跳跃 |
 
-- 6. **游戏结束**（胜利或失败）
+- 6. **游戏结束**
 
 ---
 ## 离线模式
@@ -145,245 +139,11 @@ MIT许可证：[LICENSE.txt](./LICENSE.txt)
     - 离线模式一旦开启，在游戏结束前无法关闭
 
 ---
-## 签名验证
+## Windows下需要
 
 > 若您不是*开发人员*或*无查看游戏接口的需要*，则无需阅读以下内容。
 
-### 预备
-
-需要：GPG：GPG官网：[https://gnupg.org](https://gnupg.org)  
-Windows版本(GPG4Win) [https://gpg4win.org](https://gpg4win.org)  
-
-#### **安装GPG**
-
-##### **Windows**
-1. 下载安装 [GPG4Win](https://gpg4win.org/download.html)。
-2. 安装时勾选**"GPG (GnuPG) Command Line"** 以确保 `gpg.exe` 可用。
-
-##### **Linux/MacOS**
-
-- Linux
-    ```bash
-    sudo (安装包管理器) install gnupg
-    ```
-    把`(安装包管理器)`替换为系统的安装包管理器(如，Ubuntu/Debian替换为apt)
-- MacOS
-    ```shell
-    brew install gnupg
-    ```
-
-### 1.解压签名文件
-
-- 1.Linux/MacOS操作系统
-    ```bash
-    unzip signatures.zip        # 直接解压到signatures目录，无需单独创建目录
-    ```
-- 2.Windows操作系统
-    使用Windows内置功能。  
-    - 1. 打开文件资源管理器，找到项目根目录下的`signatures.zip`文件。  
-    - 2. 双击`signatures.zip`，系统会自动用“*文件资源管理器*”打开。  
-    - 3. 点击顶部菜单的“*解压全部*”，选择当前目录后点击“解压”。  
-
-### 2.导入公钥(位于项目根目录下)：
-
-```bash
-gpg --import ./signatures/PublicKey/GreedySnakeBattle_PublicKey.asc
-```
-
-### 3.验证签名：
-
-- 单个文件验证(以LICENSE.txt文件为例)
-    ```bash
-    gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
-    ```
-
-- 批量验证
-    - 源文件验证(Unix-Like)
-        ```bash
-        find source/ -type f \( -name "*.c" -o -name "*.h" \) -exec sh -c 'gpg --verify signatures/$(basename {}).asc {}' \;
-        ```
-    - LICENSE.txt许可证文档验证
-        ```bash
-        gpg --verify signatures/LICENSE.txt.asc LICENSE.txt
-        ```
-
-- 确认输出
-    1. 包含`Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>`表示源文件和签名未被修改。 b
-        ```txt
-        gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
-        gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
-        gpg: Good signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>" [ultimate]
-        ```
-    
-    2. 包含`BAD signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>`表示**源文件和签名被篡改**。  
-        **此时不建议再使用这些文件，因为这些文件可能被篡改过，可能存在未知风险！！！**  
-        ```txt
-        gpg: Signature made 20XX-XX-XX XX:XX:XX +0800 CST
-        gpg:                using RSA key CAD77FD957132D24B9B75D1AFFAB5EB03E8460D0
-        gpg: BAD signature from "Zhang Zhiyu (A C And Cpp Development Designer) <2585689367@qq.com>" [ultimate]
-        ```
-
----
-### 自动化检查脚本
-
-#### Windows
-
-将以下脚本保存为 `verify_all.ps1`，放在项目根目录运行：
-```powershell
-# 导入公钥（如果尚未导入）
-$publicKey = ".\signatures\PublicKey\GreedySnakeBattle_PublicKey.asc"
-gpg --import $publicKey
-
-# 验证源码文件
-Get-ChildItem -Path .\source -Recurse -Include *.c, *.h | ForEach-Object {
-    $sigFile = ".\signatures\" + $_.Name + ".asc"
-    if (Test-Path $sigFile) {
-        Write-Host "验证文件: $($_.FullName)"
-        gpg --verify $sigFile $_.FullName
-        
-        # 错误检查
-        if ($LASTEXITCODE -ne 0) {
-            Write-Host "错误: $($_.FullName) 验证失败！" -ForegroundColor Red
-            exit 1
-        }
-    }
-}
-
-# 验证 LICENSE.txt
-gpg --verify .\signatures\LICENSE.txt.asc .\LICENSE.txt
-
-Write-Host "验证完成！检查是否有 'BAD signature' 输出。" -ForegroundColor Green
-```
-
-以管理员身份运行PowerShell，然后执行：
-```powershell
-Set-ExecutionPolicy RemoteSigned -Scope Process  # 允许运行脚本
-```
-```powershell
-.\verify_all.ps1
-```
-
-#### Linux/MacOS
-
-##### **1. 脚本内容**  
-
-将以下代码保存为 `verify_signatures.sh`，并放在项目根目录：  
-```bash
-#!/bin/bash
-
-# ------------------------------------------
-# GreedySnakeBattle 签名验证脚本 (Linux/MacOS)
-# 功能：自动验证所有 .c/.h/README.md/LICENSE.txt 的 GPG 签名
-# 用法：./verify_signatures.sh
-# ------------------------------------------
-
-# 检查是否安装了 GPG
-if ! command -v gpg &> /dev/null; then
-    echo "❌ 错误：GPG 未安装！请先安装："
-    echo "  - Debian/Ubuntu: sudo apt install gnupg"
-    echo "  - MacOS: brew install gnupg"
-    exit 1
-fi
-
-# 定义签名目录和公钥路径
-SIGNATURES_DIR="./signatures"
-PUBLIC_KEY="$SIGNATURES_DIR/PublicKey/GreedySnakeBattle_PublicKey.asc"
-
-# 检查签名目录是否存在
-if [ ! -d "$SIGNATURES_DIR" ]; then
-    echo "❌ 错误：签名目录 $SIGNATURES_DIR 不存在！"
-    exit 1
-fi
-
-# 检查公钥是否存在
-if [ ! -f "$PUBLIC_KEY" ]; then
-    echo "❌ 错误：公钥文件 $PUBLIC_KEY 未找到！"
-    exit 1
-fi
-
-# 导入公钥
-echo "🔑 导入公钥..."
-gpg --import "$PUBLIC_KEY" 2> /dev/null
-if [ $? -ne 0 ]; then
-    echo "❌ 错误：公钥导入失败！"
-    exit 1
-fi
-
-# 验证所有源码文件（.c 和 .h）
-echo "🔍 开始验证源码文件..."
-FAILED=0
-for file in $(find ./source -type f \( -name "*.c" -o -name "*.h" \)); do
-    sig_file="$SIGNATURES_DIR/$(basename $file).asc"
-    if [ -f "$sig_file" ]; then
-        echo "📄 验证: $file"
-        gpg --verify "$sig_file" "$file" 2> /dev/null
-        if [ $? -ne 0 ]; then
-            echo "❌ 验证失败: $file"
-            FAILED=1
-        fi
-    else
-        echo "⚠️ 警告: 未找到签名文件: $sig_file"
-    fi
-done
-
-# 验证 LICENSE.txt
-echo "📜 验证文档文件..."
-for file in "LICENSE.txt"; do
-    sig_file="$SIGNATURES_DIR/$file.asc"
-    if [ -f "$sig_file" ]; then
-        echo "📄 验证: $file"
-        gpg --verify "$sig_file" "$file" 2> /dev/null
-        if [ $? -ne 0 ]; then
-            echo "❌ 验证失败: $file"
-            FAILED=1
-        fi
-    else
-        echo "⚠️ 警告: 未找到签名文件: $sig_file"
-    fi
-done
-
-# 最终结果
-if [ $FAILED -eq 0 ]; then
-    echo "✅ 所有文件验证通过！"
-else
-    echo "❌ 部分文件验证失败，请检查日志！"
-    exit 1
-fi
-```
-
-##### **2. 使用方法**
-
-1. **赋予脚本执行权限**：  
-   ```bash
-   chmod +x verify_signatures.sh
-   ```
-
-2. **运行脚本**：  
-   ```bash
-   ./verify_signatures.sh
-   ```
-
-3. **预期输出**：  
-   - 自动检查依赖：
-     如果未安装 GPG，会提示用户安装  
-   - 批量验证：
-    ;自动遍历 `./source/` 下的所有 `.c` 和 `.h` 文件  
-   - 如果所有文件验证通过：  
-     ```txt
-     ✅ 所有文件验证通过！
-     ```
-   - 如果某些文件验证失败：  
-     ```txt
-     ❌ 验证失败: ./source/main.c
-     ❌ 部分文件验证失败，请检查日志！
-     ```
-   - 如果签名文件缺失：
-     会提示警告（`⚠️`）。  
-
----
-## Windows下游戏需要
-
-Cygwin是一个在Windows上提供完整Linux-like环境的工具，它允许你在Windows上使用大多数Linux命令和工具。以下是获取和安装Cygwin的详细步骤：
+Cygwin是一个在Windows上提供完整Linux-like环境的工具，它使你可以在Windows上使用大多数Linux命令和工具。以下是获取和安装Cygwin的详细步骤：
 
 ### 1. 下载Cygwin
 
@@ -435,10 +195,8 @@ Cygwin是一个在Windows上提供完整Linux-like环境的工具，它允许你
 
 1. 在搜索框中输入你需要的包，例如：
    - `gcc` (GNU编译器集合)
-   - `make` (构建工具)
+   - `make` 和 `cmake` (构建工具)
    - `gdb` (调试器)
-   - `vim` 或 `emacs` (编辑器)
-   - `openssh` (SSH客户端/服务器)
    - `git` (版本控制)
 
 2. 点击每个包旁边的"Skip"将其变为版本号，表示要安装
@@ -511,12 +269,13 @@ uname -a
 或者使用Cygwin的命令行安装工具`apt-cyg`：
 
 ```bash
-# 首先安装apt-cyg
-lynx -source rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg
+lynx -source rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg # 首先安装apt-cyg
+```
+```bash
 install apt-cyg /bin
-
-# 然后使用apt-cyg安装包
-apt-cyg install nano
+```
+```bash
+apt-cyg install 包名 # 然后使用apt-cyg安装包
 ```
 
 ### 6. 使用Cygwin开发
@@ -577,8 +336,8 @@ gcc program.c -o program
 `isBlockRunning`: 贪吃蛇大作战游戏运行是否阻塞调用该函数的进程。 
 | 宏(实为全局常量) | 行为 |
 | :----: | :-----: |
-| SNAKE_BLOCK | 阻塞运行 |
-| SNAKE_UNBLOCK | 非阻塞运行 |
+| SNAKE\_BLOCK | 阻塞运行 |
+| SNAKE\_UNBLOCK | 非阻塞运行 |
 
 ### 返回值
 
@@ -630,7 +389,6 @@ int main() {
 
 - CMake 3.10+
 - C编译器 (GCC/Clang/MSVC)
-- Doxygen (用于文档生成)(若没有也可以)
 
 ### 构建步骤
 
@@ -654,27 +412,6 @@ cmake ..    # 执行CMake
          ```
          生成GreedySnakeBattle(.exe)可执行文件，libgsnakebg.so动态库和libgsnakebg.a静态库。
     
-    - 2. 执行Make生成API文档
-         - 1. 有Doxygen命令程序
-              ```bash
-              make API_documents     # 生成API文档
-              ```
-         - 2. 无Doxygen命令程序
-              - 1.解压API文档文件.  
-                  - 1.Linux/MacOS操作系统
-                      ```bash
-                      unzip ../pre_generated_API_documents.zip      # 直接解压到./pre_generated_API_documents目录，无需自行创建目录或移动目录
-                      ```
-                  - 2.Windows操作系统
-                      使用Windows内置功能。  
-                      - 1. 打开*文件资源管理器*，找到项目根目录下的`pre_generated_API_document.zip`文件。
-                      - 2. 双击`pre_generated_API_documents.zip`，系统会自动用*“文件资源管理器”*打开。
-                      - 3. 点击顶部菜单的*“解压全部”*，选择`build`目录后点击*“解压”*。
-              - 2.重命名
-                  ```bash
-                  mv pre_generated_API_documents API_documents          # 把 pre_generated_API_documents 重命名为 API_documents
-                  ```
-
 ### 执行Make进行安装/卸载
 
 #### 安装
@@ -695,8 +432,7 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
 2. **库文件**：
    - 静态库：`libgsnakebg.a`
    - 动态库：`libgsnakebg.so` (Windows下为 `libgsnakebg.dll`)
-3. **头文件**：`Include/` 目录下的所有头文件
-4. **API文档**：HTML格式的API文档
+3. **头文件**：`GSnakeBInclude/` 目录下的所有头文件
 
 ---
 ## 跨平台支持
@@ -707,7 +443,6 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
     - 需要Cygwin
     - 自动创建桌面快捷方式
     - 设置应用图标
-    - 使用Win32 API实现终端控制
 
 2. **Linux**:
     - 标准Unix安装路径
@@ -757,7 +492,7 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
 ```c
 /**
  * @file GreedySnakeBattleGameExternalInterface.c
- * @brief 该文件实现了 @ref GreedySnakeBattleGameExternalInterface 功能
+ * @brief This file implements the GreedySnakeBattleGameExternalInterface function.
  * @author Zhang Zhiyu
  */
 ```
@@ -765,12 +500,11 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
 ✅ **函数注释**（详细说明函数作用、参数、返回值）：  
 ```c
 /**
- * @brief 初始化终端设置
- * @ingroup OSAdapt
+ * @brief Initialize terminal settings
  * 
- * 保存原始终端模式并启用 ANSI 转义码支持。
+ * Save the original terminal mode and enable ANSI escape code support.
  */
-static void windowsInitConsole() {
+static void initTerminalSettings() {
     // ...
 }
 ```
@@ -779,27 +513,26 @@ static void windowsInitConsole() {
 ```c
 /**
  * @struct GameAllRunningData
- * @brief 存储游戏运行时的所有数据
+ * @brief Store all data when the game is running.
  */
 typedef struct {
-    int score;  /**< 当前分数 */
+    int score;  /**< Current score */
     // ...
 } GameAllRunningData;
 ```
 
 ❌ **避免**：
 - 单行注释 `//` 仅用于临时调试，正式代码应使用 `/** */` 或 `/* */`。  
-- 无意义的注释，如 `// 这是一个变量`。  
+- 无意义的注释，如 `// This is a variable.`。  
 
 #### **贡献者注意事项**：
-- **新增函数/文件** 必须包含完整的Doxygen注释。  
-- **修改函数** 时，更新对应的`@brief`和`@param`等说明。  
+- **修改函数** 时，更新对应的说明。  
 - **关键逻辑** 应补充`@note`或`@attention`说明特殊情况。  
 
 ---
 ### **2.命名规则（Qt风格）**
 
-采用**Qt的命名风格**，但略有调整：  
+采用**Qt的命名风格**：  
 
 #### **规则**：
 | 类型 | 命名风格 | 示例 |
@@ -826,7 +559,7 @@ typedef struct {
 ✅ **大括号`{}`**：
 - **K&R 风格**（左大括号不换行）：  
 ```c
-if ( condition ) {
+if (condition) {
     // code
 }
 ```
@@ -835,7 +568,7 @@ if ( condition ) {
 - 运算符两侧加空格：  
 ```c
 int sum = a + b;
-if ( score > 100 ) { ... }
+if (score > 100) { ... }
 ```
 - 函数参数逗号后加空格：  
 ```c
@@ -848,7 +581,6 @@ void foo(int a, int b, int c);
 
 #### **贡献者注意事项**：
 - **新增代码** 必须遵循现有缩进和括号风格。  
-- **修改代码** 时保持风格一致，不要混用 `if (x){` 和 `if (x) {`。  
 - **复杂逻辑** 应拆分成小函数，避免超长函数。  
 
 ---
@@ -858,10 +590,5 @@ void foo(int a, int b, int c);
 | **注释** | Doxygen&Javadoc风格，函数、文件、关键变量必须注释 |
 | **命名** | 如上 |
 | **代码风格** | 4空格缩进，K&R大括号，指针`*`靠近变量 |
-
-### **如何检查？**  
-1. **Clang-Format**（可配置 `.clang-format` 文件）。  
-2. **Doxygen**生成文档，检查注释完整性。  
-3. **代码审查**时人工核对命名和风格。  
 
 希望贡献者能保持代码风格统一，提高可维护性！

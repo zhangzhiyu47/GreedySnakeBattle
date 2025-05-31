@@ -8,9 +8,10 @@
 #include "GSnakeBInclude/Struct/GameConfig.h"
 #include "GSnakeBInclude/Struct/Point.h"
 #include "GSnakeBInclude/GlobalVariable/globalVariable.h"
-#include "GSnakeBInclude/Functions/gameSetConfiguration.h"
 #include "GSnakeBInclude/Functions/standardIO.h"
 #include "GSnakeBInclude/Functions/terminal.h"
+#include "GSnakeBInclude/Functions/painting.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
@@ -57,14 +58,31 @@ void gameIntroduction() {
  */
 void configureGame() {
     GameConfig config={0};
-    FILE *fp=NULL;
+    FILE* fp=NULL;
+    char* entry[] = {
+        "蛇吃到自己是否退出********",
+        "蛇移一格需要的秒数********",
+        "开启胜利点所需积分********",
+        "食物的初始化的数量********",
+        "围墙的初始化的数量********",
+        "是否开启系统的小蛇********",
+        "所有设置一键初始化********",
+        "设置游戏界面的宽高********",
+        "设置游戏的背景颜色********",
+        "退出游戏的设置界面********",
+    };
+    char tip[256] = { 0 };
 
     if ( isConfigFileOpenFail==false ) {
         fp=fopen("./.贪_吃_蛇_大_作_战_的_所_有_设_置_信_息_勿_动.data","r");
         if ( fp==NULL ) {
             printf("配置文件打开失败，马上开启离线模式(您的设置信息可能会丢失)\n");
+
             isConfigFileOpenFail=true;
             config=outlineModeConfig;
+
+            blockWaitUserEnter();
+            clearScreen();
         } else {
             fread(&config,sizeof(GameConfig),1,fp);
             fclose(fp);
@@ -77,68 +95,135 @@ void configureGame() {
     HIGH=config.scrnHigh;
     WIDE=config.scrnWide;
 
-    for ( muint_t setOptionCode=2; setOptionCode<=10 && setOptionCode>=1; ) {
-        setOptionCode=0;
-        if ( isConfigFileOpenFail) {
-            printf("(当前是离线模式)\n");
-        }
-        
-        printf("01：蛇吃到自己是否退出：%s\n",config.isEnableEatSlfGmOver?"是":"否");
-        printf("02：蛇移一格需要的秒数：%.2f\n",config.speed/1000000.0);
-        printf("03：开启胜利点所需积分：%d\n",config.minScrOpnVctryPnt*10);
-        printf("04：食物的初始化的数量：%d\n",config.foodNum);
-        printf("05：围墙的初始化的数量：%d\n",config.wallNum);
-        printf("06：是否开启系统的小蛇：%s\n",config.isEnableObs?"是":"否");
-        printf("07：所有设置一键初始化：无参数\n08：贪吃蛇历史最高记录：%d分\n",config.histryHighestScr*10);
-        printf("09：设置游戏界面的长宽：垂直长度：%d  水平长度：%d\n",HIGH,WIDE);
-        printf("10：设置游戏的背景颜色：字体：%d  背景：%d\n",config.wordColr,config.scrnColr);
-        printf("注：输入错误的的数值将不改变原来的数值\n");
-        printf("请输入你要修改的号码（输入其他将直接退出）：");
-        fflush(stdout);
+    for ( muint_t setOptionCode=1; setOptionCode != 10; ) {
+        tip[0] = '\0';
+        setOptionCode = selectInterfacePainting(10, entry, setOptionCode);
 
-        scanf("%u",&setOptionCode);
-        while ( getchar()!='\n' );
-
-        switch ( setOptionCode ) {
+        switch (setOptionCode) {
         case 1:
-            setConfig_isEnableEatSlfGmOver(&config);
+            snprintf(tip, sizeof(tip), "> %s\b\b\b\b\b\b\b\b(1->YES):", entry[0]);
+            config.isEnableEatSlfGmOver = adjustNumberPainting(
+                                            config.isEnableEatSlfGmOver,
+                                            0, 1, 0, tip, "", config);
             break;
+
         case 2:
-            setConfig_speed(&config);
+            snprintf(tip, sizeof(tip), "> %s\b\b\b\b\b\b\b\b(0.2-2s):", entry[1]);
+            config.speed = 1000 * 1000 * adjustNumberPainting(
+                                           (double)config.speed / 1000.0 / 1000.0,
+                                           2, 2.0, 0.2, tip, "", config);
+            config.speed -= config.speed % 10000;
             break;
+
         case 3:
-            setConfig_minScrOpnVctryPnt(&config);
+            snprintf(tip, sizeof(tip), "> %s\b\b\b\b\b\b\b\b(30-500):", entry[2]);
+            config.minScrOpnVctryPnt = adjustNumberPainting(
+                                         config.minScrOpnVctryPnt,
+                                         0, 50, 3, tip, "0", config);
             break;
+
         case 4:
-            setConfig_foodNum(&config);
+            snprintf(tip, sizeof(tip), "> %s\b\b\b\b\b\b\b\b(1-20):", entry[3]);
+            config.foodNum = adjustNumberPainting(
+                               config.foodNum,
+                               0, 20, 1, tip, "", config);
             break;
+
         case 5:
-            setConfig_wallNum(&config);
+            snprintf(tip, sizeof(tip), "> %s\b\b\b\b\b\b\b\b(0-15):", entry[4]);
+            config.wallNum = adjustNumberPainting(
+                               config.wallNum,
+                               0, 15, 0, tip, "", config);
             break;
+
         case 6:
-            setConfig_isEnableObs(&config);
+            snprintf(tip, sizeof(tip), "> %s\b\b\b\b\b\b\b\b(1->YES):", entry[5]);
+            config.isEnableObs = adjustNumberPainting(
+                                   config.isEnableObs,
+                                   0, 1, 0, tip, "", config);
             break;
+
         case 7:
-            setConfigAllToDefault(&config);
+            {
+                Point termSize=terminalSize();
+
+                config.wallNum=0;
+                config.foodNum=1;
+
+                config.isEnableObs=0;
+                config.isEnableEatSlfGmOver=0;
+
+                config.speed=450000u;
+                config.minScrOpnVctryPnt=5;
+
+                config.wordColr=0;
+                config.scrnColr=231;
+
+                config.scrnHigh=HIGH=termSize.x-5;
+                config.scrnWide=WIDE=termSize.y;
+            }
             break;
+
         case 8:
+            snprintf(tip, sizeof(tip), "> %s\b\b\b\b\b\b\b\b(10-%d):", entry[7], terminalSize().y);
+            config.scrnWide = adjustNumberPainting(
+                                config.scrnWide,
+                                0, terminalSize().y, 10, tip, " (当前设置:宽)", config);
+
+            snprintf(tip, sizeof(tip), "> %s\b\b\b\b\b\b\b\b(5-%d):", entry[7], terminalSize().x - 5);
+            config.scrnHigh = adjustNumberPainting(
+                                config.scrnHigh,
+                                0, terminalSize().x - 5, 5, tip, " (当前设置:高)", config);
             break;
+
         case 9:
-            setConfig_scrnHigh_scrnWide(&config);
-            break;
-        case 10:
-            setConfig_wordColr_scrnColr(&config);
+            snprintf(tip, sizeof(tip), "> %s\b\b\b\b\b\b\b\b(0-255):", entry[8]);
+
+            do {
+                config.scrnColr = adjustNumberPainting(
+                                    config.scrnColr,
+                                    0, 256, 0, tip, " (当前设置:背景,输入256查看颜色表)", config);
+                if (config.scrnColr == 256) {
+                    terminal256ColorTablePainting(&config);
+
+                    clearScreen();
+                    for (int i = 0; i < 10; ++i) {
+                        printf("  %s\n", entry[i]);
+                    }
+                    printf("\033[9;1H");
+                    fflush(stdout);
+                }
+            } while (config.scrnColr == 256);
+
+            do {
+                config.wordColr = adjustNumberPainting(
+                                    config.wordColr,
+                                    0, 256, 0, tip, " (当前设置:文字,输入256查看颜色表)", config);
+                if (config.wordColr == 256) {
+                    terminal256ColorTablePainting(&config);
+
+                    clearScreen();
+                    for (int i = 0; i < 10; ++i) {
+                        printf("  %s\n", entry[i]);
+                    }
+                    printf("\033[9;1H");
+                    fflush(stdout);
+                }
+            } while (config.wordColr == 256);
             break;
         }
-        clearScreen();
     }
 
     if ( isConfigFileOpenFail==false ) {
         fp=fopen("./.贪_吃_蛇_大_作_战_的_所_有_设_置_信_息_勿_动.data","w");
         if ( fp==NULL ) {
             printf("配置文件打开失败，马上开启离线模式(您的设置信息可能会丢失)\n");
+
             isConfigFileOpenFail=true;
             outlineModeConfig=config;
+
+            blockWaitUserEnter();
+            clearScreen();
         } else {
             fwrite(&config,sizeof(GameConfig),1,fp);
             fclose(fp);
@@ -172,43 +257,35 @@ void configureGame() {
  * @retval false No.Then start the game.
  */
 bool showGameMenu(GameAllRunningData *data,const pid_t childProcess) {
+    char* entry[] = {
+        "*************开始游戏**************",
+        "*************说明游戏**************",
+        "*************设置游戏**************",
+        "*************结束游戏**************",
+    };
     clearScreen();
 
     for ( muint_t menuOptionCode=0; menuOptionCode!=1; ) {
-        menuOptionCode=0;
-        if ( isConfigFileOpenFail ) {
-            printf("(当前是离线模式)\n");
-        }
-        printf("*************1:开始游戏**************\n");
-        printf("*************2:说明游戏**************\n");
-        printf("*************3:设置游戏**************\n");
-        printf("*************4:结束游戏**************\n");
-        printf("请输入提示前的序号：");
-        fflush(stdout);
+        menuOptionCode = selectInterfacePainting(4, entry, menuOptionCode);
 
-        scanf("%u",&menuOptionCode);
-        while ( getchar()!='\n' );
-
-        switch ( menuOptionCode ) {
+        switch (menuOptionCode) {
         case 1:
             break;
+
         case 2:
             gameIntroduction();
             break;
+
         case 3:
-            clearScreen();
             configureGame();
             break;
+
         case 4:
             return true;
-        default:
-            clearScreen();
         }
     }
-    
-    disableNormalInput(childProcess);
-    
-    printf("马上开始游戏");
+        
+    printf("\033[5;1H马上开始游戏");
     srand((unsigned)time(0));
     for (int i=0,totalTimes=rand()%9+3; i<totalTimes; ++i) {
         printf(".");

@@ -6,6 +6,7 @@
 #include "GSnakeBInclude/GlobalVariable/globalVariable.h"
 #include <termios.h>
 #include <stdbool.h>
+#include <unistd.h>
 
 /**
  * @brief Check if the configuration file failed to open.
@@ -26,3 +27,8 @@ GameConfig outlineModeConfig={0};
  * @brief Original terminal settings.
  */
 struct termios originalTermios;
+
+/**
+ * @brief Record the pid of the child process.
+ */
+pid_t childPid;

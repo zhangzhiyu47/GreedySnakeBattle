@@ -8,6 +8,8 @@
 #include "../Struct/Point.h"
 #include "../Struct/GameConfig.h"
 
+#include <unistd.h>
+
 /**
  * @brief Check if the configuration file failed to open.
  */
@@ -27,5 +29,10 @@ extern GameConfig outlineModeConfig;
  * @brief Original terminal settings.
  */
 extern struct termios originalTermios;
+
+/**
+ * @brief Record the pid of the child process.
+ */
+extern pid_t childPid;
 
 #endif

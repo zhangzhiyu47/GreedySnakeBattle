@@ -5,9 +5,13 @@
 
 #include "GSnakeBInclude/Struct/GameAllRunningData.h"
 #include "GSnakeBInclude/Functions/standardIO.h"
+#include "GSnakeBInclude/Functions/terminal.h"
+#include "GSnakeBInclude/Functions/painting.h"
+#include "GSnakeBInclude/Functions/exitApp.h"
 #include "GSnakeBInclude/Functions/food.h"
 
 #include <stdio.h>
+#include <poll.h>
 
 /**
  * @brief Move user's snake.
@@ -33,12 +37,15 @@ void userSnakeMove(GameAllRunningData *data) {
  *
  * | input | action |
  * | :---: | :----: |
- * | A/7 | ← |
- * | W/5 | ↑ |
- * | S/8 | ↓ |
- * | D/9 | → |
+ * | ←/A/7 | ← |
+ * | ↑/W/5 | ↑ |
+ * | ↓/S/8 | ↓ |
+ * | →/D/9 | → |
  * | j/J | Jump |
- * | f/F | Fly |
+ * | f/F/Tab | Fly |
+ * | p/P | Pause |
+ * | r/R | Repaint |
+ * | Esc | Block game |
  * | o/O | Game over |
  *
  * @param[in,out] data All the game's data when the game is running.
@@ -49,6 +56,7 @@ void userSnakeMove(GameAllRunningData *data) {
  */
 int userSnakeMoveDirecControl(GameAllRunningData *data) {
     char key=0;
+
     if ( data->usrSnkIsJumping ) {
         if ( data->usrSnkNxtXDrc<0 ) {
             data->usrSnkNxtXDrc++;
@@ -66,6 +74,23 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
         key=getchar();
     }
 
+    if (key == '\033' && getchar() == '[') {
+        switch (getchar()) {
+            case 'A':
+                key = 'w';
+                break;
+            case 'B':
+                key = 's';
+                break;
+            case 'C':
+                key = 'd';
+                break;
+            case 'D':
+                key = 'a';
+                break;
+        }
+        
+    }
     switch (key) {
     case 'a':
     case 'A':
@@ -73,54 +98,89 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
         data->usrSnkNxtXDrc=-1;
         data->usrSnkNxtYDrc=0;
         break;
+
     case 'w':
     case 'W':
     case '5':
         data->usrSnkNxtXDrc=0;
         data->usrSnkNxtYDrc=-1;
         break;
+
     case 's':
     case 'S':
     case '8':
         data->usrSnkNxtXDrc=0;
         data->usrSnkNxtYDrc=1;
         break;
+
     case 'd':
     case 'D':
     case '9':
         data->usrSnkNxtXDrc=1;
         data->usrSnkNxtYDrc=0;
         break;
+
     case 'j':
     case 'J':
         if ( data->usrSnkNxtXDrc<0 ) {
-            data->usrSnkNxtXDrc--;
+            data->usrSnkNxtXDrc = -2;
         } else if ( data->usrSnkNxtXDrc>0 ) {
-            data->usrSnkNxtXDrc++;
+            data->usrSnkNxtXDrc = 2;
         } else if ( data->usrSnkNxtYDrc<0 ) {
-            data->usrSnkNxtYDrc--;
+            data->usrSnkNxtYDrc = -2;
         } else if ( data->usrSnkNxtYDrc>0 ) {
-            data->usrSnkNxtYDrc++;
+            data->usrSnkNxtYDrc = 2;
         }
         data->usrSnkIsJumping=1;
         break;
+
     case 'f':
     case 'F':
+    case '\t':
         if ( data->usrSnkNxtXDrc<0 ) {
-            data->usrSnkNxtXDrc--;
+            data->usrSnkNxtXDrc = -2;
         } else if ( data->usrSnkNxtXDrc>0 ) {
-            data->usrSnkNxtXDrc++;
+            data->usrSnkNxtXDrc = 2;
         } else if ( data->usrSnkNxtYDrc<0 ) {
-            data->usrSnkNxtYDrc--;
+            data->usrSnkNxtYDrc = -2;
         } else if ( data->usrSnkNxtYDrc>0 ) {
-            data->usrSnkNxtYDrc++;
+            data->usrSnkNxtYDrc = 2;
         }
         data->usrSnkIsJumping=0;
         break;
+
+    case 'p':
+    case 'P':
+        {   // In order to eliminate the warning issued by variables defined in case.
+            int result = waitForUserInputWithPoll(15.0); // Default 15 minutes if input fails
+
+            if (result == 0) {
+                printf("您已输入，将继续执行游戏。\n");
+                blockWaitUserEnter();
+                clearScreen();
+
+                wallPainting(data);
+            } else if (result == -1) {
+                printf("系统调用失败，错误退出!\n");
+                exitApp(1,data);
+            } else if (result == 1) {
+                printf("超时退出!\n");
+                exitApp(1,data);
+            }
+        }
+        break;
+
+    case 'r':
+    case 'R':
+        clearScreen();
+        wallPainting(data);
+        break;
+
     case 'o':
     case 'O':
         return 1;
     }
+
     return 0;
 }
 
