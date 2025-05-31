@@ -30,9 +30,4 @@ extern GameConfig outlineModeConfig;
  */
 extern struct termios originalTermios;
 
-/**
- * @brief Record the pid of the child process.
- */
-extern pid_t childPid;
-
 #endif

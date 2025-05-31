@@ -284,8 +284,6 @@ int GreedySnakeBattleGameExternalInterface(int isBlockRunning) {
                 write(fd[1],buf,ret);
             }
         } else if (pid>0) {
-            childPid = pid;
-            
             close(fd[1]);
             dup2(fd[0],STDIN_FILENO);
 

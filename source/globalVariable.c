@@ -27,8 +27,3 @@ GameConfig outlineModeConfig={0};
  * @brief Original terminal settings.
  */
 struct termios originalTermios;
-
-/**
- * @brief Record the pid of the child process.
- */
-pid_t childPid;
