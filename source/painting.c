@@ -412,7 +412,7 @@ void gameOverPainting(GameAllRunningData *data) {
     if ( data->usrSrc/10>data->histryHighestScr ) {
         printf("你真厉害，创造了新的记录，超过了历史最高记录%d分\n",data->histryHighestScr*10);
         if ( isConfigFileOpenFail==false ) {
-            FILE *fp=fopen("./.贪_吃_蛇_大_作_战_的_所_有_设_置_信_息_勿_动.data","r");
+            FILE *fp=fopen("GreedySnakeBattleGame.conf","r");
             GameConfig config={0};
 
             if ( fp==NULL ) {
@@ -441,7 +441,7 @@ void gameOverPainting(GameAllRunningData *data) {
                 fclose(fp);
                 fp=NULL;
 
-                fp=fopen("./.贪_吃_蛇_大_作_战_的_所_有_设_置_信_息_勿_动.data","w");
+                fp=fopen("GreedySnakeBattleGame.conf","w");
 
                 if ( fp==NULL ) {
                     printf("配置文件打开失败，马上开启离线模式(您的设置信息可能会丢失)\n");

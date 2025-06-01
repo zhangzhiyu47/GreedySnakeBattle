@@ -21,7 +21,7 @@
  * opening is successful, write the default game configuration
  * to the configuration file; If unsuccessful, do not read or
  * write files and exit the function.(The configuration file is
- * "./.贪_吃_蛇_大_作_战_的_所_有_设_置_信_息_勿_动.data".)
+ * "GreedySnakeBattleGame.conf".)
  *
  * @return Returns the status of file reading and writing.
  * @retval  0 For successful reading of the configuration file
@@ -37,7 +37,7 @@
 int confgFileInitAndGameIntrfcRndrng() {
     const Point termSize=terminalSize();
 
-    FILE *fp=fopen("./.贪_吃_蛇_大_作_战_的_所_有_设_置_信_息_勿_动.data","r");
+    FILE *fp=fopen("GreedySnakeBattleGame.conf","r");
     int ret=0;
 
     if ( fp!=NULL ) {
@@ -61,7 +61,7 @@ int confgFileInitAndGameIntrfcRndrng() {
     } else {
         fp=NULL;
 
-        fp=fopen("./.贪_吃_蛇_大_作_战_的_所_有_设_置_信_息_勿_动.data","w");
+        fp=fopen("GreedySnakeBattleGame.conf","w");
         printf("\033[48;5;15m");
         printf("\033[38;5;10m");
         for (int i=0; i<termSize.x; ++i) {

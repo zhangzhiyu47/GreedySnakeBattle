@@ -16,7 +16,7 @@
  * opening is successful, write the default game configuration
  * to the configuration file; If unsuccessful, do not read or
  * write files and exit the function.(The configuration file is
- * "./.贪_吃_蛇_大_作_战_的_所_有_设_置_信_息_勿_动.data".)
+ * "GreedySnakeBattleGame.conf".)
  *
  * @return Returns the status of file reading and writing.
  * @retval  0 For successful reading of the configuration file

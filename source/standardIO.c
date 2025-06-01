@@ -27,7 +27,7 @@ int waitForUserInputWithPoll(double initialTimeoutMinutes) {
     GameConfig config = {0};
 
     if (isConfigFileOpenFail == false) {
-        FILE*fp = fopen("./.贪_吃_蛇_大_作_战_的_所_有_设_置_信_息_勿_动.data", "r");
+        FILE*fp = fopen("GreedySnakeBattleGame.conf", "r");
         if (fp == NULL) {
             printf("配置文件打开失败，马上开启离线模式(您的设置信息可能会丢失)\n");
 
