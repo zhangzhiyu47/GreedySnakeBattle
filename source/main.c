@@ -13,19 +13,24 @@
 #include "GSnakeBInclude/Functions/gameMainLogic.h"
 #include "GSnakeBInclude/Functions/terminal.h"
 #include "GSnakeBInclude/Functions/exitApp.h"
+#include "GSnakeBInclude/LogFile/logFileWrite.h"
 
 #include <linux/prctl.h>
+#include <string.h>
 #include <sys/prctl.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <errno.h>
 
 int main(int argc,char* argv[]) {
+    logMessage(LOG_INFO, logFile, "Game start");
+
     int fd[2]={0};
     int ret=pipe(fd);
     if (ret==-1) {
-        perror("pipe error");
-        printf("错误，游戏无法启动，正在退出！\n");
+        logMessage(LOG_ERROR, logFile, "Starting error:pipe:%s", strerror(errno));
+        printf("错误！游戏无法启动，正在退出！\n");
         exit(1);
     }
 

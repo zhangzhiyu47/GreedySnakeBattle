@@ -30,4 +30,9 @@ extern GameConfig outlineModeConfig;
  */
 extern struct termios originalTermios;
 
+/**
+ * @brief Apply the written log file name.
+ */
+extern const char* logFile;
+
 #endif

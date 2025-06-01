@@ -27,3 +27,8 @@ GameConfig outlineModeConfig={0};
  * @brief Original terminal settings.
  */
 struct termios originalTermios;
+
+/**
+ * @brief Apply the written log file name.
+ */
+const char* logFile = "GreedySnakeBattleGame.log";

@@ -96,15 +96,19 @@ int confgFileInitAndGameIntrfcRndrng() {
         } else {
             GameConfig config= {0};
 
-            config.wallNum=0;
-            config.isEnableEatSlfGmOver=0;
-            config.speed=450000u;
-            config.isEnableObs=0;
-            config.minScrOpnVctryPnt=5;
             config.foodNum=1;
+            config.wallNum=0;
+
+            config.isEnableObs=0;
+            config.isEnableEatSlfGmOver=0;
+
+            config.speed=450000u;
+            config.minScrOpnVctryPnt=5;
             config.histryHighestScr=0;
-            HIGH=config.scrnHigh=termSize.x/2-3;
+
+            HIGH=config.scrnHigh=termSize.x-5;
             WIDE=config.scrnWide=termSize.y;
+
             config.wordColr=0;
             config.scrnColr=231;
 

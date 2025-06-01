@@ -14,6 +14,7 @@
 #include "GSnakeBInclude/Functions/gameMainLogic.h"
 #include "GSnakeBInclude/Functions/terminal.h"
 #include "GSnakeBInclude/Functions/exitApp.h"
+#include "GSnakeBInclude/LogFile/logFileWrite.h"
 
 #include "GSnakeBInclude/GreedySnakeBattleGameExternalInterface.h"
 
@@ -22,6 +23,7 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <errno.h>
 #include <unistd.h>
 
 /**
@@ -226,6 +228,8 @@ const int SNAKE_UNBLOCK=0; /* value:0 */
  * ```
  */
 int GreedySnakeBattleGameExternalInterface(int isBlockRunning) {
+    logMessage(LOG_INFO, logFile, "Game start");
+
     if (isBlockRunning!=SNAKE_BLOCK && isBlockRunning!=SNAKE_UNBLOCK) {
         return -2;
     }
@@ -239,8 +243,8 @@ int GreedySnakeBattleGameExternalInterface(int isBlockRunning) {
         int fd[2]={0};
         int ret=pipe(fd);
         if (ret==-1) {
-            perror("pipe error");
-            printf("错误，游戏无法启动，正在退出！\n");
+            logMessage(LOG_ERROR, logFile, "Starting error:pipe:%s", strerror(errno));
+            printf("错误！游戏无法启动，正在退出！\n");
             exit(1);
         }
 
