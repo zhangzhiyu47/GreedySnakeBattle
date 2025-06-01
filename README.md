@@ -21,8 +21,8 @@
 ---
 ## 项目概述
 
-这是一个用C语言实现的跨平台(Linux-Like，Windows需要Cygwin)贪吃蛇对战游戏，具有丰富的配置选项和完整的游戏功能。项目采用模块化设计，支持多种操作系统平台。  
-  
+这是一个用C语言实现的跨平台(Linux-Like，Windows需要Cygwin)贪吃蛇对战游戏，具有丰富的配置选项和完整的游戏功能。项目采用模块化设计，支持多种操作系统平台。   
+
 作者: 张志宇  
 许可证: MIT许可证: [LICENSE.txt](./LICENSE.txt)  
 版本：4.0.1  
@@ -80,7 +80,7 @@ MIT许可证：[LICENSE.txt](./LICENSE.txt)
 
 ## 游戏流程
 
-- 1. **客户端资源加载**（如果自行修改源代码后编译，可选择是否保留  
+- 1. **客户端资源加载**（如果自行修改源代码后编译，可选择是否保留)  
 
 - 2. **首次登录加载界面**（仅第一次运行游戏时显示，如果自行修改源代码后编译，可选择是否保留  
 
@@ -92,7 +92,6 @@ MIT许可证：[LICENSE.txt](./LICENSE.txt)
     | 游戏说明 |
     | 游戏设置 |
     | 退出游戏 |
-
 - 4. **游戏设置界面**
     按*上下键(或W,S)*移动**>**进行选择，按下*Tab*或*回车*表示确认选择  
     进行设置时，下划线所在且高亮的数字为当前调整的一个数字，可以通过*上下键(或W,S)或直接输入数字调整*。可以通过*左右键(或A,D)*移动要调整的数字  
@@ -155,10 +154,10 @@ Cygwin是一个在Windows上提供完整Linux-like环境的工具，它使你可
 
 #### 基本安装步骤
 
-1. **运行安装程序**：
+- 1. **运行安装程序**：
    - 双击下载的`setup-x86_64.exe`文件
 
-2. **选择安装类型**：
+- 2. **选择安装类型**：
    ```
    Install from Internet (推荐)
    Download Without Installing
@@ -166,69 +165,61 @@ Cygwin是一个在Windows上提供完整Linux-like环境的工具，它使你可
    ```
    选择第一个选项"Install from Internet"
 
-3. **选择安装目录**（默认通常是）：
+- 3. **选择安装目录**（默认通常是）：
    ```
    C:\cygwin64\
    ```
    注意：路径最好不要包含空格或中文
 
-4. **选择本地包目录**（用于存储下载的包）：
+- 4. **选择本地包目录**（用于存储下载的包）：
    ```
    C:\Users\<你的用户名>\Downloads\cygwin-packages\
    ```
 
-5. **选择连接方式**：
+- 5. **选择连接方式**：
    - 如果你使用代理，在此处配置
    - 否则选择"Direct Connection"
 
 #### 选择镜像站点
 
-1. 从列表中选择一个镜像站点，例如：
+- 1. 从列表中选择一个镜像站点，例如：
    ```
    http://mirrors.163.com/cygwin/ (中国镜像)
    http://mirrors.kernel.org/sourceware/cygwin/
    ```
 
-2. 点击"Next"继续
+- 2. 点击"Next"继续
 
 #### 选择要安装的包
 
-1. 在搜索框中输入你需要的包，例如：
+- 1. 在搜索框中输入你需要的包，例如：
    - `gcc` (GNU编译器集合)
    - `make` 和 `cmake` (构建工具)
    - `gdb` (调试器)
-   - `git` (版本控制)
+   - `git` (GitHub仓库工具)
 
-2. 点击每个包旁边的"Skip"将其变为版本号，表示要安装
+- 2. 点击每个包旁边的"Skip"将其变为版本号，表示要安装
 
-3. **重要开发包**：
-   - `gcc-core`：C编译器
-   - `gcc-g++`：C++编译器
-   - `make`：构建工具
-   - `gdb`：调试器
-   - `libncurses-devel`：终端处理库
-   - `git`：版本控制
-
-4. 点击"Next"开始下载和安装
+- 3. 点击"Next"开始下载和安装
 
 ### 3. 安装后的配置
 
 #### 环境变量设置
 
-1. 将Cygwin的bin目录添加到系统PATH：
+- 1. 将Cygwin的bin目录添加到系统PATH：
    ```
    C:\cygwin64\bin
    ```
 
-2. 方法：
+- 2. 方法：
    - 右键"此电脑" → 属性 → 高级系统设置 → 环境变量
    - 在"系统变量"中找到Path，点击编辑
    - 添加新条目：`C:\cygwin64\bin`
 
 #### 启动Cygwin
 
-1. 通过开始菜单找到"Cygwin64 Terminal"并启动
-2. 或者创建桌面快捷方式
+- 1. 通过开始菜单找到"Cygwin64 Terminal"并启动
+- 2. 或者创建桌面快捷方式
 
 ### 4. 验证安装
 
@@ -261,10 +252,10 @@ uname -a
 
 如果需要安装更多包：
 
-1. 重新运行`setup-x86_64.exe`
-2. 选择"Install from Internet"
-3. 在包选择界面搜索并选择新包
-4. 完成安装
+- 1. 重新运行`setup-x86_64.exe`
+- 2. 选择"Install from Internet"
+- 3. 在包选择界面搜索并选择新包
+- 4. 完成安装
 
 或者使用Cygwin的命令行安装工具`apt-cyg`：
 
@@ -304,10 +295,10 @@ gcc program.c -o program
 
 ### 注意事项
 
-1. Cygwin的性能略低于原生Linux系统
-2. 某些Linux特有功能可能不完全支持
-3. 对于高性能需求，考虑使用WSL2
-4. 文件路径在Windows和Cygwin间转换：
+- 1. Cygwin的性能略低于原生Linux系统
+- 2. 某些Linux特有功能可能不完全支持
+- 3. 对于高性能需求，考虑使用WSL2
+- 4. 文件路径在Windows和Cygwin间转换：
    - Windows路径：`C:\path\to\file`
    - Cygwin路径：`/cygdrive/c/path/to/file`
 
@@ -405,19 +396,18 @@ cd build    # 进入build目录
 cmake ..    # 执行CMake
 ```
 
-- 3. 执行Make
-    - 1. 执行Make编译源文件  
-         ```bash
-         make                        # 执行Make编译源文件
-         ```
-         生成GreedySnakeBattle(.exe)可执行文件，libgsnakebg.so动态库和libgsnakebg.a静态库。
+- 3. 执行Make编译源文件  
+     ```bash
+     make   # 执行Make编译源文件
+     ```
+     生成GreedySnakeBattle(.exe)可执行文件，libgsnakebg.so/.dll动态库和libgsnakebg.a静态库。
     
 ### 执行Make进行安装/卸载
 
 #### 安装
 
 ```bash
-sudo make install         # 安装(需要管理员权限)(Termux无需管理员权限)
+sudo make install  # 安装(需要管理员权限)(Termux无需管理员权限)
 ```
 
 #### 卸载
@@ -428,32 +418,32 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
 
 ### 安装内容
 
-1. **可执行文件**：`GreedySnakeBattle` (Windows下为 `GreedySnakeBattle.exe`)
-2. **库文件**：
+- 1. **可执行文件**：`GreedySnakeBattle` (Windows下为 `GreedySnakeBattle.exe`)
+- 2. **库文件**：
    - 静态库：`libgsnakebg.a`
    - 动态库：`libgsnakebg.so` (Windows下为 `libgsnakebg.dll`)
-3. **头文件**：`GSnakeBInclude/` 目录下的所有头文件
+- 3. **头文件**：`GSnakeBInclude/` 目录下的所有头文件
 
 ---
 ## 跨平台支持
 
 游戏支持以下平台：
 
-1. **Windows**:
+- 1. **Windows**:
     - 需要Cygwin
     - 自动创建桌面快捷方式
     - 设置应用图标
 
-2. **Linux**:
+- 2. **Linux**:
     - 标准Unix安装路径
     - 创建.desktop桌面快捷方式
     - 使用termios实现终端控制
 
-3. **Termux(Android)**:
+- 3. **Termux(Android)**:
     - 特殊安装路径适配
     - 针对移动终端优化
 
-4. **MacOS**:
+- 4. **MacOS**:
     - Unix标准安装路径
     - 使用termios实现终端控制
 
@@ -483,12 +473,11 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
 
 基于该项目，总结了以下**注释风格**、**命名规则**和**代码风格**，供贡献者参考。  
 
-### **1. 注释风格（Javadoc 风格）**  
-代码主要使用**Doxygen/Javadoc风格的注释**，适用于生成API文档。  
+### 1. 注释风格（Javadoc 风格）
 
-#### **规则**：
+#### 规则：
 
-✅ **文件注释**（文件开头）：  
+- 1.**文件注释**（文件开头）：  
 ```c
 /**
  * @file GreedySnakeBattleGameExternalInterface.c
@@ -497,7 +486,7 @@ sudo make uninstall       # 卸载(需要管理员权限)(Termux无需管理员�
  */
 ```
 
-✅ **函数注释**（详细说明函数作用、参数、返回值）：  
+- 2.**函数注释**（详细说明函数作用、参数、返回值）：  
 ```c
 /**
  * @brief Initialize terminal settings
@@ -509,7 +498,7 @@ static void initTerminalSettings() {
 }
 ```
 
-✅ **结构体/枚举注释**：  
+- 3.**结构体/枚举注释**：  
 ```c
 /**
  * @struct GameAllRunningData
@@ -521,20 +510,20 @@ typedef struct {
 } GameAllRunningData;
 ```
 
-❌ **避免**：
-- 单行注释 `//` 仅用于临时调试，正式代码应使用 `/** */` 或 `/* */`。  
-- 无意义的注释，如 `// This is a variable.`。  
+- 4. **避免**：
+    - 单行注释 `//` 仅用于临时调试，正式代码应使用 `/** */` 或 `/* */`。  
+    - 无意义的注释，如 `// This is a variable.`。  
 
-#### **贡献者注意事项**：
+#### 贡献者注意事项：
 - **修改函数** 时，更新对应的说明。  
 - **关键逻辑** 应补充`@note`或`@attention`说明特殊情况。  
 
 ---
-### **2.命名规则（Qt风格）**
+### 2.命名规则（Qt风格）
 
 采用**Qt的命名风格**：  
 
-#### **规则**：
+#### 规则：
 | 类型 | 命名风格 | 示例 |
 | :--: | :------: | :--: |
 | **函数** | 除特别要求的函数组(蛇形命名法+小驼峰命名法:`lowerCamelCase_snake_case`外，其他函数都采用小驼峰命名法：`lowerCamelCase` | `setConfig_isEnableObs`，`foodInit` |
@@ -544,51 +533,43 @@ typedef struct {
 | **全局变量** | 小驼峰命名法：`lowerCamelCase` | `isConfigFileOpenFail` |
 | **类型定义** | `PascalCase` + `_t`（当该类型为typedef已有类型时必须要加该后缀） | `GameAllRunningData`, `muint_t` |
 
-#### **贡献者注意事项**：
+#### 贡献者注意事项：
 - **新变量/函数/...** 采用上述命名方式。
 - **避免**使用`匈牙利命名法`（如`bIsRunning`, `iCount`）。  
 - **宏定义**必须全部大写，如 `#define MAX_SNAKE_LENGTH 100`。  
 
 ---
-### **3. 代码风格（Qt风格）**  
-#### **规则**：
-✅ **缩进**：
-- **4 空格缩进**（非Tab）。  
-- 函数体、`if/for/while` 块必须缩进。  
+### 3. 代码风格（Qt风格）
 
-✅ **大括号`{}`**：
-- **K&R 风格**（左大括号不换行）：  
-```c
-if (condition) {
-    // code
-}
-```
+#### 规则：
 
-✅ **空格**：
-- 运算符两侧加空格：  
-```c
-int sum = a + b;
-if (score > 100) { ... }
-```
-- 函数参数逗号后加空格：  
-```c
-void foo(int a, int b, int c);
-```
+- 1.**缩进**：
+    - **4空格缩进**  
+    - 函数体、`if/for/while` 块必须缩进  
 
-❌ **避免**：
-- 一行多语句，如 `a=1; b=2;`。  
-- 过长的行（建议 80~120 字符换行）。  
+- 2.**大括号`{}`**：
+    - **K&R 风格**（左大括号不换行）：  
+    ```c
+    if (condition) {
+        // code
+    }
+    ```
 
-#### **贡献者注意事项**：
+- 3.**空格**：
+    - 运算符两侧加空格：  
+        ```c
+        int sum = a + b;
+        if (score > 100) { ... }
+        ```
+    - 函数参数逗号后加空格：  
+        ```c
+        void foo(int a, int b, int c);
+        ```
+
+- 4.**避免**：
+    - 一行多语句，如 `a=1; b=2;`。  
+    - 过长的行（建议 80~120 字符换行）。  
+
+#### 贡献者注意事项：
 - **新增代码** 必须遵循现有缩进和括号风格。  
-- **复杂逻辑** 应拆分成小函数，避免超长函数。  
-
----
-### **总结：贡献者应遵循的规则**  
-| 项目 | 规则 |
-| :--: | :--: |
-| **注释** | Doxygen&Javadoc风格，函数、文件、关键变量必须注释 |
-| **命名** | 如上 |
-| **代码风格** | 4空格缩进，K&R大括号，指针`*`靠近变量 |
-
-希望贡献者能保持代码风格统一，提高可维护性！
+- **复杂逻辑** 应拆分成小函数，避免超长函数。
