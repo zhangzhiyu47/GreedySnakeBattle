@@ -25,7 +25,7 @@
 
 作者: 张志宇  
 许可证: MIT许可证: [LICENSE.txt](./LICENSE.txt)  
-版本：4.0.1  
+版本：5.0.1  
 欢迎提交修改，建议和Issues。
 
 ## 项目许可证
@@ -319,16 +319,16 @@ gcc program.c -o program
 ```c
 #include <GreedySnakeBattleGameExternalInterface.h>
 
-    int GreedySnakeBattleGameExternalInterface(int isBlockRunning);
+    int GreedySnakeBattleGameExternalInterface(StartupMode mode);
 ```
 
 ### 参数
 
-`isBlockRunning`: 贪吃蛇大作战游戏运行是否阻塞调用该函数的进程。 
-| 宏(实为全局常量) | 行为 |
+`mode`: 贪吃蛇大作战游戏运行是否阻塞调用该函数的进程。 
+| 枚举 | 行为 |
 | :----: | :-----: |
-| SNAKE\_BLOCK | 阻塞运行 |
-| SNAKE\_UNBLOCK | 非阻塞运行 |
+| `SNAKE_BLOCK` | 阻塞运行 |
+| `SNAKE_NONBLOCK` | 非阻塞运行 |
 
 ### 返回值
 

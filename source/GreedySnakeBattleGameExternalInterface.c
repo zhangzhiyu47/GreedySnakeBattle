@@ -27,25 +27,6 @@
 #include <unistd.h>
 
 /**
- * @brief Block running game.
- *
- * This macro is used for the function parameter
- * of @ref GreedySnakeBattleGameExternalInterface,
- * which blocks the operation of the greedy snake
- * battle game.
- */
-const int SNAKE_BLOCK=1;   /* value:1 */
-/**
- * @brief Non-block running game.
- *
- * This macro is used for the function parameter
- * of @ref GreedySnakeBattleGameExternalInterface,
- * which non-blocks the operation of the greedy snake
- * battle game.
- */
-const int SNAKE_UNBLOCK=0; /* value:0 */
-
-/**
  * ---
  * # About this function
  *  
@@ -57,7 +38,7 @@ const int SNAKE_UNBLOCK=0; /* value:0 */
  * ```c
  * #include "GreedySnakeBattleGameExternalInterface.h"
  *
- *     int GreedySnakeBattleGameExternalInterface(int isBlockRunning);  
+ *     int GreedySnakeBattleGameExternalInterface(StartupMode mode);
  * ```
  *
  * ## Library
@@ -88,12 +69,12 @@ const int SNAKE_UNBLOCK=0; /* value:0 */
  * return value of this function**.  
  *  
  * ## Parameter
- * @param isBlockRunning Parent process blocking when the
- *                       game is running.
- *                       | Macros(Real global constants) | Actions |
- *                       | :----: | :-----: |
- *                       | @ref SNAKE_BLOCK | Block running game |
- *                       | @ref SNAKE_UNBLOCK | Non-blocking running game |
+ * @param mode Parent process blocking when the
+ *             game is running.
+ *             | Enumeration | Actions |
+ *             | :----: | :-----: |
+ *             | @ref SNAKE_BLOCK | Block running game |
+ *             | @ref SNAKE_NONBLOCK | Non-blocking running game |
  *
  * ## Return
  * @return Call status of this function.
@@ -227,14 +208,19 @@ const int SNAKE_UNBLOCK=0; /* value:0 */
  * }
  * ```
  */
-int GreedySnakeBattleGameExternalInterface(int isBlockRunning) {
+int GreedySnakeBattleGameExternalInterface(StartupMode mode) {
+    if (createAppDirectories() == -1) {
+        return -1;
+    }
+
+    setRotation(ROT_DEFAULT);
     logMessage(LOG_INFO, logFile, "Game start");
 
-    if (isBlockRunning!=SNAKE_BLOCK && isBlockRunning!=SNAKE_UNBLOCK) {
+    if (mode!=SNAKE_BLOCK && mode!=SNAKE_NONBLOCK) {
         return -2;
     }
-    pid_t pid=fork();
 
+    pid_t pid=fork();
     if (pid==-1) {
         perror("fork error");
         printf("错误，游戏启动失败，正在退出!");
@@ -353,7 +339,7 @@ int GreedySnakeBattleGameExternalInterface(int isBlockRunning) {
             exitApp(0,data);
         }
     } else if (pid>0) {
-        if (isBlockRunning==SNAKE_BLOCK) {
+        if (mode==SNAKE_BLOCK) {
             waitpid(pid,NULL,0);
             return 0;
         }

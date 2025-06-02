@@ -31,4 +31,14 @@ struct termios originalTermios;
 /**
  * @brief Apply the written log file name.
  */
-const char* logFile = "GreedySnakeBattleGame.log";
+char logFile[2048] = {0};
+
+/**
+ * @brief Configuration information file name of the game.
+ */
+char configFile[2048] = {0};
+
+/**
+ * @brief Directory where game settings are located.
+ */
+char configDir[1024] = {0};

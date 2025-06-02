@@ -33,6 +33,16 @@ extern struct termios originalTermios;
 /**
  * @brief Apply the written log file name.
  */
-extern const char* logFile;
+extern char logFile[2048];
+
+/**
+ * @brief Configuration information file name of the game.
+ */
+extern char configFile[2048];
+
+/**
+ * @brief Directory where game settings are located.
+ */
+extern char configDir[1024];
 
 #endif

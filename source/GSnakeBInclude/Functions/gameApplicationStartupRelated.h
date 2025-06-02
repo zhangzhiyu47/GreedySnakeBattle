@@ -16,7 +16,7 @@
  * opening is successful, write the default game configuration
  * to the configuration file; If unsuccessful, do not read or
  * write files and exit the function.(The configuration file is
- * "GreedySnakeBattleGame.conf".)
+ * configFile.)
  *
  * @return Returns the status of file reading and writing.
  * @retval  0 For successful reading of the configuration file
@@ -30,5 +30,19 @@
  * @attention This function is complex, but necessary!
  */
 int confgFileInitAndGameIntrfcRndrng();
+
+/**
+ * @brief Creates application directories including
+ *        config and log directories.
+ * 
+ * Follows XDG Base Directory Specification:
+ * - Uses $XDG_CONFIG_HOME/GreedySnakeBattle/ if set
+ * - Falls back to ~/.config/GreedySnakeBattle/ otherwise
+ * - Creates log/ subdirectory within the config directory
+ * 
+ * @return 0 on success, -1 on failure with errno set
+ *         appropriately
+ */
+int createAppDirectories();
 
 #endif

@@ -74,7 +74,7 @@ void configureGame() {
     char tip[256] = { 0 };
 
     if ( isConfigFileOpenFail==false ) {
-        fp=fopen("GreedySnakeBattleGame.conf","r");
+        fp=fopen(configFile,"r");
         if ( fp==NULL ) {
             printf("配置文件打开失败，马上开启离线模式(您的设置信息可能会丢失)\n");
 
@@ -215,7 +215,7 @@ void configureGame() {
     }
 
     if ( isConfigFileOpenFail==false ) {
-        fp=fopen("GreedySnakeBattleGame.conf","w");
+        fp=fopen(configFile,"w");
         if ( fp==NULL ) {
             printf("配置文件打开失败，马上开启离线模式(您的设置信息可能会丢失)\n");
 

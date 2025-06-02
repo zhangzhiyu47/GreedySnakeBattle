@@ -24,6 +24,12 @@
 #include <errno.h>
 
 int main(int argc,char* argv[]) {
+    if (createAppDirectories() == -1) {
+        perror("游戏启动失败");
+        return 1;
+    }
+
+    setRotation(ROT_DEFAULT);
     logMessage(LOG_INFO, logFile, "Game start");
 
     int fd[2]={0};

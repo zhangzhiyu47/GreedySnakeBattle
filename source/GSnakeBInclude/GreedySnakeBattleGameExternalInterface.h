@@ -17,23 +17,18 @@
  */
 
 /**
- * @brief Block running game.
+ * @enum StartupMode
+ * @brief Enumeration of game startup modes
  *
- * This macro is used for the function parameter
+ * This Enumeration is used for the function parameter
  * of @ref GreedySnakeBattleGameExternalInterface,
- * which blocks the operation of the greedy snake
- * battle game.
+ * which blocks or non-blocks the operation of the greedy
+ * snake battle game.
  */
-extern const int SNAKE_BLOCK;   /* value:1 */
-/**
- * @brief Non-block running game.
- *
- * This macro is used for the function parameter
- * of @ref GreedySnakeBattleGameExternalInterface,
- * which non-blocks the operation of the greedy snake
- * battle game.
- */
-extern const int SNAKE_UNBLOCK; /* value:0 */
+typedef enum StartupMode {
+    SNAKE_BLOCK,     /**< Block running game */
+    SNAKE_NONBLOCK   /**< Non-block running game */
+} StartupMode;
 
 /**
  * ---
@@ -47,7 +42,7 @@ extern const int SNAKE_UNBLOCK; /* value:0 */
  * ```c
  * #include "GreedySnakeBattleGameExternalInterface.h"
  *
- *     int GreedySnakeBattleGameExternalInterface(int isBlockRunning);  
+ *     int GreedySnakeBattleGameExternalInterface(StartupMode mode);
  * ```
  *
  * ## Library
@@ -78,12 +73,12 @@ extern const int SNAKE_UNBLOCK; /* value:0 */
  * return value of this function**.  
  *  
  * ## Parameter
- * @param isBlockRunning Parent process blocking when the
- *                       game is running.
- *                       | Macros(Real global constants) | Actions |
- *                       | :----: | :-----: |
- *                       | @ref SNAKE_BLOCK | Block running game |
- *                       | @ref SNAKE_UNBLOCK | Non-blocking running game |
+ * @param mode Parent process blocking when the
+ *             game is running.
+ *             | Enumeration | Actions |
+ *             | :----: | :-----: |
+ *             | @ref SNAKE_BLOCK | Block running game |
+ *             | @ref SNAKE_NONBLOCK | Non-blocking running game |
  *
  * ## Return
  * @return Call status of this function.
@@ -217,6 +212,6 @@ extern const int SNAKE_UNBLOCK; /* value:0 */
  * }
  * ```
  */
-int GreedySnakeBattleGameExternalInterface(int isBlockRunning);
+int GreedySnakeBattleGameExternalInterface(StartupMode mode);
 
 #endif

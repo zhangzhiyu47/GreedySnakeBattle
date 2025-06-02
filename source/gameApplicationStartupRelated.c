@@ -8,6 +8,10 @@
 #include "GSnakeBInclude/GlobalVariable/globalVariable.h"
 #include "GSnakeBInclude/Functions/terminal.h"
 #include "GSnakeBInclude/Functions/standardIO.h"
+
+#include <sys/stat.h>
+#include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 
 /**
@@ -21,7 +25,7 @@
  * opening is successful, write the default game configuration
  * to the configuration file; If unsuccessful, do not read or
  * write files and exit the function.(The configuration file is
- * "GreedySnakeBattleGame.conf".)
+ * configFile.)
  *
  * @return Returns the status of file reading and writing.
  * @retval  0 For successful reading of the configuration file
@@ -37,7 +41,7 @@
 int confgFileInitAndGameIntrfcRndrng() {
     const Point termSize=terminalSize();
 
-    FILE *fp=fopen("GreedySnakeBattleGame.conf","r");
+    FILE *fp=fopen(configFile,"r");
     int ret=0;
 
     if ( fp!=NULL ) {
@@ -61,7 +65,7 @@ int confgFileInitAndGameIntrfcRndrng() {
     } else {
         fp=NULL;
 
-        fp=fopen("GreedySnakeBattleGame.conf","w");
+        fp=fopen(configFile,"w");
         printf("\033[48;5;15m");
         printf("\033[38;5;10m");
         for (int i=0; i<termSize.x; ++i) {
@@ -118,4 +122,57 @@ int confgFileInitAndGameIntrfcRndrng() {
         }
     }
     return ret;
+}
+
+/**
+ * @brief Creates application directories including
+ *        config and log directories.
+ * 
+ * Follows XDG Base Directory Specification:
+ * - Uses $XDG_CONFIG_HOME/GreedySnakeBattle/ if set
+ * - Falls back to ~/.config/GreedySnakeBattle/ otherwise
+ * - Creates log/ subdirectory within the config directory
+ * 
+ * @return 0 on success, -1 on failure with errno set
+ *         appropriately
+ */
+int createAppDirectories() {
+    // Get XDG_CONFIG_HOME or fallback to ~/.config
+    char* xdgConfigHome = getenv("XDG_CONFIG_HOME");
+    char configBasePath[1024] = {0};
+    
+    if (xdgConfigHome == NULL || xdgConfigHome[0] == '\0') {
+        char* home = getenv("HOME");
+        if (home == NULL) {
+            return -1;
+        }
+        snprintf(configBasePath, sizeof(configBasePath), "%s/.config", home);
+    } else {
+        strncpy(configBasePath, xdgConfigHome, sizeof(configBasePath) - 1);
+    }
+
+    // Create main application config directory
+    snprintf(configDir, sizeof(configDir), "%s/GreedySnakeBattle", configBasePath);
+    
+    struct stat st;
+    if (stat(configDir, &st) == -1) {
+        if (mkdir(configDir, 0755) == -1) {
+            return -1;
+        }
+    }
+
+    // Create log subdirectory
+    char logPath[2048] = {0};
+    snprintf(logPath, sizeof(logPath), "%s/log", configDir);
+    
+    if (stat(logPath, &st) == -1) {
+        if (mkdir(logPath, 0755) == -1) {
+            return -1;
+        }
+    }
+
+    snprintf(configFile, sizeof(configFile), "%s/game.conf", configDir);
+    snprintf(logFile, sizeof(logFile), "%s/game.log", logPath);
+
+    return 0;
 }
