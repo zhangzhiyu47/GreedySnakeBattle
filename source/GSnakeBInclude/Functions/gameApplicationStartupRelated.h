@@ -39,10 +39,7 @@ int confgFileInitAndGameIntrfcRndrng();
  * - Uses $XDG_CONFIG_HOME/GreedySnakeBattle/ if set
  * - Falls back to ~/.config/GreedySnakeBattle/ otherwise
  * - Creates log/ subdirectory within the config directory
- * 
- * @return 0 on success, -1 on failure with errno set
- *         appropriately
  */
-int createAppDirectories();
+void createAppDirectories();
 
 #endif

@@ -132,11 +132,8 @@ int confgFileInitAndGameIntrfcRndrng() {
  * - Uses $XDG_CONFIG_HOME/GreedySnakeBattle/ if set
  * - Falls back to ~/.config/GreedySnakeBattle/ otherwise
  * - Creates log/ subdirectory within the config directory
- * 
- * @return 0 on success, -1 on failure with errno set
- *         appropriately
  */
-int createAppDirectories() {
+void createAppDirectories() {
     // Get XDG_CONFIG_HOME or fallback to ~/.config
     char* xdgConfigHome = getenv("XDG_CONFIG_HOME");
     char configBasePath[1024] = {0};
@@ -144,9 +141,10 @@ int createAppDirectories() {
     if (xdgConfigHome == NULL || xdgConfigHome[0] == '\0') {
         char* home = getenv("HOME");
         if (home == NULL) {
-            return -1;
+            snprintf(configBasePath, sizeof(configBasePath), ".");
+        } else {
+            snprintf(configBasePath, sizeof(configBasePath), "%s/.config", home);
         }
-        snprintf(configBasePath, sizeof(configBasePath), "%s/.config", home);
     } else {
         strncpy(configBasePath, xdgConfigHome, sizeof(configBasePath) - 1);
     }
@@ -157,7 +155,7 @@ int createAppDirectories() {
     struct stat st;
     if (stat(configDir, &st) == -1) {
         if (mkdir(configDir, 0755) == -1) {
-            return -1;
+            snprintf(configDir, sizeof(configDir), ".");
         }
     }
 
@@ -167,12 +165,10 @@ int createAppDirectories() {
     
     if (stat(logPath, &st) == -1) {
         if (mkdir(logPath, 0755) == -1) {
-            return -1;
+            snprintf(logPath, sizeof(logPath), ".");
         }
     }
 
     snprintf(configFile, sizeof(configFile), "%s/game.conf", configDir);
     snprintf(logFile, sizeof(logFile), "%s/game.log", logPath);
-
-    return 0;
 }
