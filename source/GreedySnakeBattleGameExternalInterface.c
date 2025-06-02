@@ -209,10 +209,8 @@
  * ```
  */
 int GreedySnakeBattleGameExternalInterface(StartupMode mode) {
-    if (createAppDirectories() == -1) {
-        return -1;
-    }
-
+    createAppDirectories();
+    
     setRotation(ROT_DEFAULT);
     logMessage(LOG_INFO, logFile, "Game start");
 
