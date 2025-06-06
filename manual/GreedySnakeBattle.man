@@ -1,0 +1,212 @@
+GREEDYSNAKEBATTLE(6)    Greedy Snake Battle Game Manual   GREEDYSNAKEBATTLE(6)
+
+NNAAMMEE
+       GreedySnakeBattle - Cross-platform snake battle game with rich features
+
+SSYYNNOOPPSSIISS
+       GGrreeeeddyySSnnaakkeeBBaattttllee
+
+DDEESSCCRRIIPPTTIIOONN
+       GGrreeeeddyySSnnaakkeeBBaattttllee is a cross-platform (Linux-Like, Windows with Cygwin)
+       snake battle game implemented in C with modular design and extensive
+       configuration options.
+
+VVEERRSSIIOONN
+       5.0.2
+
+LLIICCEENNSSEE
+       MIT License - Open source project game
+
+GGAAMMEE EELLEEMMEENNTTSS
+       @@      Snake head
+
+       **      Snake body
+
+       ##      Food
+
+       ++      Wall
+
+       $$      Victory point
+
+GGAAMMEE FFLLOOWW
+       1. Client resource loading
+
+       2. First-run loading screen (only on first launch)
+
+       3. Main menu interface:
+          - Start Game
+
+          - Game Instructions
+
+          - Game Settings
+
+          - Exit Game
+
+       4. Game settings interface (configurable options):
+          - Whether snake dies when eating itself
+
+          - Snake movement speed
+
+          - Victory points required
+
+          - Food quantity
+
+          - Wall quantity
+
+          - Enable system snakes
+
+          - Game interface size
+
+          - Game background color
+
+          - Restore defaults
+
+       5. Game running interface
+
+       6. Game over
+
+OOFFFFLLIINNEE MMOODDEE
+       Automatically activated when config file cannot be opened:
+
+       FFeeaattuurreess
+              - Doesn't read config files
+
+              - Uses built-in default configuration
+
+              - Settings changes aren't saved
+
+              - Config reverts to default after game ends
+
+       NNootteess  - Not recommended to change settings in offline mode
+
+              - Once enabled, cannot be disabled until game ends
+
+WWIINNDDOOWWSS RREEQQUUIIRREEMMEENNTTSS
+       Requires Cygwin for Windows support:
+
+       IInnssttaallllaattiioonn SStteeppss
+              1. Download from https://cygwin.com/setup-x86_64.exe
+
+              2. Install packages: gcc, make, cmake, gdb, git
+
+              3. Add Cygwin\bin to system PATH
+
+              4. Verify installation with:
+                 bbaasshh ----vveerrssiioonn
+
+                 ggcccc ----vveerrssiioonn
+
+                 mmaakkee ----vveerrssiioonn
+
+LLIIBBRRAARRYY
+       Greedy Snake Battle game library (_l_i_b_g_s_n_a_k_e_b_g, _-_l_g_s_n_a_k_e_b_g)
+
+GGAAMMEE IINNTTEERRFFAACCEE
+       FFuunnccttiioonn
+              ##iinncclluuddee ""GGrreeeeddyySSnnaakkeeBBaattttlleeGGaammeeEExxtteerrnnaallIInntteerrffaaccee..hh""
+
+                  iinntt GGrreeeeddyySSnnaakkeeBBaattttlleeGGaammeeEExxtteerrnnaallIInntteerrffaaccee((SSttaarrttuuppMMooddee
+              mmooddee));;
+
+       PPaarraammeetteerrss
+              _m_o_d_e: SNAKE_BLOCK (blocking) or SNAKE_NONBLOCK (non-blocking)
+
+       RReettuurrnn VVaalluueess
+              -2 (parameter error), -1 (system failure), 0 (game ended), 1
+              (game started)
+
+       EExxaammppllee
+              #include "GreedySnakeBattleGameExternalInterface.h"
+
+              int main() {
+                  int ret = GreedySnakeBattleGameExternalInterface(SNAKE_BLOCK);
+
+                  switch (ret) {
+                      case -2:
+                          printf("Parameter error!\n");
+                          break;
+                      case -1:
+                          printf("Game startup failed!\n");
+                          break;
+                      case 0:
+                          printf("Game over.\n");
+                          break;
+                      case 1:
+                          printf("The game is already running in the background.\n");
+                          break;
+                  }
+
+                  return 0;
+              }
+
+BBUUIILLDD && IINNSSTTAALLLL
+       RReeqquuiirreemmeennttss
+              - CMake 3.10+
+
+              - C compiler (GCC/Clang/MSVC)
+
+       BBuuiilldd SStteeppss
+              1. mkdir build && cd build
+
+              2. cmake ..
+
+              3. make
+
+       IInnssttaallll//UUnniinnssttaallll
+              ssuuddoo mmaakkee iinnssttaallll
+
+              ssuuddoo mmaakkee uunniinnssttaallll
+
+CCRROOSSSS--PPLLAATTFFOORRMM SSUUPPPPOORRTT
+       - Windows (Cygwin)
+
+       - Linux
+
+       - Termux (Android)
+
+       - MacOS
+
+KKNNOOWWNN IISSSSUUEESS
+       1. Performance degradation with very long snakes
+
+       2. Obstacle snakes cannot avoid user snakes/walls automatically
+
+       3. Imprecise logic when eating obstacle snake bodies
+
+FFUUTTUURREE PPLLAANNSS
+       1. New features: Portals, infinite food mode
+
+       2. Improvements: Better obstacle snake AI, snake rendering logic
+
+CCOODDIINNGG SSTTYYLLEE
+       CCoommmmeennttss
+              Javadoc style with @file, @brief, @author tags
+
+       NNaammiinngg - Functions: lowerCamelCase_snake_case or lowerCamelCase
+
+              - Variables: lowerCamelCase
+
+              - Structs: UpperCamelCase members
+
+              - Macros: UPPER_CASE
+
+       CCooddee SSttyyllee
+              - 4-space indentation
+
+              - K&R braces
+
+              - Operator spacing
+
+AAUUTTHHOORR
+       Zhang Zhiyu <2585689367@qq.com>
+
+RREEPPOORRTTIINNGG BBUUGGSS
+       Report bugs to <2585689367@qq.com>
+
+CCOOPPYYRRIIGGHHTT
+       MIT License
+
+SSEEEE AALLSSOO
+       GGrreeeeddyySSnnaakkeeBBaattttllee((66))
+
+5.0.2                             2025-06-03              GREEDYSNAKEBATTLE(6)

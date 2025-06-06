@@ -191,6 +191,14 @@ elseif(ANDROID)  # Termux安装规则
     install(DIRECTORY source/GSnakeBInclude/
         DESTINATION ${CMAKE_INSTALL_PREFIX}/include/GreedySnakeBattle
         FILES_MATCHING PATTERN "*.h")
+
+    # 安装man手册
+    install(FILES manual/GreedySnakeBattle.6.gz
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man6)
+
+    # 安装GreedySnakeBattle.man到共享目录
+    install(FILES manual/GreedySnakeBattle.man
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/GreedySnakeBattle)
     
 else()  # Linux/macOS安装规则
     # 标准Unix安装路径
@@ -210,9 +218,14 @@ else()  # Linux/macOS安装规则
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/GreedySnakeBattle
         FILES_MATCHING PATTERN "*.h")
     
-    # 文档安装
-    install(DIRECTORY ${CMAKE_BINARY_DIR}/API_documents/
-        DESTINATION ${CMAKE_INSTALL_DOCDIR}/GreedySnakeBattle)
+    # 安装man手册
+    install(FILES manual/GreedySnakeBattle.6.gz
+        DESTINATION ${CMAKE_INSTALL_MANDIR}/man6)
+
+    # 安装GreedySnakeBattle.man到共享目录
+    install(FILES manual/GreedySnakeBattle.man
+        DESTINATION ${CMAKE_INSTALL_DATADIR}/GreedySnakeBattle)
+
     
     # 桌面快捷方式(Linux)
     if(UNIX AND NOT APPLE)
