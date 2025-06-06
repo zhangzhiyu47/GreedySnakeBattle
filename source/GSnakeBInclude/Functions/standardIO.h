@@ -6,7 +6,7 @@
 #ifndef STANDARD_IO_H
 #define STANDARD_IO_H
 
-#include "GSnakeBInclude/Struct/GameAllRunningData.h"
+#include "../Struct/GameAllRunningData.h"
 
 #include <unistd.h>
 
