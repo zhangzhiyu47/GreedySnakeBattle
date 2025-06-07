@@ -30,6 +30,11 @@ typedef enum StartupMode {
     SNAKE_NONBLOCK   /**< Non-block running game */
 } StartupMode;
 
+// C++ support START
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * ---
  * # About this function
@@ -213,5 +218,10 @@ typedef enum StartupMode {
  * ```
  */
 int GreedySnakeBattleGameExternalInterface(StartupMode mode);
+
+// C++ support END
+#ifdef __cplusplus
+}
+#endif
 
 #endif
