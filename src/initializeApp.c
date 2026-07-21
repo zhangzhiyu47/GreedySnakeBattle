@@ -60,7 +60,7 @@ void createAppDirectories() {
     struct stat st;
     if (stat(configDir, &st) == -1) {
         if (mkdir(configDir, 0700) == -1) {
-            perror("mkdir: %s" HERE);
+            perror("(" HERE "): mkdir: ");
             exitApp(1, "游戏出错，无法创建配置目录", NULL);
         }
     }
