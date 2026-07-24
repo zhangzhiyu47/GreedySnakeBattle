@@ -1,13 +1,8 @@
-/**
- * @file terminal.c
- * @brief This source realizes the functions about the terminal.
- */
-
 #include "include/GlobalVariable/globalVariable.h"
 #include "include/Struct/Point.h"
 #include "include/Functions/terminal.h"
 #include "include/logger.h"
-#include "include/Functions/exitApp.h"
+#include "include/exitApp.h"
 #include <errno.h>
 #include <stdint.h>
 #include <string.h>
@@ -41,14 +36,7 @@ void restoreTerminalSettings() {
     tcsetattr(STDIN_FILENO, TCSANOW, &originalTermios);
 }
 
-/**
- * @brief Get the size of the terminal.
- *
- * Get the size of the terminal. In error,
- * both Point.x and Point.y are set to -1.
- *
- * @return Point The size of the terminal.
- */
+/// Get the size of the terminal
 Point terminalSize() {
     Point termSize = {0};
     struct winsize w = {0};
@@ -57,7 +45,7 @@ Point terminalSize() {
         termSize.y = w.ws_row;
     } else {
         logger(LOG_ERROR, "ioctl: %s" HERE, strerror(errno));
-        exitApp(1, "游戏出错", NULL);
+        exitApp(EXIT_ERROR, "游戏出错", NULL);
     }
     return termSize;
 }

@@ -3,7 +3,7 @@
 #include "include/GlobalVariable/globalVariable.h"
 #include "include/logger.h"
 #include "include/constants.h"
-#include "include/Functions/exitApp.h"
+#include "include/exitApp.h"
 
 #include <errno.h>
 #include <stdbool.h>
@@ -72,7 +72,7 @@ int getGameConfig(GameConfig *config) {
 
         if ( fp==NULL ) {
             logger(LOG_ERROR, "fopen: %s" HERE, strerror(errno));
-            exitApp(1, "游戏出错，配置文件读取失败！", NULL);
+            exitApp(EXIT_ERROR, "游戏出错，配置文件读取失败！", NULL);
         } else {
             Point termSize = terminalSize();
 
@@ -122,7 +122,7 @@ int setGameConfig(GameConfig *config) {
 
     if (fp == NULL) {
         logger(LOG_ERROR, "fopen: %s" HERE, strerror(errno));
-        exitApp(1, "游戏出错，配置文件写入失败！", NULL);
+        exitApp(EXIT_ERROR, "游戏出错，配置文件写入失败！", NULL);
     } else {
         fprintf(fp, "wallNum=%lu\n", config->wallNum);
         fprintf(fp, "foodNum=%lu\n", config->foodNum);

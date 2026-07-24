@@ -1,8 +1,8 @@
 #include "include/GlobalVariable/globalVariable.h"
 #include "include/Struct/GameAllRunningData.h"
 #include "include/Functions/obstacleSnake.h"
-#include "include/Functions/userSnake.h"
-#include "include/Functions/painting.h"
+#include "include/userSnake.h"
+#include "include/painting.h"
 #include "include/Functions/terminal.h"
 #include "include/Struct/Point.h"
 #include "include/constants.h"
@@ -13,13 +13,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-/**
- * @brief The main logic of the game
- *
- * @bug If snake's body is large enough, the
- *      game will get stuck there unless the
- *      signal is sent to stop.
- */
+/// The main logic of the classic-mode game
 void gameMainLogic(GameAllRunningData *data) {
     Point termSize = terminalSize();
     if (termSize.x < WIDE + ROCKER_BAR_WIDTH || termSize.y < HIGH) {
@@ -28,14 +22,19 @@ void gameMainLogic(GameAllRunningData *data) {
         }
     }
 
-    showWhichIsYoursSnake(data);
-    usleep(data->speed * 2);
+    if (showWhichIsYoursSnake(data)) {
+        return;
+    }
+    usleep(data->speed);
 
     while ( data->usrSnkBody[0].x<WIDE && data->usrSnkBody[0].x>1 &&
             data->usrSnkBody[0].y<HIGH && data->usrSnkBody[0].y>1 ) {
 
-        if ( userSnakeMoveDirecControl(data) ) {
+        int retval = userSnakeMoveDirecControl(data);
+        if (retval == 1) {
             break;
+        } else if (retval == -1) {
+            return;
         }
 
         printf("\033[%lu;%luH ",
@@ -43,7 +42,7 @@ void gameMainLogic(GameAllRunningData *data) {
                 data->usrSnkBody[data->usrSnkLeng-1].x);
         userSnakeMove(data);
 
-        if ( data->isEnableObs && !data->obsState ) {
+        if (data->isEnableObs && !data->obsState) {
             printf("\033[%lu;%luH ",
                     data->obsSnkBody[data->obsSnkLeng-1].y,
                     data->obsSnkBody[data->obsSnkLeng-1].x);
@@ -51,35 +50,44 @@ void gameMainLogic(GameAllRunningData *data) {
             obsMove(data);
         }
 
-        gameInterfacePainting(data);
-        if ( !data->obsState ) {
+        gameAreaPainting(data);
+        if (!data->obsState) {
             obsEatFood(data);
             obsEatWallsOrUserSnake(data);
         }
 
-        if ( isUserSnakeEatSelf(data) && data->isEnableEatSlfGmOver!=0 ) {
+        if (isUserSnakeEatSelf(data)
+                && data->isEnableEatSlfGmOver!=0 ) {
             break;
         }
 
-        if ( data->usrSrc >= HIGH * WIDE - (HIGH + WIDE) * 2 - 40
-                - data->isEnableObs*data->obsSnkLeng ) {
-            data->usrSnkGameEndState=1;
+        if ( data->usrSrc >= HIGH * WIDE
+                - (HIGH + WIDE) * 2
+                - data->foodNum
+                - data->wallNum
+                - data->isEnableObs * data->obsSnkLeng) {
             break;
         }
 
-        if ( data->isEnableObs && !data->obsState
-                && data->obsSnkLeng>=HIGH*WIDE-(HIGH+WIDE)*2-40-
-                data->isEnableObs*data->obsSnkLeng ) {
-            data->usrSnkGameEndState=0;
+        if (data->isEnableObs
+                && !data->obsState
+                && data->obsSnkLeng >= HIGH * WIDE
+                    - (HIGH + WIDE) * 2
+                    - data->foodNum
+                    - data->wallNum
+                    - data->usrSnkLeng
+                    - data->obsSnkLeng) {
             break;
         }
 
-        if ( (isUserSnakeEatWall(data) && data->wallNum)
-                || (isUserSnakeEatObsSnake(data) &&
-                data->isEnableObs && !data->obsState) ) {
+        if ((isUserSnakeEatWall(data) && data->wallNum)
+                || 
+                (isUserSnakeEatObsSnake(data)
+                 && data->isEnableObs
+                 && !data->obsState) ) {
             break;
         }
-        
+
         userSnakeEatFood(data);
 
         fflush(stdout);
@@ -95,5 +103,65 @@ void gameMainLogic(GameAllRunningData *data) {
         setGameConfig(&config);
     }
 
-    gamePausePainting(data);
+    gamePausePainting(data, L"游戏结束，点击屏幕继续");
+}
+
+/// The main logic of the unlimited-mode game
+void gameMainLogicUnlimitedMode(GameAllRunningData *data) {
+    Point termSize = terminalSize();
+    if (termSize.x < WIDE + ROCKER_BAR_WIDTH || termSize.y < HIGH) {
+        if (screenTooSmallPainting(data)) {
+            return;
+        }
+    }
+
+    if (showWhichIsYoursSnake(data)) {
+        return;
+    }
+    usleep(data->speed);
+
+    while ( data->usrSnkBody[0].x<WIDE && data->usrSnkBody[0].x>1 &&
+            data->usrSnkBody[0].y<HIGH && data->usrSnkBody[0].y>1 ) {
+
+        int retval = userSnakeMoveDirecControl(data);
+        if (retval == 1) {
+            break;
+        } else if (retval == -1) {
+            return;
+        }
+
+        if (isUnlimitedFoodAt(
+                    data->usrSnkBody[data->usrSnkLeng - 1].x,
+                    data->usrSnkBody[data->usrSnkLeng - 1].y)) {
+            printf("\033[%lu;%luH" UNLIMIT_FOOD_C UNLIMIT_FOOD,
+                    data->usrSnkBody[data->usrSnkLeng - 1].y,
+                    data->usrSnkBody[data->usrSnkLeng - 1].x);
+            resetColor();
+            userSnakeMove(data);
+        } else {
+            printf("\033[%lu;%luH ",
+                    data->usrSnkBody[data->usrSnkLeng - 1].y,
+                    data->usrSnkBody[data->usrSnkLeng - 1].x);
+            userSnakeMove(data);
+        }
+
+        gameAreaPainting(data);
+
+        if (isUserSnakeEatSelf(data)
+                && data->isEnableEatSlfGmOver!=0 ) {
+            break;
+        }
+
+        if (data->usrSrc >= HIGH * WIDE - (HIGH + WIDE) * 2) {
+            break;
+        }
+
+        userSnakeEatUnlimitedFood(data);
+
+        fflush(stdout);
+        usleep(data->speed);
+        data->refreshTimes++;
+    }
+
+    gamePausePainting(data, L"游戏结束，点击屏幕继续");
 }

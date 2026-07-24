@@ -1,6 +1,6 @@
 #include "include/Struct/GameAllRunningData.h"
 #include "include/Functions/terminal.h"
-#include "include/Functions/exitApp.h"
+#include "include/exitApp.h"
 #include "include/GlobalVariable/globalVariable.h"
 #include "include/logger.h"
 
@@ -30,12 +30,12 @@ static void getTimeStr(char *buf, size_t size) {
 void exitApp(int retn, const char *tip,
         const GameAllRunningData *data) {
     printf("\033[?25h\033[0m\033[?1049l\033[?1002;1006l");
-    if (strlen(tip)) {
+    if (retn != EXIT_NORMAL) {
         printf("%s\n", tip);
     }
     fflush(stdout);
 
-    if (retn) {
+    if (retn == EXIT_ERROR) {
         FILE *fp = fopen(errSignFile, "w");
         if (fp) {
             char buf[2048] = {0};

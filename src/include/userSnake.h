@@ -5,7 +5,9 @@
 #ifndef USER_SNAKE_H
 #define USER_SNAKE_H
 
-#include "../Struct/GameAllRunningData.h"
+#include "Struct/GameAllRunningData.h"
+
+#include <stdbool.h>
 
 /**
  * @brief Move user's snake.
@@ -43,22 +45,14 @@ void userSnakeMove(GameAllRunningData *data);
  */
 int userSnakeMoveDirecControl(GameAllRunningData *data);
 
-/**
- * @brief User's snake eat foods or death the obstacle
- *        snake's body(If it is enable).
- *
- * @param[in,out] data All the game's data when the game is running.
- *
- * @todo When the user snake eats the body of the obstacle snake,
- *       this function simply reduces the length of the obstacle
- *       snake to reduce the length of the snake, but this method
- *       can not accurately show the snake that will be eaten when
- *       drawing the game interface. Need to modify part of the
- *       logic of the code and the logic of drawing the snake's body
- *       (Maybe is gameInterfacePainting(GameAllRunningData const
- *       *const data) function).
- */
+/// User's snake eat foods or death the obstacle snake's body
 void userSnakeEatFood(GameAllRunningData *data);
+
+/// User's snake eat unlimited foods
+void userSnakeEatUnlimitedFood(GameAllRunningData *data);
+
+/// Determine if there's unlimited food at the coordinates
+bool isUnlimitedFoodAt(uint64_t x, uint64_t y);
 
 /**
  * @brief Is user's snake eating its own body.

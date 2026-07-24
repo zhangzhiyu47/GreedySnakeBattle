@@ -4,25 +4,27 @@
  */
 
 #include "include/Struct/GameAllRunningData.h"
-#include "include/Functions/standardIO.h"
 #include "include/Functions/terminal.h"
-#include "include/Functions/painting.h"
+#include "include/painting.h"
 #include "include/Functions/food.h"
 #include "include/GlobalVariable/globalVariable.h"
 #include "include/Struct/Point.h"
 #include "include/constants.h"
 #include "include/button.h"
+#include "include/userSnake.h"
 
 #include <stdatomic.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <poll.h>
+#include <unistd.h>
 
 static void paintAll(int termW, int termH, void *data) {
     resetColor();
     fillBackground(termW, termH, NULL);
     wallPainting(data);
-    gameInterfacePainting(data);
+    gameAreaPainting(data);
 }
 
 /**
@@ -36,12 +38,11 @@ static void paintAll(int termW, int termH, void *data) {
  * @param[in,out] data All the game's data when the game is running.
  */
 void userSnakeMove(GameAllRunningData *data) {
-    for (uint64_t i=data->usrSnkLeng-1; i>0; i-- ) {
+    for (uint64_t i = data->usrSnkLeng - 1; i > 0; --i) {
         data->usrSnkBody[i]=data->usrSnkBody[i-1];
     }
     data->usrSnkBody[0].x+=data->usrSnkNxtXDrc;
     data->usrSnkBody[0].y+=data->usrSnkNxtYDrc;
-    return;
 }
 
 static char parseMouse() {
@@ -83,6 +84,15 @@ static char parseMouse() {
     return selected;
 }
 
+/// Non-blocking keyboard check
+static int keyboardHit() {
+    struct timeval tv = {0L, 0L};
+    fd_set fds;
+    FD_ZERO(&fds);
+    FD_SET(STDIN_FILENO, &fds);
+    return select(STDIN_FILENO+1, &fds, NULL, NULL, &tv);
+}
+
 /**
  * @brief Control the direction of user's snake movement.
  *
@@ -104,6 +114,7 @@ static char parseMouse() {
  * @return The state of the game when the game is running.
  * @retval 0 Game will be last running.
  * @retval 1 Game will be over.
+ * @retval 1 Game will be over without pausing.
  */
 int userSnakeMoveDirecControl(GameAllRunningData *data) {
     char key=0;
@@ -112,13 +123,13 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
         Point termSize = terminalSize();
         if (termSize.x < WIDE || termSize.y < HIGH) {
             if (screenTooSmallPainting(data)) {
-                return 1;
+                return -1;
             }
         }
 
         clearScreen();
         wallPainting(data);
-        gameInterfacePainting(data);
+        gameAreaPainting(data);
     }
 
     if ( data->usrSnkIsJumping ) {
@@ -134,8 +145,8 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
         data->usrSnkIsJumping=0;
     }
 
-    while ( linuxKbhit() > 0 ) {
-        key=getchar();
+    while (keyboardHit() > 0) {
+        key = getchar();
     }
 
     if (key == '\033' && getchar() == '[') {
@@ -218,17 +229,17 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
 
     case 'p':
     case 'P':
-        gamePausePainting(data);
+        gamePausePainting(data, L"点击屏幕继续游戏");
         clearScreen();
         wallPainting(data);
-        gameInterfacePainting(data);
+        gameAreaPainting(data);
         break;
 
     case 'r':
     case 'R':
         clearScreen();
         wallPainting(data);
-        gameInterfacePainting(data);
+        gameAreaPainting(data);
         break;
 
     case 'o':
@@ -258,7 +269,7 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
             resetColor();
             fillBackground(termSize.x, termSize.y, NULL);
             wallPainting(data);
-            gameInterfacePainting(data);
+            gameAreaPainting(data);
 
             printf("\033[?1002;1006h");
         }
@@ -268,43 +279,94 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
     return 0;
 }
 
-/**
- * @brief User's snake eat foods or death the obstacle
- *        snake's body(If it is enable).
- *
- * @param[in,out] data All the game's data when the game is running.
- *
- * @todo When the user snake eats the body of the obstacle snake,
- *       this function simply reduces the length of the obstacle
- *       snake to reduce the length of the snake, but this method
- *       can not accurately show the snake that will be eaten when
- *       drawing the game interface. Need to modify part of the
- *       logic of the code and the logic of drawing the snake's body
- *       (@ref gameInterfacePainting function also needs to improve).
- */
+/// User's snake eat foods or death the obstacle snake's body
 void userSnakeEatFood(GameAllRunningData *data) {
     for (uint64_t i=0; i<data->foodNum; i++ ) {
-        if ( data->food[i].x==data->usrSnkBody[0].x &&
-                data->food[i].y==data->usrSnkBody[0].y ) {
+        if ( data->food[i].x==data->usrSnkBody[0].x
+                && data->food[i].y==data->usrSnkBody[0].y ) {
             foodInit(data,i);
             data->usrSnkLeng++;
-            data->usrSrc+=1;
+            data->usrSrc++;
         }
     }
 
-    for (uint64_t i=0; i<data->obsSnkLeng &&
-            data->obsState!=0; i++ ) {
+    for (uint64_t i = 0; i < data->obsSnkLeng
+            && data->obsState != 0; i++) {
         if ( data->obsSnkBody[i].x==data->usrSnkBody[0].x &&
                 data->obsSnkBody[i].y==data->usrSnkBody[0].y ) {
-            for (uint64_t j = i; j < data->obsSnkLeng; ++j) {
-                data->obsSnkBody[j].x = data->obsSnkBody[j + 1].x;
-                data->obsSnkBody[j].y = data->obsSnkBody[j + 1].y;
-            }
+
+            data->obsSnkBody[i].x =
+                data->obsSnkBody[data->obsSnkLeng - 1].x;
+            data->obsSnkBody[i].y =
+                data->obsSnkBody[data->obsSnkLeng - 1].y;
 
             data->usrSnkLeng++;
-            data->usrSrc += 1;
+            data->usrSrc++;
             data->obsSnkLeng--;
         }
+    }
+}
+
+/// Determine if there's unlimited food at the coordinates
+bool isUnlimitedFoodAt(uint64_t x, uint64_t y) {
+    if (x < 2 || x > WIDE - 1 || y < 2 || y > HIGH - 1) {
+        return false;
+    }
+
+    const uint64_t step = 2;
+    const uint64_t left = 2, right = WIDE - 1;
+    const uint64_t top = 2, bottom = HIGH - 1;
+
+    uint64_t distLeft = x - left;
+    uint64_t distRight = right - x;
+    uint64_t distTop = y - top;
+    uint64_t distBottom = bottom - y;
+
+    uint64_t minDist = distLeft;
+    if (distRight < minDist) {
+        minDist = distRight;
+    }
+    if (distTop < minDist) {
+        minDist = distTop;
+    }
+    if (distBottom < minDist) {
+        minDist = distBottom;
+    }
+
+    uint64_t layer = minDist / step;
+
+    uint64_t l = left + layer * step;
+    uint64_t r = right - layer * step;
+    uint64_t t = top + layer * step;
+    uint64_t b = bottom - layer * step;
+
+    if (l > r || t > b) {
+        return false;
+    }
+
+    if (y == t && x >= l && x <= r) {
+        return true;
+    }
+    if (t < b && y == b && x >= l && x <= r) {
+        return true;
+    }
+    if (x == l && y >= t && y <= b) {
+        return true;
+    }
+    if (l < r && x == r && y >= t && y <= b) {
+        return true;
+    }
+
+    return false;
+}
+
+/// User's snake eat unlimited foods
+void userSnakeEatUnlimitedFood(GameAllRunningData *data) {
+    if (isUnlimitedFoodAt(
+                data->usrSnkBody[0].x,
+                data->usrSnkBody[0].y)) {
+        data->usrSrc++;
+        data->usrSnkLeng++;
     }
 }
 

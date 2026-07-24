@@ -8,7 +8,7 @@
 #include <stdatomic.h>
 
 /**
- * @brief The height(HIGH) and width(WIDE) of the game interface.
+ * @brief The height(HIGH) and width(WIDE) of the game area
  */
 extern uint64_t HIGH,WIDE;
 

@@ -2,48 +2,45 @@
 #define GAME_ALL_RUNNING_DATA_H
 
 #include "Point.h"
+#include "../constants.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 
 /// All the game-running data.
 typedef struct GameAllRunningData {
-    uint64_t speed;             /**< The speed of snake */
-    uint64_t histryHighestScr;  /**< The highest usr score(The amount of food actually eaten by user's snakes) of history */
+    uint64_t speed;             /**< Speed of snake */
+    uint64_t histryHighestScr;  /**< The highest score of history */
 
-    bool isEnableEatSlfGmOver;  /**< Is enable the setting of dying when the snakes eat themself */
-    bool isEnableObs;           /**< Is enable the obstacle Snake */
+    bool isEnableEatSlfGmOver;  /**< Is enable die when snake eat body */
+    bool isEnableObs;           /**< Is enable the obstacle snake */
 
-    Point usrSnkBody[1143];     /**< Record the position of each node of the user's snake bodies ([0] is the snake's head) */
+    /**< Each node of user's snake bodies ([0] for head) */
+    Point usrSnkBody[1143];
 
-    uint64_t usrSnkLeng;        /**< The length of the user's snake */
+    uint64_t usrSnkLeng;        /**< Length of the user's snake */
 
     int usrSnkNxtXDrc;          /**< ←→ The user's snake next-step crosswise direction */
     int usrSnkNxtYDrc;          /**< ↓↑ The user's snake next-step vertical direction  */
 
     uint64_t usrSrc;            //< User's score
 
-    bool usrSnkGameEndState;    /**< The state of user's snake when the game is over(1 for winning,0 for losing) */
-
-    bool usrSnkIsEatingObsSnk;  /**< Does the user's snake eat the obstacle snake */
     bool usrSnkIsJumping;       /**< Is user's snake jumping */
 
-    Point food[1143];           /**< Record the position of each one of foods */
-    uint64_t foodNum;           /**< The number of snake's food */
+    Point food[FOOD_NUMBER_MAX];/**< Position of each foods */
+    uint64_t foodNum;           /**< Number of snake's food */
 
-    Point wall[15];             /**< Record the position of each one of walls */
-    uint64_t wallNum;           /**< The number of walls */
+    Point wall[WALL_NUMBER_MAX];/**< Position of each walls */
+    uint64_t wallNum;           /**< Number of walls */
 
-    Point obsSnkBody[1143];     /**< Record the position of each node of the obstacle snake bodies ([0] is the snake's head) */
+    /**< Each node of obstacle snake bodies ([0] for head) */
+    Point obsSnkBody[1143];    
+    uint64_t obsSnkLeng;        /**< Length of the obstacle snake */
     
-    uint64_t obsSnkLeng;        /**< The length of the obstacle snake */
-    
-    uint64_t obsState;          /**< The state of obstacle snake(The details are as follows)
-                                     | Number | Represent |
-                                     | :----: | :-------: |
-                                     | 0 | living(if it is enable) |
-                                     | 1 | die by eating the walls |
-                                     | 2 | die by eating the user snake |
-                                */
+    uint64_t obsState;          /**< The state of obstacle snake
+                                     | 0 | living |
+                                     | 1 | die by eating walls |
+                                     | 2 | die by eating user snake | */
     
     int obsSnkNxtXDrc;          /**< ←→ The obstacle snake next-step crosswise direction */
     int obsSnkNxtYDrc;          /**< ↓↑ The obstacle snake next-step vertical direction  */

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.13)
 project(GreedySnakeBattle LANGUAGES C)
 
 set(VERSION_MAJOR 6)
-set(VERSION_MINOR 0)
+set(VERSION_MINOR 1)
 set(VERSION_PATCH 0)
 set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
@@ -17,7 +17,6 @@ set(SOURCES
     src/logger.c
     src/obstacleSnake.c
     src/painting.c
-    src/standardIO.c
     src/terminal.c
     src/gameMenu.c
     src/userSnake.c
@@ -35,7 +34,8 @@ target_link_libraries(gsb PRIVATE m)
 target_compile_options(gsb PRIVATE
     -Wall
     -Wextra
-    $<$<CONFIG:Debug>:-g -O0>
+    -g
+    $<$<CONFIG:Debug>:-O0>
     $<$<CONFIG:Release>:-O2>
 )
 
@@ -89,19 +89,11 @@ endif()
 if(ANDROID)  
     install(TARGETS gsb
         RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
-    
-    install(FILES man/gsb.6.gz
-        DESTINATION ${CMAKE_INSTALL_PREFIX}/share/man/man6)
-
 else()
     include(GNUInstallDirs)
     
     install(TARGETS gsb
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-    
-    install(FILES man/gsb.6.gz
-        DESTINATION ${CMAKE_INSTALL_MANDIR}/man6)
-
 endif()
 
 configure_file(
@@ -114,5 +106,3 @@ add_custom_target(uninstall
     COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/cmake_uninstall.cmake
     COMMENT "Uninstalling..."
 )
-
-

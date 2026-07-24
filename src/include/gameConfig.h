@@ -12,8 +12,8 @@ typedef struct GameConfig {
     uint64_t speed;             /**< The speed of snake */
     uint64_t histryHighestScr;  /**< The highest score of history */
 
-    uint64_t scrnHigh;          /**< The height of the game-face sreen */
-    uint64_t scrnWide;          /**< The weight of the game-face sreen */
+    uint64_t scrnHigh;          /**< The height of the game area */
+    uint64_t scrnWide;          /**< The weight of the game area */
 
     bool isEnableObs;           /**< Is enable the obstacle snake */
     bool isEnableEatSlfGmOver;  /**< Is enable die when snake eat body */

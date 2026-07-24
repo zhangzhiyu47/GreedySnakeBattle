@@ -5,14 +5,12 @@
 #include "include/Functions/food.h"
 #include "include/initGameData.h"
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <time.h>
 
 /// Initialize all the obstacle walls
 static void wallInit(GameAllRunningData *data) {
-    srand((unsigned)time(NULL));
-
     for (uint64_t i = 0; i < data->wallNum; i++) {
         for (bool isRandWrongPos = true; isRandWrongPos;) {
             data->wall[i].x=rand()%(WIDE-3)+2;
@@ -35,17 +33,10 @@ static void wallInit(GameAllRunningData *data) {
     }
 }
 
-/**
- * @brief Initialize all the game's data
- *
- * @todo
- *      | number | action |
- *      | :----: | :----: |
- *      | 1 | Set the portal |
- *      | 2 | Unlimited food |
- */
+/// Initialize all the classic-mode game's data
+/// TODO: Set the portal
 void initGameData(GameAllRunningData *data) {
-    GameConfig config= {0};
+    GameConfig config = {0};
     getGameConfig(&config);
 
     WIDE=config.scrnWide;
@@ -74,7 +65,6 @@ void initGameData(GameAllRunningData *data) {
     }
     
     data->usrSnkNxtXDrc=1;
-    data->usrSnkNxtYDrc=data->usrSrc=data->usrSnkGameEndState=0;
     
     data->isEnableEatSlfGmOver=config.isEnableEatSlfGmOver;
 
@@ -87,7 +77,43 @@ void initGameData(GameAllRunningData *data) {
     data->histryHighestScr=config.histryHighestScr;
 
     data->usrSnkIsJumping=0;
-    data->usrSnkIsEatingObsSnk=0;
+
+    data->refreshTimes = 0;
+}
+
+/// Initialize all the unlimit-food-mode game's data
+void initGameDataUnlimitFood(GameAllRunningData *data) {
+    GameConfig config = {0};
+    getGameConfig(&config);
+
+    WIDE=config.scrnWide;
+    HIGH=config.scrnHigh;
+
+    data->usrSnkBody[0].x=WIDE/2;
+    data->usrSnkBody[0].y=data->usrSnkBody[1].y=HIGH/2;
+    data->usrSnkBody[1].x=WIDE/2-1;
+    data->usrSnkLeng=2;
+    
+    data->obsSnkLeng=1;
+    data->isEnableObs=false;
+    data->obsState=0;
+    
+    data->foodNum=0;
+    data->wallNum=0;
+    
+    data->usrSnkNxtXDrc=1;
+    
+    data->isEnableEatSlfGmOver=config.isEnableEatSlfGmOver;
+
+    data->speed=config.speed;
+
+    data->obsIQ = 0;
+    data->obsSnkNxtXDrc=data->obsSnkNxtYDrc=0;
+    data->obsClosestFood=0;
+
+    data->histryHighestScr = UINTMAX_MAX;
+
+    data->usrSnkIsJumping=0;
 
     data->refreshTimes = 0;
 }

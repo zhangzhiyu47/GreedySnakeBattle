@@ -8,7 +8,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <time.h>
 
 /**
  * @brief Initialize a food.
@@ -21,8 +20,6 @@
  *               initialized or updated.
  */
 void foodInit(GameAllRunningData *data, int number) {
-    srand((unsigned)time(NULL));
-
     for ( bool isRandWrongPos=true; isRandWrongPos; ) {
         data->food[number].x=rand()%(WIDE-3)+2;
         data->food[number].y=rand()%(HIGH-3)+2;

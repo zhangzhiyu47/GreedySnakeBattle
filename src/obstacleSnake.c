@@ -3,7 +3,6 @@
 #include "include/Functions/food.h"
 
 #include <stdbool.h>
-#include <time.h>
 #include <stdlib.h>
 
 #define MAX_DIM 2048
@@ -501,13 +500,6 @@ static void obsMoveIQ5(GameAllRunningData *data) {
  * @param[in,out] data All the game's data when the game is running.
  */
 void obsInit(GameAllRunningData *data) {
-    static bool seeded = false;
-
-    if (!seeded) {
-        srand((unsigned)time(NULL));
-        seeded = true;
-    }
-
     for (bool isRandWrongPos = true; isRandWrongPos;) {
         data->obsSnkBody[0].x = rand() % (WIDE - 3) + 2;
         data->obsSnkBody[0].y = rand() % (HIGH - 3) + 2;
@@ -634,7 +626,6 @@ void obsEatWallsOrUserSnake(GameAllRunningData *data) {
         if (data->obsSnkBody[0].x == data->usrSnkBody[i].x
                 && data->obsSnkBody[0].y == data->usrSnkBody[i].y) {
             data->obsState = 2;
-            data->usrSnkIsEatingObsSnk = 1;
             return;
         }
     }

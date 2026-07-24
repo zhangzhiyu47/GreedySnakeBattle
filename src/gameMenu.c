@@ -1,6 +1,6 @@
 #include "include/GlobalVariable/globalVariable.h"
 #include "include/Functions/terminal.h"
-#include "include/Functions/painting.h"
+#include "include/painting.h"
 #include "include/gameConfig.h"
 #include "include/menu.h"
 #include "include/browser.h"
@@ -9,7 +9,7 @@
 #include "include/gameMenu.h"
 #include "include/constants.h"
 #include "include/logger.h"
-#include "include/Functions/exitApp.h"
+#include "include/exitApp.h"
 #include "include/res/gameIntro.h"
 #include "include/res/EULA.h"
 
@@ -155,11 +155,11 @@ void configureGame(GameConfig *config, int selected) {
         Point termSize = terminalSize();
         NumberDialog *nd = numberCreate();
 
-        numberField(nd, "食物数量", 1, 20,
+        numberField(nd, "食物数量", 1, FOOD_NUMBER_MAX,
                 config->foodNum, 0);
         numberStep(nd, 0, 1);
 
-        numberField(nd, "围墙数量", 0, 15,
+        numberField(nd, "围墙数量", 0, WALL_NUMBER_MAX,
                 config->wallNum, 0);
         numberStep(nd, 1, 1);
 
@@ -232,15 +232,16 @@ void configureGame(GameConfig *config, int selected) {
     }
 }
 
-bool showGameMenu(GameConfig *config) {
+int showGameMenu(GameConfig *config) {
     Point termSize = terminalSize();
     Menu *menu = menuCreate();
     MenuResult res;
-    bool needEnd = false;
+    int retval = 0;
 
     menuTab(menu, "开始");
-    menuItem(menu, 0, "开始", '\0');
-    menuItem(menu, 0, "退出", '\0');
+    menuItem(menu, 0, "经典模式", '\0');
+    menuItem(menu, 0, "无限食物", '\0');
+    menuItem(menu, 0, "退出游戏", '\0');
 
     menuTab(menu, "设置");
     menuItem(menu, 1, "死亡条件", '\0');
@@ -261,17 +262,20 @@ bool showGameMenu(GameConfig *config) {
 
     clearScreen();
 
-    while (!needEnd) {
+    while (!retval) {
         res = menuRun(menu);
 
         if (res.selectedTab == 0) {
             switch (res.selectedItem) {
                 case 0:
-                    needEnd = true;
+                    retval = GAME_MODE_CLASSIC;
                     break;
                 case 1:
+                    retval = GAME_MODE_UNLIMIT_FOOD;
+                    break;
+                case 2:
                     menuFree(menu);
-                    return true;
+                    return GAME_MODE_QUIT;
             }
         } else if (res.selectedTab == 1) {
             configureGame(config, res.selectedItem);
@@ -292,7 +296,7 @@ bool showGameMenu(GameConfig *config) {
             }
         } else {
             menuFree(menu);
-            return true;
+            return GAME_MODE_QUIT;
         }
 
         menuInitial(menu, res.selectedTab, res.selectedItem);
@@ -301,7 +305,7 @@ bool showGameMenu(GameConfig *config) {
     menuFree(menu);
     fillBackground(termSize.x, termSize.y, NULL);
     clearScreen();
-    return false;
+    return retval;
 }
 
 /// Request the user to agree to the End User License Agreement
@@ -418,7 +422,7 @@ void showErrorLog() {
         struct stat st;
         if (stat(logFile, &st) == -1) {
             logger(LOG_ERROR, "stat: %s" HERE, strerror(errno));
-            exitApp(1, "游戏出错！", NULL);
+            exitApp(EXIT_ERROR, "游戏出错！", NULL);
         }
 
         time_t sec = st.st_mtim.tv_sec;

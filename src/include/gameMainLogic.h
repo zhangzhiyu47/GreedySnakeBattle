@@ -3,13 +3,10 @@
 
 #include "Struct/GameAllRunningData.h"
 
-/**
- * @brief The main logic of the game
- *
- * @bug If snake's body is large enough, the
- *      game will get stuck there unless the
- *      signal is sent to stop.
- */
+/// The main logic of the classic-mode game
 void gameMainLogic(GameAllRunningData *data);
+
+/// The main logic of the unlimited-mode game
+void gameMainLogicUnlimitedMode(GameAllRunningData *data);
 
 #endif

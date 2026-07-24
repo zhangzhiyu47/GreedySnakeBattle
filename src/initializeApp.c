@@ -2,7 +2,7 @@
 #include "include/Struct/Point.h"
 #include "include/GlobalVariable/globalVariable.h"
 #include "include/Functions/terminal.h"
-#include "include/Functions/exitApp.h"
+#include "include/exitApp.h"
 #include "include/initializeApp.h"
 #include "include/logger.h"
 #include "include/gameMenu.h"
@@ -61,7 +61,7 @@ void createAppDirectories() {
     if (stat(configDir, &st) == -1) {
         if (mkdir(configDir, 0700) == -1) {
             perror("(" HERE "): mkdir: ");
-            exitApp(1, "游戏出错，无法创建配置目录", NULL);
+            exitApp(EXIT_ERROR, "游戏出错，无法创建配置目录", NULL);
         }
     }
 
@@ -80,19 +80,19 @@ void checkLockFile() {
     int fd = open(lockFile, O_RDWR | O_CREAT, 0600);
     if (fd == -1) {
         logger(LOG_ERROR, "open: %s" HERE, strerror(errno));
-        exitApp(1, "游戏出错！", NULL);
+        exitApp(EXIT_ERROR, "游戏出错！", NULL);
     }
 
     if (flock(fd, LOCK_EX | LOCK_NB) != 0) {
         close(fd);
-        exitApp(0, "当前已有该应用在运行，无法重复启动", NULL);
+        exitApp(EXIT_NORMAL, "当前已有该应用在运行，无法重复启动", NULL);
     }
 
     struct stat st;
     if (fstat(fd, &st) == -1) {
         close(fd);
         logger(LOG_ERROR, "fstat: %s" HERE, strerror(errno));
-        exitApp(1, "游戏出错！", NULL);
+        exitApp(EXIT_ERROR, "游戏出错！", NULL);
     }
 
     if (st.st_size > 0 || access(errSignFile, F_OK) == 0) {

@@ -5,8 +5,12 @@
 #include "gameConfig.h"
 #include <unistd.h>
 
+#define GAME_MODE_QUIT 0
+#define GAME_MODE_CLASSIC 1
+#define GAME_MODE_UNLIMIT_FOOD 2
+
 /// Show game menu.
-bool showGameMenu(GameConfig *config);
+int showGameMenu(GameConfig *config);
 
 /// Introduce and explain the game in detail.
 void gameIntroduction(const char *button);
