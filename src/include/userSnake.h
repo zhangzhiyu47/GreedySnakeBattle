@@ -9,16 +9,10 @@
 
 #include <stdbool.h>
 
-/**
- * @brief Move user's snake.
- *
- * The position of the snake's last body is copied from
- * the previous body, and the coordinates of the snake
- * head are added to GameAllRunningData.usrSnkNxtXDrc and
- * GameAllRunningData.usrSnkNxtYDrc
- *
- * @param[in,out] data All the game's data when the game is running.
- */
+/// Move user's snake, go through walls, come out on the other side
+void userSnakeMoveCross(GameAllRunningData *data);
+
+/// Move user's snake
 void userSnakeMove(GameAllRunningData *data);
 
 /**

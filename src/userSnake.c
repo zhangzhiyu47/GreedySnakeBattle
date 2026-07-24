@@ -27,16 +27,26 @@ static void paintAll(int termW, int termH, void *data) {
     gameAreaPainting(data);
 }
 
-/**
- * @brief Move user's snake.
- *
- * The position of the snake's last body is copied from
- * the previous body, and the coordinates of the snake
- * head are added to GameAllRunningData.usrSnkNxtXDrc and
- * GameAllRunningData.usrSnkNxtYDrc
- *
- * @param[in,out] data All the game's data when the game is running.
- */
+/// Move user's snake, go through walls, come out on the other side
+void userSnakeMoveCross(GameAllRunningData *data) {
+    for (uint64_t i = data->usrSnkLeng - 1; i > 0; --i) {
+        data->usrSnkBody[i]=data->usrSnkBody[i-1];
+    }
+    data->usrSnkBody[0].x+=data->usrSnkNxtXDrc;
+    data->usrSnkBody[0].y+=data->usrSnkNxtYDrc;
+
+    if (data->usrSnkBody[0].x == 1) {
+        data->usrSnkBody[0].x = WIDE - 1;
+    } else if (data->usrSnkBody[0].x == WIDE) {
+        data->usrSnkBody[0].x = 2;
+    } else if (data->usrSnkBody[0].y == 1) {
+        data->usrSnkBody[0].y = HIGH - 1;
+    } else if (data->usrSnkBody[0].y == HIGH) {
+        data->usrSnkBody[0].y = 2;
+    }
+}
+
+/// Move user's snake
 void userSnakeMove(GameAllRunningData *data) {
     for (uint64_t i = data->usrSnkLeng - 1; i > 0; --i) {
         data->usrSnkBody[i]=data->usrSnkBody[i-1];
@@ -102,12 +112,12 @@ static int keyboardHit() {
  * | ↑/W/5 | ↑ |
  * | ↓/S/8 | ↓ |
  * | →/D/9 | → |
- * | j/J | Jump |
- * | f/F/Tab | Fly |
- * | p/P | Pause |
- * | r/R | Repaint |
+ * | J | Jump |
+ * | F/Tab | Fly |
+ * | P | Pause |
+ * | R | Repaint |
  * | Esc | Block game |
- * | o/O/q/Q | Game over |
+ * | Q/O | Game over |
  *
  * @param[in,out] data All the game's data when the game is running.
  *

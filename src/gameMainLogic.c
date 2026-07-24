@@ -80,6 +80,14 @@ void gameMainLogic(GameAllRunningData *data) {
             break;
         }
 
+        if (data->usrSnkLeng >= SNAKE_MAX_LENGTH) {
+            break;
+        }
+
+        if (data->obsSnkLeng >= SNAKE_MAX_LENGTH) {
+            break;
+        }
+
         if ((isUserSnakeEatWall(data) && data->wallNum)
                 || 
                 (isUserSnakeEatObsSnake(data)
@@ -137,13 +145,12 @@ void gameMainLogicUnlimitedMode(GameAllRunningData *data) {
                     data->usrSnkBody[data->usrSnkLeng - 1].y,
                     data->usrSnkBody[data->usrSnkLeng - 1].x);
             resetColor();
-            userSnakeMove(data);
         } else {
             printf("\033[%lu;%luH ",
                     data->usrSnkBody[data->usrSnkLeng - 1].y,
                     data->usrSnkBody[data->usrSnkLeng - 1].x);
-            userSnakeMove(data);
         }
+        userSnakeMoveCross(data);
 
         gameAreaPainting(data);
 
@@ -153,6 +160,10 @@ void gameMainLogicUnlimitedMode(GameAllRunningData *data) {
         }
 
         if (data->usrSrc >= HIGH * WIDE - (HIGH + WIDE) * 2) {
+            break;
+        }
+
+        if (data->usrSnkLeng >= SNAKE_MAX_LENGTH) {
             break;
         }
 
