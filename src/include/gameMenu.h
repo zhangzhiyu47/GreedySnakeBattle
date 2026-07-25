@@ -16,9 +16,12 @@ int showGameMenu(GameConfig *config);
 void gameIntroduction(const char *button);
 
 /// Request the user to agree to the End User License Agreement
-int requestUserAgreeEULA();
+int requestUserAgreeEULA(const char *tip);
 
 /// Ask user whether to check app errors and display logs
 void showErrorLog();
+
+/// Show new version update information
+void showNewVersionInfo();
 
 #endif // GAME_MENU_H

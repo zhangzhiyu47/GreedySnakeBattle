@@ -1,13 +1,14 @@
 #include "include/gameConfig.h"
 #include "include/Struct/Point.h"
-#include "include/GlobalVariable/globalVariable.h"
-#include "include/Functions/terminal.h"
+#include "include/global.h"
+#include "include/terminal.h"
 #include "include/exitApp.h"
 #include "include/initializeApp.h"
 #include "include/logger.h"
 #include "include/gameMenu.h"
 
 #include <errno.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,12 +68,21 @@ void createAppDirectories() {
 
     snprintf(configFile, sizeof(configFile),
             "%s/game.ini", configDir);
+
     snprintf(logFile, sizeof(logFile),
             "%s/error.log", configDir);
+
     snprintf(errSignFile, sizeof(errSignFile),
             "%s/.error.sign", configDir);
+
     snprintf(lockFile, sizeof(lockFile),
             "%s/.lock.pid", configDir);
+
+    snprintf(updateSignFile, sizeof(updateSignFile),
+            "%s/NEW_VERSION.txt", configDir);
+
+    snprintf(EULAUpdateSign, sizeof(EULAUpdateSign),
+            "%s/.EULA.update", configDir);
 }
 
 /// Check the application singleton lock file
@@ -105,4 +115,20 @@ void checkLockFile() {
     fsync(fd);
 
     lockFileFd = fd;
+}
+
+/// Check new version update
+void checkNewVersion() {
+    if (access(updateSignFile, F_OK) == 0) {
+        showNewVersionInfo();
+        remove(updateSignFile);
+    }
+}
+
+/// Check EULA update
+bool checkEULAUpdate() {
+    if (access(EULAUpdateSign, F_OK) == 0) {
+        return true;
+    }
+    return false;
 }

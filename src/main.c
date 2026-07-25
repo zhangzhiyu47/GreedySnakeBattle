@@ -1,14 +1,8 @@
-/**
- * @file main.c
- * @brief This source realizes the @ref main function.
- * @author Zhang Zhiyu
- */
-
 #include "include/painting.h"
-#include "include/GlobalVariable/globalVariable.h"
+#include "include/global.h"
 #include "include/gameMenu.h"
 #include "include/gameMainLogic.h"
-#include "include/Functions/terminal.h"
+#include "include/terminal.h"
 #include "include/exitApp.h"
 #include "include/Struct/Point.h"
 #include "include/constants.h"
@@ -29,9 +23,6 @@
 
 static void handlerINT(int signum) {
     UNUSED(signum);
-
-    const char *restoreTerm = "\033[?25h\033[0m\033[?1049l";
-    write(STDOUT_FILENO, restoreTerm, 18);
 
     restoreTerminalSettings();
 
@@ -65,36 +56,42 @@ int main(int argc,char* argv[]) {
 
     sa.sa_handler = &handlerINT;
     if (sigaction(SIGINT, &sa, NULL) == -1) {
-        logger(LOG_ERROR, "sigaction: %s" HERE, strerror(errno));
+        logdual(LOG_ERROR, "sigaction: %s" HERE, strerror(errno));
         exitApp(EXIT_ERROR, "游戏出错，无法启动！", NULL);
     }
 
     sa.sa_handler = &handlerWINCH;
     if (sigaction(SIGWINCH, &sa, NULL) == -1) {
-        logger(LOG_ERROR, "sigaction: %s" HERE, strerror(errno));
+        logdual(LOG_ERROR, "sigaction: %s" HERE, strerror(errno));
         exitApp(EXIT_ERROR, "游戏出错，无法启动！", NULL);
     }
 
     GameAllRunningData *data = malloc(sizeof(GameAllRunningData));
     if (data == NULL) {
-        logger(LOG_ERROR, "malloc: %s" HERE, strerror(errno));
+        logdual(LOG_ERROR, "malloc: %s" HERE, strerror(errno));
         exitApp(EXIT_ERROR, "游戏出错，无法启动！", NULL);
     }
 
-    checkLockFile();
-
-    printf("\033[?1049h\033[?25l");
-    printf("\033]0;Greedy Snake Battle\x07");
-    clearScreen();
     initTerminalSettings();
+    clearScreen();
+
+    checkLockFile();
 
     GameConfig config = {0};
     if (initializeApp(&config)) {
-        if (requestUserAgreeEULA()) {
+        if (requestUserAgreeEULA("同意协议内容后开始使用本应用")) {
             remove(configFile);
             exitApp(EXIT_NORMAL, "", data);
         }
         gameIntroduction("开始游戏");
+    }
+
+    checkNewVersion();
+
+    if (checkEULAUpdate()) {
+        if (!requestUserAgreeEULA("协议更新，需要您重新同意协议")) {
+            remove(EULAUpdateSign);
+        }
     }
 
     Point termSize = terminalSize();

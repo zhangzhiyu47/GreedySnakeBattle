@@ -20,8 +20,6 @@
 #define ALT_BUF_ON   ESC "?1049h"
 #define ALT_BUF_OFF  ESC "?1049l"
 #define CLEAR_SCREEN ESC "H" ESC "2J" ESC "3J"
-#define MOUSE_ON     ESC "?1000h" ESC "?1002h" ESC "?1015h" ESC "?1006h"
-#define MOUSE_OFF    ESC "?1006l" ESC "?1015l" ESC "?1002l" ESC "?1000l"
 
 static void fgRgb(int r, int g, int b) {
     printf(ESC "38;2;%d;%d;%dm", r, g, b);
@@ -901,7 +899,6 @@ BrowserResult browserRun(TextBrowser *b) {
 
     if (b->useAltBuffer) printf(ALT_BUF_ON);
     printf(CLEAR_SCREEN);
-    if (b->useMouse) printf(MOUSE_ON);
     termRaw();
 
     gState.running = 1;
@@ -1003,7 +1000,6 @@ BrowserResult browserRun(TextBrowser *b) {
         }
     }
 
-    if (b->useMouse) printf(MOUSE_OFF);
     if (b->useAltBuffer) printf(ALT_BUF_OFF);
     termRestore();
     sigaction(SIGWINCH, &oldSa, NULL);

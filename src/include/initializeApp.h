@@ -19,4 +19,10 @@ void createAppDirectories();
 /// Check the application singleton lock file
 void checkLockFile();
 
+/// Check new version update
+void checkNewVersion();
+
+/// Check EULA update
+bool checkEULAUpdate();
+
 #endif // INITIALIZE_APP_H

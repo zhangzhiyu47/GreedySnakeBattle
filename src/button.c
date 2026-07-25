@@ -30,8 +30,6 @@
 #define ALT_BUF_ON   ESC "?1049h"
 #define ALT_BUF_OFF  ESC "?1049l"
 #define CLEAR_SCREEN ESC "H" ESC "2J" ESC "3J"
-#define MOUSE_ON     ESC "?1000h" ESC "?1002h" ESC "?1015h" ESC "?1006h"
-#define MOUSE_OFF    ESC "?1006l" ESC "?1015l" ESC "?1002l" ESC "?1000l"
 #define RESET_COLOR  ESC "0m"
 
 /* ANSI helpers */
@@ -1014,7 +1012,6 @@ ButtonResult buttonRun(Button *d) {
 
     if (d->useAltBuffer) printf(ALT_BUF_ON);
     printf(CLEAR_SCREEN);
-    if (d->useMouse) printf(MOUSE_ON);
     termRaw();
 
     gState.running = 1;
@@ -1155,7 +1152,6 @@ ButtonResult buttonRun(Button *d) {
         }
     }
 
-    if (d->useMouse) printf(MOUSE_OFF);
     if (d->useAltBuffer) printf(ALT_BUF_OFF);
     termRestore();
     sigaction(SIGWINCH, &oldSa, NULL);

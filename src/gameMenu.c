@@ -1,5 +1,5 @@
-#include "include/GlobalVariable/globalVariable.h"
-#include "include/Functions/terminal.h"
+#include "include/global.h"
+#include "include/terminal.h"
 #include "include/painting.h"
 #include "include/gameConfig.h"
 #include "include/menu.h"
@@ -14,6 +14,7 @@
 #include "include/res/EULA.h"
 
 #include <errno.h>
+#include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
@@ -309,7 +310,7 @@ int showGameMenu(GameConfig *config) {
 }
 
 /// Request the user to agree to the End User License Agreement
-int requestUserAgreeEULA() {
+int requestUserAgreeEULA(const char *tip) {
     Button *b = buttonCreate();
     int retval = 0;
 
@@ -322,8 +323,7 @@ int requestUserAgreeEULA() {
     buttonInitial(b, 0);
     buttonUseAltBuffer(b, 0);
 
-    showEULA("我已经了解协议内容",
-             "在初次使用本应用前，您需要了解：");
+    showEULA("我已经了解协议内容", tip);
 
     while (1) {
         ButtonResult res = buttonRun(b);
@@ -335,8 +335,7 @@ int requestUserAgreeEULA() {
                 retval = 1;
                 break;
             } else if (res.selectedTop == 2) {
-                showEULA("我已经了解协议内容",
-                         "在初次使用本应用前，您需要了解：");
+                showEULA("我已经了解协议内容", tip);
                 buttonInitial(b, 2);
                 continue;
             }
@@ -347,6 +346,8 @@ int requestUserAgreeEULA() {
     }
 
     buttonFree(b);
+    usleep(40 * 1000);
+    tcflush(STDIN_FILENO, TCIFLUSH);
     return retval;
 }
 
@@ -434,13 +435,13 @@ void showErrorLog() {
 
         size_t len = strlen(buf);
         snprintf(buf + len, sizeof(buf) - len, ".%06ld", usec);
-        snprintf(time, sizeof(time), "   When: %s", buf);
+        snprintf(time, sizeof(time), "  When: %s", buf);
     } else {
         char buf[64] = {0};
         read(fd, buf, sizeof(buf));
         close(fd);
 
-        snprintf(time, sizeof(time), "   %s", buf);
+        snprintf(time, sizeof(time), "  %s", buf);
     }
 
     Button *b = buttonCreate();
@@ -473,4 +474,68 @@ void showErrorLog() {
 
     free(logs);
     buttonFree(b);
+
+    usleep(40 * 1000);
+    tcflush(STDIN_FILENO, TCIFLUSH);
+}
+
+static char * readFile(const char *filename) {
+    FILE* fp = fopen(filename, "rb");
+    if (fp == NULL) {
+        return NULL;
+    }
+
+    fseek(fp, 0, SEEK_END);
+    long size = ftell(fp);
+    if (size < 0) {
+        fclose(fp);
+        return NULL;
+    }
+    rewind(fp);
+
+    char *buffer = malloc(size + 1);
+    if (buffer == NULL) {
+        fclose(fp);
+        return NULL;
+    }
+
+    size_t readCount = fread(buffer, 1, size, fp);
+    if (readCount != (size_t)size) {
+        free(buffer);
+        fclose(fp);
+        return NULL;
+    }
+
+    buffer[size] = '\0';
+
+    fclose(fp);
+    return buffer;
+}
+
+/// Show new version update information
+void showNewVersionInfo() {
+    char *info = readFile(updateSignFile);
+
+    if (info) {
+        char version[32] = {0};
+        snprintf(version, 32, "  当前版本：%s", APP_VERSION);
+
+        Point termSize = terminalSize();
+        fillBackground(termSize.x, termSize.y, NULL);
+
+        TextBrowser *tb = browserCreate();
+        browserHint(tb, "新版本更新");
+        browserPrompt(tb, version);
+        browserText(tb, info);
+        browserButtonRight(tb, "继续");
+        browserStyle(tb, 1, 1);
+        browserUseAltBuffer(tb, 0);
+        browserRun(tb);
+
+        free(info);
+        browserFree(tb);
+
+        usleep(40 * 1000);
+        tcflush(STDIN_FILENO, TCIFLUSH);
+    }
 }

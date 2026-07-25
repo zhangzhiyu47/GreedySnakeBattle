@@ -1,6 +1,6 @@
 #include "include/Struct/GameAllRunningData.h"
-#include "include/GlobalVariable/globalVariable.h"
-#include "include/Functions/food.h"
+#include "include/global.h"
+#include "include/initGameData.h"
 
 #include <stdbool.h>
 #include <stdlib.h>

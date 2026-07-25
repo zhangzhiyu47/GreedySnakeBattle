@@ -1,7 +1,7 @@
 #include "include/Struct/GameAllRunningData.h"
-#include "include/Functions/terminal.h"
+#include "include/terminal.h"
 #include "include/exitApp.h"
-#include "include/GlobalVariable/globalVariable.h"
+#include "include/global.h"
 #include "include/logger.h"
 
 #include <errno.h>
@@ -29,7 +29,8 @@ static void getTimeStr(char *buf, size_t size) {
 /// Exit the application
 void exitApp(int retn, const char *tip,
         const GameAllRunningData *data) {
-    printf("\033[?25h\033[0m\033[?1049l\033[?1002;1006l");
+
+    restoreTerminalSettings();
     if (retn != EXIT_NORMAL) {
         printf("%s\n", tip);
     }
@@ -48,10 +49,9 @@ void exitApp(int retn, const char *tip,
             logger(LOG_ERROR, "fopen: %s" HERE, strerror(errno));
         }
     }
-    
+
     free((void*)data);
     logCleanup();
-    restoreTerminalSettings();
 
     ftruncate(lockFileFd, 0);
     close(lockFileFd);

@@ -1,6 +1,6 @@
 #include "include/gameConfig.h"
-#include "include/Functions/terminal.h"
-#include "include/GlobalVariable/globalVariable.h"
+#include "include/terminal.h"
+#include "include/global.h"
 #include "include/logger.h"
 #include "include/constants.h"
 #include "include/exitApp.h"

@@ -1,13 +1,50 @@
-#include "include/GlobalVariable/globalVariable.h"
+#include "include/global.h"
 #include "include/Struct/GameAllRunningData.h"
 #include "include/gameConfig.h"
 #include "include/Functions/obstacleSnake.h"
-#include "include/Functions/food.h"
 #include "include/initGameData.h"
 
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+
+/// Update or initialize for the numberTH food
+void foodInit(GameAllRunningData *data, int number) {
+    for ( bool isRandWrongPos=true; isRandWrongPos; ) {
+        data->food[number].x=rand()%(WIDE-3)+2;
+        data->food[number].y=rand()%(HIGH-3)+2;
+        isRandWrongPos=false;
+        for (uint64_t i=0; i<data->usrSnkLeng; i++ ) {
+            if ( data->usrSnkBody[i].x==data->food[number].x &&
+                    data->usrSnkBody[i].y==data->food[number].y ) {
+                isRandWrongPos=true;
+                break;
+            }
+        }
+        for (uint64_t i=0; i<data->foodNum; i++ ) {
+            if ( data->food[i].x==data->food[number].x &&
+                    data->food[i].y==data->food[number].y
+                    && i != (uint64_t)number) {
+                isRandWrongPos=true;
+                break;
+            }
+        }
+        for (uint64_t i=0; i<data->wallNum; i++ ) {
+            if ( data->wall[i].x==data->food[number].x &&
+                    data->wall[i].y==data->food[number].y ) {
+                isRandWrongPos=true;
+                break;
+            }
+        }
+        for (uint64_t i=0; i<data->obsSnkLeng; i++ ) {
+            if ( data->obsSnkBody[i].x==data->food[number].x &&
+                    data->obsSnkBody[i].y==data->food[number].y ) {
+                isRandWrongPos=true;
+                break;
+            }
+        }
+    }
+}
 
 /// Initialize all the obstacle walls
 static void wallInit(GameAllRunningData *data) {
@@ -34,7 +71,6 @@ static void wallInit(GameAllRunningData *data) {
 }
 
 /// Initialize all the classic-mode game's data
-/// TODO: Set the portal
 void initGameData(GameAllRunningData *data) {
     GameConfig config = {0};
     getGameConfig(&config);

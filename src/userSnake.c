@@ -4,10 +4,10 @@
  */
 
 #include "include/Struct/GameAllRunningData.h"
-#include "include/Functions/terminal.h"
+#include "include/terminal.h"
 #include "include/painting.h"
-#include "include/Functions/food.h"
-#include "include/GlobalVariable/globalVariable.h"
+#include "include/initGameData.h"
+#include "include/global.h"
 #include "include/Struct/Point.h"
 #include "include/constants.h"
 #include "include/button.h"

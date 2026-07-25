@@ -3,8 +3,10 @@
 
 #include "Struct/GameAllRunningData.h"
 
+/// Update or initialize for the numberTH food
+void foodInit(GameAllRunningData *data, int number);
+
 /// Initialize all the classic-mode game's data
-/// TODO: Set the portal
 void initGameData(GameAllRunningData *data);
 
 /// Initialize all the unlimit-food-mode game's data

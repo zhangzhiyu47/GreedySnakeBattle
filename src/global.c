@@ -1,4 +1,4 @@
-#include "include/GlobalVariable/globalVariable.h"
+#include "include/global.h"
 #include <stdatomic.h>
 #include <stdint.h>
 #include <termios.h>
@@ -13,6 +13,8 @@ char configFile[2048] = {0};
 char logFile[2048] = {0};
 char errSignFile[2048] = {0};
 char lockFile[2048] = {0};
+char updateSignFile[2048] = {0};
+char EULAUpdateSign[2048] = {0};
 
 int lockFileFd = 0;
 

@@ -1,6 +1,6 @@
 #include "include/Struct/GameAllRunningData.h"
-#include "include/GlobalVariable/globalVariable.h"
-#include "include/Functions/terminal.h"
+#include "include/global.h"
+#include "include/terminal.h"
 #include "include/painting.h"
 #include "include/exitApp.h"
 #include "include/Struct/Point.h"

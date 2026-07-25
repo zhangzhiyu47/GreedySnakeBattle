@@ -1,6 +1,6 @@
-#include "include/GlobalVariable/globalVariable.h"
+#include "include/global.h"
 #include "include/Struct/Point.h"
-#include "include/Functions/terminal.h"
+#include "include/terminal.h"
 #include "include/logger.h"
 #include "include/exitApp.h"
 #include <errno.h>
@@ -11,17 +11,14 @@
 #include <unistd.h>
 #include <stdio.h>
 
-/**
- * @brief Clear the screen display content.
- */
 void clearScreen() {
     printf("\033[H\033[2J\033[3J");
 }
 
-/**
- * @brief Initialize terminal settings
- */
 void initTerminalSettings() {
+    printf("\033[?1000;1002;1006;1049h\033[?25l");
+    printf("\033]0;Greedy Snake Battle\x07");
+
     tcgetattr(STDIN_FILENO, &originalTermios);
 
     struct termios newt = originalTermios;
@@ -29,14 +26,12 @@ void initTerminalSettings() {
     tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 }
 
-/**
- * @brief Restore original terminal settings
- */
 void restoreTerminalSettings() {
+    const char restoreSeq[] = "\033[0m\033[?25h\033[?1000;1002;1006;1049l";
+    write(STDOUT_FILENO, restoreSeq, sizeof(restoreSeq) - 1);
     tcsetattr(STDIN_FILENO, TCSANOW, &originalTermios);
 }
 
-/// Get the size of the terminal
 Point terminalSize() {
     Point termSize = {0};
     struct winsize w = {0};

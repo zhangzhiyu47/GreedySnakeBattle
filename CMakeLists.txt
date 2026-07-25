@@ -2,18 +2,17 @@ cmake_minimum_required(VERSION 3.13)
 project(GreedySnakeBattle LANGUAGES C)
 
 set(VERSION_MAJOR 6)
-set(VERSION_MINOR 1)
+set(VERSION_MINOR 2)
 set(VERSION_PATCH 0)
 set(PROJECT_VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 set(SOURCES
     src/main.c
     src/exitApp.c
-    src/food.c
     src/initializeApp.c
     src/gameMainLogic.c
     src/initGameData.c
-    src/globalVariable.c
+    src/global.c
     src/logger.c
     src/obstacleSnake.c
     src/painting.c

@@ -1,9 +1,9 @@
-#include "include/GlobalVariable/globalVariable.h"
+#include "include/global.h"
 #include "include/Struct/GameAllRunningData.h"
 #include "include/Functions/obstacleSnake.h"
 #include "include/userSnake.h"
 #include "include/painting.h"
-#include "include/Functions/terminal.h"
+#include "include/terminal.h"
 #include "include/Struct/Point.h"
 #include "include/constants.h"
 #include "include/gameMainLogic.h"
@@ -153,11 +153,6 @@ void gameMainLogicUnlimitedMode(GameAllRunningData *data) {
         userSnakeMoveCross(data);
 
         gameAreaPainting(data);
-
-        if (isUserSnakeEatSelf(data)
-                && data->isEnableEatSlfGmOver!=0 ) {
-            break;
-        }
 
         if (data->usrSrc >= HIGH * WIDE - (HIGH + WIDE) * 2) {
             break;
