@@ -42,6 +42,10 @@ target_link_options(gsb PRIVATE
     $<$<CONFIG:Release>:-flto>
 )
 
+if(ANDROID_PACK)
+    target_compile_definitions(gsb PRIVATE ANDROID_PACK)
+endif()
+
 add_dependencies(gsb gen_res_headers)
 
 set(RES_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/res")

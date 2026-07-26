@@ -16,7 +16,9 @@ void clearScreen() {
 }
 
 void initTerminalSettings() {
+#ifndef ANDROID_PACK
     printf("\033[?1049h");
+#endif // ANDROID_PACK
     printf("\033[?1000;1002;1006h\033[?25l");
     printf("\033]0;Greedy Snake Battle\x07");
 
@@ -30,6 +32,12 @@ void initTerminalSettings() {
 void restoreTerminalSettings() {
     const char restoreSeq[] = "\033[0m\033[?25h\033[?1000;1002;1006;1049l";
     write(STDOUT_FILENO, restoreSeq, sizeof(restoreSeq) - 1);
+
+#ifdef ANDROID_PACK
+    const char color[] = RGB_BG(255, 250, 240) RGB_FG(255, 250, 240);
+    write(STDOUT_FILENO, color, sizeof(color) - 1);
+#endif // ANDROID_PACK
+
     tcsetattr(STDIN_FILENO, TCSANOW, &originalTermios);
 }
 

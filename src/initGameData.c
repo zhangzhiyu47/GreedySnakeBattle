@@ -46,12 +46,12 @@ void foodInit(GameAllRunningData *data, int number) {
                 break;
             }
         }
-
-        printf("\033[%lu;%luH" FOOD_C FOOD,
-                data->food[number].y,
-                data->food[number].x);
-        resetColor();
     }
+
+    printf("\033[%lu;%luH" FOOD_C FOOD,
+            data->food[number].y,
+            data->food[number].x);
+    resetColor();
 }
 
 /// Initialize all the obstacle walls
