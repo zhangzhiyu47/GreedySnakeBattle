@@ -1,5 +1,5 @@
-#include "include/Struct/GameAllRunningData.h"
 #include "include/global.h"
+#include "include/obstacleSnake.h"
 #include "include/initGameData.h"
 
 #include <stdbool.h>

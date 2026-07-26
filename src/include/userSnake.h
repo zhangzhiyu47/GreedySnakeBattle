@@ -1,11 +1,7 @@
-/**
- * @file userSnake.h
- * @brief This header declares the functions about snake's snake.
- */
 #ifndef USER_SNAKE_H
 #define USER_SNAKE_H
 
-#include "Struct/GameAllRunningData.h"
+#include "GameAllRunningData.h"
 
 #include <stdbool.h>
 

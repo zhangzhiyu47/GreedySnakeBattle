@@ -1,26 +1,29 @@
 #ifndef PAINTING_H
 #define PAINTING_H
 
-#include "Struct/GameAllRunningData.h"
+#include "GameAllRunningData.h"
 #include "gameConfig.h"
 
 #include <stddef.h>
 
+#define FOOD   "#"
+#define FOOD_C RGB_FG(255, 111, 0)
+
 #define UNLIMIT_FOOD   "#"
 #define UNLIMIT_FOOD_C RGB_FG(129, 199, 132)
 
-/// Paint all the walls
-void wallPainting(GameAllRunningData *data);
+/// Draw the all game area and rocker bar
+void allPainting(GameAllRunningData *data);
 
 /// Paint game area
-void gameAreaPainting(GameAllRunningData const *const data);
+void gameAreaPainting(GameAllRunningData *data);
 
 /// Draw "↓You" to show which snake the user is controlling.
 /// Return 0 for continue game, 1 for exit game interface
 int showWhichIsYoursSnake(GameAllRunningData *data);
 
 /// Fill background
-void fillBackground(int termW, int termH, void *context);
+void fillBackground(int termW, int termH, void * /* UNUSED */);
 
 /// Ask user to zoom in screen or exit app.
 /// Return 0 if terminal size is sufficient, 1 to exit game interface

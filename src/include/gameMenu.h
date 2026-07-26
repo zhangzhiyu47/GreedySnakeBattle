@@ -1,9 +1,8 @@
 #ifndef GAME_MENU_H
 #define GAME_MENU_H
 
-#include "Struct/GameAllRunningData.h"
+#include "GameAllRunningData.h"
 #include "gameConfig.h"
-#include <unistd.h>
 
 #define GAME_MODE_QUIT 0
 #define GAME_MODE_CLASSIC 1

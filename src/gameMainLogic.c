@@ -1,10 +1,8 @@
 #include "include/global.h"
-#include "include/Struct/GameAllRunningData.h"
-#include "include/Functions/obstacleSnake.h"
+#include "include/obstacleSnake.h"
 #include "include/userSnake.h"
 #include "include/painting.h"
 #include "include/terminal.h"
-#include "include/Struct/Point.h"
 #include "include/constants.h"
 #include "include/gameMainLogic.h"
 
@@ -22,6 +20,7 @@ void gameMainLogic(GameAllRunningData *data) {
         }
     }
 
+    allPainting(data);
     if (showWhichIsYoursSnake(data)) {
         return;
     }
@@ -50,7 +49,16 @@ void gameMainLogic(GameAllRunningData *data) {
             obsMove(data);
         }
 
+        /*
+        printf("\033[%lu;%luH@",
+                data->usrSnkBody[0].y,
+                data->usrSnkBody[0].x);
+        printf("\033[%lu;%luH*",
+                data->usrSnkBody[1].y,
+                data->usrSnkBody[1].x);
+        */
         gameAreaPainting(data);
+
         if (!data->obsState) {
             obsEatFood(data);
             obsEatWallsOrUserSnake(data);
@@ -123,6 +131,7 @@ void gameMainLogicUnlimitedMode(GameAllRunningData *data) {
         }
     }
 
+    allPainting(data);
     if (showWhichIsYoursSnake(data)) {
         return;
     }

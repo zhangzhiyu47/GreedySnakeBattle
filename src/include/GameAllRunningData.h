@@ -2,7 +2,7 @@
 #define GAME_ALL_RUNNING_DATA_H
 
 #include "Point.h"
-#include "../constants.h"
+#include "constants.h"
 
 #include <stdbool.h>
 #include <stdint.h>

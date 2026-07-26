@@ -1,9 +1,8 @@
-#include "include/Struct/GameAllRunningData.h"
+#include "include/GameAllRunningData.h"
 #include "include/global.h"
 #include "include/terminal.h"
 #include "include/painting.h"
 #include "include/exitApp.h"
-#include "include/Struct/Point.h"
 #include "include/constants.h"
 #include "include/gameConfig.h"
 #include "include/logger.h"
@@ -25,7 +24,9 @@
 #define BUFFER_SIZE 1024
 
 #define WALL "▒"
-#define WALL_COLOR RGB_BG(160, 82, 45) RGB_FG(107, 52, 16)
+#define WALL_COLOR_B RGB_BG(160, 82, 45)
+#define WALL_COLOR_F RGB_FG(107, 52, 16)
+#define WALL_COLOR WALL_COLOR_B WALL_COLOR_F
 
 #define CURSOR_COLOR RGB_BG(74, 85, 104)
 
@@ -40,9 +41,6 @@
 #define OBS_SNAKE_BODY "%%"
 #define OBS_SNAKE_HEAD_C RGB_FG(0, 77, 64)
 #define OBS_SNAKE_BODY_C RGB_FG(0, 137, 123)
-
-#define FOOD   "#"
-#define FOOD_C RGB_FG(255, 111, 0)
 
 #define ROCKER_OFFSET "\n\033[%luC", WIDE + 1
 #define UP_C        RGB_BG(255, 0, 0)
@@ -100,9 +98,10 @@ static void unlimitedFoodPainting() {
     const uint64_t right = WIDE - 1;
     const uint64_t step = 2;
 
+    resetColor();
     printf(UNLIMIT_FOOD_C);
 
-    for (uint64_t layer = 0;; ++layer) {
+    for (uint64_t layer = 0; ; ++layer) {
         uint64_t l = left + layer * step;
         uint64_t r = right - layer * step;
         uint64_t t = top + layer * step;
@@ -128,7 +127,8 @@ static void unlimitedFoodPainting() {
         }
 
         if (l < r && t + 1 < b) {
-            for (int64_t row = (int64_t)(b - 1); row > (int64_t)t; --row) {
+            for (int64_t row = (int64_t)(b - 1);
+                    row > (int64_t)t; --row) {
                 printf("\033[%lu;%luH" UNLIMIT_FOOD, (uint64_t)row, l);
             }
         }
@@ -136,7 +136,7 @@ static void unlimitedFoodPainting() {
 }
 
 /// Paint all the walls
-void wallPainting(GameAllRunningData *data) {
+static void wallPainting(GameAllRunningData *data) {
     printf(WALL_COLOR "\033[1;1H");
 
     for (uint64_t i = 0; i < WIDE; i++) {
@@ -155,24 +155,20 @@ void wallPainting(GameAllRunningData *data) {
     for (uint64_t i = 0; i < data->wallNum; i++) {
         printf("\033[%lu;%luH" WALL, data->wall[i].y, data->wall[i].x);
     }
-
-    buttonPainting();
-
-    if (!data->foodNum) {
-        resetColor();
-        unlimitedFoodPainting();
-    }
-
-    resetColor();
-    fflush(stdout);
 }
 
-/// Paint game area
-void gameAreaPainting(GameAllRunningData const *const data) {
+/// Paint all foods
+static void allFoodsPainting(GameAllRunningData *data) {
+    resetColor();
     for (uint64_t i = 0; i < data->foodNum; i++) {
         printf("\033[%lu;%luH",data->food[i].y, data->food[i].x);
         printf(FOOD_C FOOD);
     }
+}
+
+/// Paint game area
+void gameAreaPainting(GameAllRunningData *data) {
+    resetColor();
 
     for (int64_t i = data->obsSnkLeng - 1; i >= 0 &&
             data->isEnableObs == 1; --i) {
@@ -203,8 +199,8 @@ void gameAreaPainting(GameAllRunningData const *const data) {
             printf(USER_SNAKE_BODY_C USER_SNAKE_BODY);
         }
     }
-    resetColor();
 
+    resetColor();
     if (data->refreshTimes) {
         uint64_t playedTime =
             data->refreshTimes * data->speed / 1000 / 1000;
@@ -215,22 +211,43 @@ void gameAreaPainting(GameAllRunningData const *const data) {
     printf("\033[2;%luH", WIDE + 1);
     printf(" %04lu0分", data->usrSrc);
 
+    printf("\033[1;1H" WALL_COLOR WALL);
+    resetColor();
+    fflush(stdout);
+}
+
+/// Draw the all game area and rocker bar
+void allPainting(GameAllRunningData *data) {
+    resetColor();
+    clearScreen();
+
+    wallPainting(data);
+
+    buttonPainting();
+
+    if (!data->foodNum) {
+        unlimitedFoodPainting();
+    } else {
+        allFoodsPainting(data);
+    }
+
+    gameAreaPainting(data);
+
     if (data->usrSrc > data->histryHighestScr) {
         printf("\033[3;%luH 新记录!", WIDE + 1);
     }
 
-    printf("\033[1;1H" WALL_COLOR WALL);
     resetColor();
     fflush(stdout);
 }
 
 /// Fill background
 void fillBackground(int termW, int termH, void *context) {
-    (void)context;
+    UNUSED(context);
 
     setBackgroundColor();
-    for (int i = 0; i < termW * termH / 4 + 1; ++i) {
-        printf("    ");
+    for (int i = 0; i < termW * termH / 6 + 1; ++i) {
+        printf("      ");
     }
 }
 
@@ -338,6 +355,8 @@ static int checkTerminalSize(GameAllRunningData *data) {
         if (termSize.x < WIDE || termSize.y < HIGH) {
             if (screenTooSmallPainting(data)) {
                 return -1;
+            } else {
+                sleep(1);
             }
         }
         return 1;
@@ -349,16 +368,17 @@ static int checkTerminalSize(GameAllRunningData *data) {
 void gamePausePainting(GameAllRunningData *data, const wchar_t *tip) {
     resetColor();
     fillBackground(terminalSize().x, terminalSize().y, NULL);
-    wallPainting(data);
-    gameAreaPainting(data);
+    allPainting(data);
 
     const size_t len = wcswidth(tip, -1);
-    printf(QUIT_WORD_C"\033[%lu;%luH%ls",
-            (HIGH + 1 - 1) / 2, (WIDE + 1 - len) / 2, tip);
-    printf("\033[?1002;1006h");
+    size_t x = (WIDE + 1 - len) / 2;
+    size_t y = HIGH / 2;
+    if (x <= 0) x = 1;
+    if (y <= 0) y = 1;
+    printf(QUIT_WORD_C"\033[%lu;%luH%ls", y, x, tip);
     fflush(stdout);
 
-    usleep(40 * 1000);
+    sleep(1);
     tcflush(STDIN_FILENO, TCIFLUSH);
 
     char buf[32];
@@ -507,23 +527,15 @@ static int numberPainting(
         void (*numberPainter)(int, int)) {
     const int refreshTimes = 10;
 
-    clearScreen();
-
-    wallPainting(data);
-    gameAreaPainting(data);
+    allPainting(data);
     numberPainter(rawOffset, colOffset);
-
     fflush(stdout);
 
     for (int i = 0; i < refreshTimes; ++i) {
         int retval = checkTerminalSize(data);
         if (retval == 1) {
-            clearScreen();
-
-            wallPainting(data);
-            gameAreaPainting(data);
+            allPainting(data);
             numberPainter(rawOffset, colOffset);
-
             fflush(stdout);
         } else if (retval == -1) {
             return 1;
@@ -552,10 +564,6 @@ static void drawYou(const char *you, int which, int cursor) {
 /// Draw "↓You" to show which snake the user is controlling.
 /// Return 0 for continue game, 1 for exit game interface
 int showWhichIsYoursSnake(GameAllRunningData *data) {
-    clearScreen();
-    wallPainting(data);
-    gameAreaPainting(data);
-
     const Point start = {
         data->usrSnkBody[0].x,
         data->usrSnkBody[0].y - 1,
@@ -572,10 +580,7 @@ int showWhichIsYoursSnake(GameAllRunningData *data) {
         for (int j = 0; j < refreshTimes; ++j) {
             int retval = checkTerminalSize(data);
             if (retval == 1) {
-                clearScreen();
-
-                wallPainting(data);
-                gameAreaPainting(data);
+                allPainting(data);
 
                 printf("\033[%lu;%luH", start.y, start.x);
                 drawYou(you, i, 1);
@@ -600,10 +605,7 @@ int showWhichIsYoursSnake(GameAllRunningData *data) {
         for (int j = 0; j < refreshTimes; ++j) {
             int retval = checkTerminalSize(data);
             if (retval == 1) {
-                clearScreen();
-
-                wallPainting(data);
-                gameAreaPainting(data);
+                allPainting(data);
 
                 printf("\033[%lu;%luH", start.y, start.x);
                 if (i % 2 == 0) {
@@ -630,10 +632,7 @@ int showWhichIsYoursSnake(GameAllRunningData *data) {
         for (int j = 0; j < refreshTimes; ++j) {
             int retval = checkTerminalSize(data);
             if (retval == 1) {
-                clearScreen();
-
-                wallPainting(data);
-                gameAreaPainting(data);
+                allPainting(data);
 
                 printf("\033[%lu;%luH", start.y, start.x);
                 drawYou(you, i, 1);
@@ -676,10 +675,7 @@ int showWhichIsYoursSnake(GameAllRunningData *data) {
         return 1;
     };
 
-    printf("\033[?1002;1006h");
-    clearScreen();
-    wallPainting(data);
-    gameAreaPainting(data);
+    allPainting(data);
 
     // Discard read buffer
     tcflush(STDIN_FILENO, TCIFLUSH);

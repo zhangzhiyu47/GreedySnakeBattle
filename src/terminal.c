@@ -1,5 +1,5 @@
 #include "include/global.h"
-#include "include/Struct/Point.h"
+#include "include/Point.h"
 #include "include/terminal.h"
 #include "include/logger.h"
 #include "include/exitApp.h"
@@ -16,7 +16,8 @@ void clearScreen() {
 }
 
 void initTerminalSettings() {
-    printf("\033[?1000;1002;1006;1049h\033[?25l");
+    printf("\033[?1049h");
+    printf("\033[?1000;1002;1006h\033[?25l");
     printf("\033]0;Greedy Snake Battle\x07");
 
     tcgetattr(STDIN_FILENO, &originalTermios);

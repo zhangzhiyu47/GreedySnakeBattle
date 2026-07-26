@@ -164,7 +164,7 @@ void configureGame(GameConfig *config, int selected) {
                 config->wallNum, 0);
         numberStep(nd, 1, 1);
 
-        numberField(nd, "界面宽", MIN_TERMINAL_WIDE,
+        numberField(nd, "界面宽", MIN_TERMINAL_WIDE - ROCKER_BAR_WIDTH,
                 termSize.x - ROCKER_BAR_WIDTH, config->scrnWide, 0);
         numberStep(nd, 2, 1);
 
@@ -172,7 +172,7 @@ void configureGame(GameConfig *config, int selected) {
                 termSize.y, config->scrnHigh, 0);
         numberStep(nd, 3, 1);
 
-        numberField(nd, "移动速度", 0.2, 2.0,
+        numberField(nd, "移动速度", 0.15, 2.0,
                 config->speed / 1000.0 / 1000.0, 2);
         numberStep(nd, 4, 0.05);
 
@@ -300,6 +300,8 @@ int showGameMenu(GameConfig *config) {
             return GAME_MODE_QUIT;
         }
 
+        usleep(40 * 1000);
+        tcflush(STDIN_FILENO, TCIFLUSH);
         menuInitial(menu, res.selectedTab, res.selectedItem);
     }
 

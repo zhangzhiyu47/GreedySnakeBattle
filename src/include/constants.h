@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define APP_VERSION "6.2.0"
+#define APP_VERSION "6.2.1"
 #define CONFIG_VERSION "6.0.0"
 
 static const uint64_t MIN_TERMINAL_WIDE = 30;
@@ -12,7 +12,7 @@ static const uint64_t ROCKER_BAR_WIDTH  = 10;
 
 #define SNAKE_MAX_LENGTH 2048
 
-#define FOOD_NUMBER_MAX 20
+#define FOOD_NUMBER_MAX 30
 #define WALL_NUMBER_MAX 15
 
 #define RANGE_EQUAL(expr, min, max) ((expr) >= (min) && (expr) <= (max))

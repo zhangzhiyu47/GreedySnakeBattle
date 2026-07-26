@@ -1,11 +1,13 @@
 #include "include/global.h"
-#include "include/Struct/GameAllRunningData.h"
 #include "include/gameConfig.h"
-#include "include/Functions/obstacleSnake.h"
+#include "include/obstacleSnake.h"
+#include "include/painting.h"
+#include "include/terminal.h"
 #include "include/initGameData.h"
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 /// Update or initialize for the numberTH food
@@ -14,6 +16,7 @@ void foodInit(GameAllRunningData *data, int number) {
         data->food[number].x=rand()%(WIDE-3)+2;
         data->food[number].y=rand()%(HIGH-3)+2;
         isRandWrongPos=false;
+
         for (uint64_t i=0; i<data->usrSnkLeng; i++ ) {
             if ( data->usrSnkBody[i].x==data->food[number].x &&
                     data->usrSnkBody[i].y==data->food[number].y ) {
@@ -43,6 +46,11 @@ void foodInit(GameAllRunningData *data, int number) {
                 break;
             }
         }
+
+        printf("\033[%lu;%luH" FOOD_C FOOD,
+                data->food[number].y,
+                data->food[number].x);
+        resetColor();
     }
 }
 

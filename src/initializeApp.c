@@ -1,5 +1,4 @@
 #include "include/gameConfig.h"
-#include "include/Struct/Point.h"
 #include "include/global.h"
 #include "include/terminal.h"
 #include "include/exitApp.h"
@@ -24,8 +23,8 @@ int initializeApp(GameConfig *config) {
 
     resetColor();
     Point termSize = terminalSize();
-    for (uint64_t i = 0; i < termSize.y * termSize.x / 4 + 1; ++i) {
-        printf("    ");
+    for (uint64_t i = 0; i < termSize.y * termSize.x / 6 + 1; ++i) {
+        printf("      ");
     }
     clearScreen();
 

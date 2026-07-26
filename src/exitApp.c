@@ -1,4 +1,4 @@
-#include "include/Struct/GameAllRunningData.h"
+#include "include/GameAllRunningData.h"
 #include "include/terminal.h"
 #include "include/exitApp.h"
 #include "include/global.h"

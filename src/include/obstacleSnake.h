@@ -1,11 +1,7 @@
-/**
- * @file obstacleSnake.h
- * @brief This header declares the functions about obstacle snake.
- */
 #ifndef ONSTACLE_SNAKE_H
 #define ONSTACLE_SNAKE_H
 
-#include "../Struct/GameAllRunningData.h"
+#include "GameAllRunningData.h"
 
 /**
  * @brief Initialize the obstacle snake if it is enable.

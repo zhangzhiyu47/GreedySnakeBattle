@@ -2,7 +2,7 @@
 #define TERMINAL_H
 
 #include "gameConfig.h"
-#include "Struct/Point.h"
+#include "Point.h"
 
 #define RGB_BG(r, g, b)  "\033[48;2;" #r ";" #g ";" #b "m"
 #define RGB_FG(r, g, b)  "\033[38;2;" #r ";" #g ";" #b "m"

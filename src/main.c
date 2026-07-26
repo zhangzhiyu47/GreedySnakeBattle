@@ -4,7 +4,6 @@
 #include "include/gameMainLogic.h"
 #include "include/terminal.h"
 #include "include/exitApp.h"
-#include "include/Struct/Point.h"
 #include "include/constants.h"
 #include "include/logger.h"
 #include "include/initGameData.h"
@@ -114,15 +113,9 @@ int main(int argc,char* argv[]) {
         } else if (retval == GAME_MODE_CLASSIC) {
             initGameData(data);
 
-            wallPainting(data);
-            gameAreaPainting(data);
-
             gameMainLogic(data);
         } else if (retval == GAME_MODE_UNLIMIT_FOOD) {
             initGameDataUnlimitFood(data);
-
-            wallPainting(data);
-            gameAreaPainting(data);
 
             gameMainLogicUnlimitedMode(data);
         }

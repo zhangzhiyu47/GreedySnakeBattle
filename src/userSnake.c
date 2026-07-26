@@ -1,30 +1,24 @@
-/**
- * @file userSnake.c
- * @brief This source realizes the functions about snake's snake.
- */
-
-#include "include/Struct/GameAllRunningData.h"
 #include "include/terminal.h"
 #include "include/painting.h"
 #include "include/initGameData.h"
 #include "include/global.h"
-#include "include/Struct/Point.h"
 #include "include/constants.h"
 #include "include/button.h"
 #include "include/userSnake.h"
 
+#include <complex.h>
 #include <stdatomic.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <poll.h>
 #include <unistd.h>
 
 static void paintAll(int termW, int termH, void *data) {
     resetColor();
     fillBackground(termW, termH, NULL);
-    wallPainting(data);
-    gameAreaPainting(data);
+    allPainting(data);
 }
 
 /// Move user's snake, go through walls, come out on the other side
@@ -55,38 +49,56 @@ void userSnakeMove(GameAllRunningData *data) {
     data->usrSnkBody[0].y+=data->usrSnkNxtYDrc;
 }
 
-static char parseMouse() {
+static char parseMouse(GameAllRunningData *data) {
     char selected = '\0';
+    uint64_t Cb = 1;
+    scanf("%lu", &Cb);
 
-    if (getchar() == '0') {
+    if (Cb == 0) {
         uint64_t x, y;
         char option;
         scanf(";%lu;%lu%c", &x, &y, &option);
 
-        if ((option == 'M' || option == 'm')
-                && x >= WIDE + 1
-                && x <= WIDE + 1 + 7) {
+        if (option == 'M' || option == 'm') {
+            if (x >= WIDE + 1 && x <= WIDE + 1 + 7) {
+                Point termSize = terminalSize();
 
-            Point termSize = terminalSize();
-
-            if (termSize.y > 16) {
-                if (RANGE_EQUAL(y, 5, 7)) {
-                    selected = 'w';
-                } else if (RANGE_EQUAL(y, 8, 10)) {
-                    selected = 's';
-                } else if (RANGE_EQUAL(y, 11, 13)) {
-                    selected = 'a';
-                } else if (RANGE_EQUAL(y, 14, 16)) {
-                    selected = 'd';
+                if (termSize.y > 16) {
+                    if (RANGE_EQUAL(y, 5, 7)) {
+                        selected = 'w';
+                    } else if (RANGE_EQUAL(y, 8, 10)) {
+                        selected = 's';
+                    } else if (RANGE_EQUAL(y, 11, 13)) {
+                        selected = 'a';
+                    } else if (RANGE_EQUAL(y, 14, 16)) {
+                        selected = 'd';
+                    }
                 }
-            }
 
-            if (termSize.y > 21 && RANGE_EQUAL(y, 19, 21)) {
-                selected = 'p';
-            }
+                if (termSize.y > 21 && RANGE_EQUAL(y, 19, 21)) {
+                    selected = 'p';
+                }
 
-            if (termSize.y > 26 && RANGE_EQUAL(y, 23, 25)) {
-                selected = 'o';
+                if (termSize.y > 26 && RANGE_EQUAL(y, 23, 25)) {
+                    selected = 'o';
+                }
+            } else {
+                int64_t xOffset = data->usrSnkBody[0].x - x;
+                int64_t yOffset = 2 * (data->usrSnkBody[0].y - y);
+
+                if (labs(xOffset) > labs(yOffset)) {
+                    if (xOffset > 0) {
+                        selected = 'a';
+                    } else {
+                        selected = 'd';
+                    }
+                } else {
+                    if (yOffset > 0) {
+                        selected = 'w';
+                    } else {
+                        selected = 's';
+                    }
+                }
             }
         }
     }
@@ -134,12 +146,13 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
         if (termSize.x < WIDE || termSize.y < HIGH) {
             if (screenTooSmallPainting(data)) {
                 return -1;
+            } else {
+                sleep(1);
             }
         }
 
-        clearScreen();
-        wallPainting(data);
-        gameAreaPainting(data);
+        allPainting(data);
+        return 0;
     }
 
     if ( data->usrSnkIsJumping ) {
@@ -174,7 +187,7 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
                 key = 'a';
                 break;
             case '<':
-                key = parseMouse();
+                key = parseMouse(data);
                 break;
         }
     }
@@ -240,16 +253,12 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
     case 'p':
     case 'P':
         gamePausePainting(data, L"点击屏幕继续游戏");
-        clearScreen();
-        wallPainting(data);
-        gameAreaPainting(data);
+        allPainting(data);
         break;
 
     case 'r':
     case 'R':
-        clearScreen();
-        wallPainting(data);
-        gameAreaPainting(data);
+        allPainting(data);
         break;
 
     case 'o':
@@ -278,10 +287,7 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
             clearScreen();
             resetColor();
             fillBackground(termSize.x, termSize.y, NULL);
-            wallPainting(data);
-            gameAreaPainting(data);
-
-            printf("\033[?1002;1006h");
+            allPainting(data);
         }
         break;
     }

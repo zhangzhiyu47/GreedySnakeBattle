@@ -1,7 +1,7 @@
 #ifndef GLOBAL_VARIABLE_H
 #define GLOBAL_VARIABLE_H
 
-#include "Struct/Point.h"
+#include "Point.h"
 #include "gameConfig.h"
 
 #include <stdint.h>

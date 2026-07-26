@@ -1,7 +1,7 @@
 #ifndef INIT_GAME_DATA_H
 #define INIT_GAME_DATA_H
 
-#include "Struct/GameAllRunningData.h"
+#include "GameAllRunningData.h"
 
 /// Update or initialize for the numberTH food
 void foodInit(GameAllRunningData *data, int number);
