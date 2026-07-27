@@ -108,16 +108,16 @@ int main(int argc,char* argv[]) {
 
         int retval = showGameMenu(&config);
 
-        if (retval == GAME_MODE_QUIT) {
+        if (retval == MODE_QUIT) {
             break;
-        } else if (retval == GAME_MODE_CLASSIC) {
-            initGameData(data);
+        } else {
+            initGameData(data, retval);
 
-            gameMainLogic(data);
-        } else if (retval == GAME_MODE_UNLIMIT_FOOD) {
-            initGameDataUnlimitFood(data);
-
-            gameMainLogicUnlimitedMode(data);
+            if (retval == MODE_CLASSIC) {
+                gameMainLogic(data);
+            } else if (retval == MODE_UNLIMITED_FOOD) {
+                gameMainLogicUnlimitedMode(data);
+            }
         }
     } while (1);
 

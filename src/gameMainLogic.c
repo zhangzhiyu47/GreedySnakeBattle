@@ -13,13 +13,6 @@
 
 /// The main logic of the classic-mode game
 void gameMainLogic(GameAllRunningData *data) {
-    Point termSize = terminalSize();
-    if (termSize.x < WIDE + ROCKER_BAR_WIDTH || termSize.y < HIGH) {
-        if (screenTooSmallPainting(data)) {
-            return;
-        }
-    }
-
     allPainting(data);
     if (showWhichIsYoursSnake(data)) {
         return;
@@ -124,13 +117,6 @@ void gameMainLogic(GameAllRunningData *data) {
 
 /// The main logic of the unlimited-mode game
 void gameMainLogicUnlimitedMode(GameAllRunningData *data) {
-    Point termSize = terminalSize();
-    if (termSize.x < WIDE + ROCKER_BAR_WIDTH || termSize.y < HIGH) {
-        if (screenTooSmallPainting(data)) {
-            return;
-        }
-    }
-
     allPainting(data);
     if (showWhichIsYoursSnake(data)) {
         return;

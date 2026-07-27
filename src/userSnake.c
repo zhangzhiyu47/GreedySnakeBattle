@@ -146,12 +146,13 @@ int userSnakeMoveDirecControl(GameAllRunningData *data) {
         if (termSize.x < WIDE || termSize.y < HIGH) {
             if (screenTooSmallPainting(data)) {
                 return -1;
-            } else {
-                sleep(1);
             }
+            allPainting(data);
+            sleep(1);
+        } else {
+            allPainting(data);
         }
 
-        allPainting(data);
         return 0;
     }
 

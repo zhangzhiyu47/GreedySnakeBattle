@@ -3,13 +3,10 @@
 
 #include "GameAllRunningData.h"
 #include "gameConfig.h"
-
-#define GAME_MODE_QUIT 0
-#define GAME_MODE_CLASSIC 1
-#define GAME_MODE_UNLIMIT_FOOD 2
+#include "initGameData.h"
 
 /// Show game menu.
-int showGameMenu(GameConfig *config);
+GameMode showGameMenu(GameConfig *config);
 
 /// Introduce and explain the game in detail.
 void gameIntroduction(const char *button);

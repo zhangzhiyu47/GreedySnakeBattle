@@ -1,7 +1,9 @@
 #include "include/global.h"
 #include "include/gameConfig.h"
+#include "include/constants.h"
 #include "include/obstacleSnake.h"
 #include "include/painting.h"
+#include "include/exitApp.h"
 #include "include/terminal.h"
 #include "include/initGameData.h"
 
@@ -9,6 +11,9 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#define ZERO(var) data->var = 0
+#define INIT(var) data->var = config.var;
 
 /// Update or initialize for the numberTH food
 void foodInit(GameAllRunningData *data, int number) {
@@ -79,85 +84,75 @@ static void wallInit(GameAllRunningData *data) {
 }
 
 /// Initialize all the classic-mode game's data
-void initGameData(GameAllRunningData *data) {
+void initGameData(GameAllRunningData *data, GameMode mode) {
     GameConfig config = {0};
     getGameConfig(&config);
 
-    WIDE=config.scrnWide;
-    HIGH=config.scrnHigh;
+    Point termSize = terminalSize();
 
-    data->usrSnkBody[0].x=WIDE/2;
-    data->usrSnkBody[0].y=data->usrSnkBody[1].y=HIGH/2;
-    data->usrSnkBody[1].x=WIDE/2-1;
-    data->usrSnkLeng=2;
-    
-    data->obsSnkLeng=1;
-    data->isEnableObs=config.isEnableObs;
-    data->obsState=0;
-    
-    data->foodNum=config.foodNum;
-    data->wallNum=config.wallNum;
-    
-    wallInit(data);
-    
-    if (data->isEnableObs) {
-        obsInit(data);
+    WIDE = config.scrnWide;
+    HIGH = config.scrnHigh;
+
+    if (termSize.x < WIDE + ROCKER_BAR_WIDTH || termSize.y < HIGH) {
+        if (termSize.x < MIN_TERMINAL_WIDE
+                || termSize.y < MIN_TERMINAL_HIGH) {
+            if (screenResizePainting()) {
+                exitApp(EXIT_NORMAL, "", data);
+            }
+        }
+        WIDE = termSize.x - ROCKER_BAR_WIDTH;
+        HIGH = termSize.y;
     }
-    
-    for (uint64_t i = 0; i < data->foodNum; i++) {
-        foodInit(data,i);
+
+    data->usrSnkBody[0].x = WIDE / 2;
+    data->usrSnkBody[0].y = data->usrSnkBody[1].y = HIGH / 2;
+    data->usrSnkBody[1].x = WIDE / 2 - 1;
+    data->usrSnkLeng = 2;
+
+    data->usrSnkNxtXDrc = 1;
+    data->usrSnkNxtYDrc = 0;
+
+    INIT(speed);
+
+    ZERO(refreshTimes);
+    ZERO(usrSnkIsJumping);
+
+    if (mode == MODE_CLASSIC) {
+        data->obsSnkLeng = 1;
+        INIT(isEnableObs);
+        ZERO(obsState);
+
+        INIT(foodNum);
+        INIT(wallNum);
+
+        wallInit(data);
+
+        if (data->isEnableObs) {
+            obsInit(data);
+        }
+
+        for (uint64_t i = 0; i < data->foodNum; i++) {
+            foodInit(data,i);
+        }
+
+        INIT(isEnableEatSlfGmOver);
+
+        INIT(obsIQ);
+        ZERO(obsSnkNxtXDrc);
+        ZERO(obsSnkNxtYDrc);
+        ZERO(obsClosestFood);
+
+        INIT(histryHighestScr);
+    } else if (mode == MODE_UNLIMITED_FOOD) {
+        ZERO(obsSnkLeng);
+        ZERO(isEnableObs);
+        ZERO(obsState);
+        ZERO(isEnableEatSlfGmOver);
+        ZERO(obsIQ);
+        ZERO(obsSnkNxtXDrc);
+        ZERO(obsSnkNxtYDrc);
+        ZERO(obsClosestFood);
+
+        data->histryHighestScr = UINTMAX_MAX;
     }
-    
-    data->usrSnkNxtXDrc=1;
-    
-    data->isEnableEatSlfGmOver=config.isEnableEatSlfGmOver;
-
-    data->speed=config.speed;
-
-    data->obsIQ = config.obsIQ;
-    data->obsSnkNxtXDrc=data->obsSnkNxtYDrc=0;
-    data->obsClosestFood=0;
-
-    data->histryHighestScr=config.histryHighestScr;
-
-    data->usrSnkIsJumping=0;
-
-    data->refreshTimes = 0;
-}
-
-/// Initialize all the unlimit-food-mode game's data
-void initGameDataUnlimitFood(GameAllRunningData *data) {
-    GameConfig config = {0};
-    getGameConfig(&config);
-
-    WIDE=config.scrnWide;
-    HIGH=config.scrnHigh;
-
-    data->usrSnkBody[0].x=WIDE/2;
-    data->usrSnkBody[0].y=data->usrSnkBody[1].y=HIGH/2;
-    data->usrSnkBody[1].x=WIDE/2-1;
-    data->usrSnkLeng=2;
-    
-    data->obsSnkLeng=1;
-    data->isEnableObs=false;
-    data->obsState=0;
-    
-    data->foodNum=0;
-    data->wallNum=0;
-    
-    data->usrSnkNxtXDrc=1;
-    
-    data->isEnableEatSlfGmOver=config.isEnableEatSlfGmOver;
-
-    data->speed=config.speed;
-
-    data->obsIQ = 0;
-    data->obsSnkNxtXDrc=data->obsSnkNxtYDrc=0;
-    data->obsClosestFood=0;
-
-    data->histryHighestScr = UINTMAX_MAX;
-
-    data->usrSnkIsJumping=0;
-
-    data->refreshTimes = 0;
 }

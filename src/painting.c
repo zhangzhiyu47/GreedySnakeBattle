@@ -262,17 +262,26 @@ static void screenTooSmallTip(GameConfig *config, Point termSize) {
     resetColor();
     clearScreen();
 
+#ifdef ANDROID_PACK
+    printf("游戏过程中请不要缩小屏幕，当前游戏无法正常进行\n");
+
+    printf("当前 %lux%lu，游戏需要至少 %lux%lu 的屏幕大小\n",
+            termSize.x, termSize.y,
+            config->scrnWide + ROCKER_BAR_WIDTH, config->scrnHigh);
+
+    printf("您可以尝试像放大缩小照片一样放大缩小屏幕，或关闭键盘试试\n");
+#else
     printf("当前终端屏幕过小，游戏无法正常进行\n");
 
     printf("你的设置 %lux%lu, 当前 %lux%lu\n"
-           "游戏需要至少 %lux%lu 的终端空间（含摇杆栏）\n",
-           config->scrnWide, config->scrnHigh,
-           termSize.x, termSize.y,
-           config->scrnWide + ROCKER_BAR_WIDTH, config->scrnHigh);
+            "游戏需要至少 %lux%lu 的终端空间（含摇杆栏）\n",
+            config->scrnWide, config->scrnHigh,
+            termSize.x, termSize.y,
+            config->scrnWide + ROCKER_BAR_WIDTH, config->scrnHigh);
 
     printf("您可以按 Q 退出应用\n");
     printf("或按 q 退出游戏界面，进入 \"设置 -> 更多设置\" 调整游戏界面大小\n");
-    printf("手机端可以尝试两指放大屏幕，或关闭键盘\n");
+#endif // ANDROID_PACK
 }
 
 /// Ask user to zoom in screen or exit app.
@@ -355,8 +364,6 @@ static int checkTerminalSize(GameAllRunningData *data) {
         if (termSize.x < WIDE || termSize.y < HIGH) {
             if (screenTooSmallPainting(data)) {
                 return -1;
-            } else {
-                sleep(1);
             }
         }
         return 1;
@@ -378,7 +385,7 @@ void gamePausePainting(GameAllRunningData *data, const wchar_t *tip) {
     printf(QUIT_WORD_C"\033[%lu;%luH%ls", y, x, tip);
     fflush(stdout);
 
-    sleep(1);
+    usleep(40 * 1000);
     tcflush(STDIN_FILENO, TCIFLUSH);
 
     char buf[32];
@@ -389,7 +396,7 @@ void gamePausePainting(GameAllRunningData *data, const wchar_t *tip) {
         }
     }
 
-    usleep(40 * 1000);
+    usleep(500 * 1000);
     tcflush(STDIN_FILENO, TCIFLUSH);
 }
 
@@ -397,14 +404,21 @@ static void screenResizeTip(Point termSize) {
     resetColor();
     clearScreen();
 
-    printf("当前终端屏幕过小，游戏无法正常进行\n");
+#ifdef ANDROID_PACK
+    printf("当前屏幕过小，游戏无法正常进行\n");
+#else
+    printf("当前终端过小，游戏无法正常进行\n");
+#endif // ANDROID_PACK
 
     printf("最低 %lux%lu, 当前 %lux%lu\n",
            MIN_TERMINAL_WIDE, MIN_TERMINAL_HIGH,
            termSize.x, termSize.y);
 
+#ifdef ANDROID_PACK
+    printf("您可以尝试像放大缩小照片一样放大缩小屏幕，或关闭键盘试试\n");
+#else
     printf("您可以按 Q 退出应用\n");
-    printf("手机端可以尝试两指放大屏幕，或关闭键盘\n");
+#endif // ANDROID_PACK
 }
 
 /// Block until terminal meets minimum size or user presses Q to quit.

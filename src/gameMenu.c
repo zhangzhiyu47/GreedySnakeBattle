@@ -9,6 +9,7 @@
 #include "include/gameMenu.h"
 #include "include/constants.h"
 #include "include/logger.h"
+#include "include/initGameData.h"
 #include "include/exitApp.h"
 #include "include/res/gameIntro.h"
 #include "include/res/EULA.h"
@@ -233,7 +234,7 @@ void configureGame(GameConfig *config, int selected) {
     }
 }
 
-int showGameMenu(GameConfig *config) {
+GameMode showGameMenu(GameConfig *config) {
     Point termSize = terminalSize();
     Menu *menu = menuCreate();
     MenuResult res;
@@ -269,14 +270,14 @@ int showGameMenu(GameConfig *config) {
         if (res.selectedTab == 0) {
             switch (res.selectedItem) {
                 case 0:
-                    retval = GAME_MODE_CLASSIC;
+                    retval = MODE_CLASSIC;
                     break;
                 case 1:
-                    retval = GAME_MODE_UNLIMIT_FOOD;
+                    retval = MODE_UNLIMITED_FOOD;
                     break;
                 case 2:
                     menuFree(menu);
-                    return GAME_MODE_QUIT;
+                    return MODE_QUIT;
             }
         } else if (res.selectedTab == 1) {
             configureGame(config, res.selectedItem);
@@ -297,7 +298,7 @@ int showGameMenu(GameConfig *config) {
             }
         } else {
             menuFree(menu);
-            return GAME_MODE_QUIT;
+            return MODE_QUIT;
         }
 
         usleep(40 * 1000);
