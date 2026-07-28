@@ -4,7 +4,6 @@
 #include "include/painting.h"
 #include "include/exitApp.h"
 #include "include/constants.h"
-#include "include/gameConfig.h"
 #include "include/logger.h"
 
 #include <errno.h>
@@ -258,29 +257,22 @@ static void sigWinchHandler(int signum) {
     winCh = 1;
 }
 
-static void screenTooSmallTip(GameConfig *config, Point termSize) {
+static void screenTooSmallTip(Point termSize) {
     resetColor();
     clearScreen();
 
-#ifdef ANDROID_PACK
-    printf("游戏过程中请不要缩小屏幕，当前游戏无法正常进行\n");
+    printf("游戏过程中请不要缩小屏幕，游戏无法正常进行\n");
 
-    printf("当前 %lux%lu，游戏需要至少 %lux%lu 的屏幕大小\n",
+    printf("游戏需要至少 %lux%lu 的屏幕大小，当前 %lux%lu\n",
             termSize.x, termSize.y,
-            config->scrnWide + ROCKER_BAR_WIDTH, config->scrnHigh);
+            WIDE + ROCKER_BAR_WIDTH, HIGH);
 
+#ifdef ANDROID_PACK
     printf("您可以尝试像放大缩小照片一样放大缩小屏幕，或关闭键盘试试\n");
 #else
-    printf("当前终端屏幕过小，游戏无法正常进行\n");
-
-    printf("你的设置 %lux%lu, 当前 %lux%lu\n"
-            "游戏需要至少 %lux%lu 的终端空间（含摇杆栏）\n",
-            config->scrnWide, config->scrnHigh,
-            termSize.x, termSize.y,
-            config->scrnWide + ROCKER_BAR_WIDTH, config->scrnHigh);
-
-    printf("您可以按 Q 退出应用\n");
-    printf("或按 q 退出游戏界面，进入 \"设置 -> 更多设置\" 调整游戏界面大小\n");
+    printf("请您放大终端屏幕，您也可以按 Q 退出应用\n");
+    printf("或按 q 退出游戏界面，"
+           "进入 \"设置 -> 更多设置\" 调整游戏界面大小\n");
 #endif // ANDROID_PACK
 }
 
@@ -291,9 +283,6 @@ int screenTooSmallPainting(GameAllRunningData *data) {
     struct sigaction sa, oldSa;
     char buf[64] = {0};
     int retval = 0;
-
-    GameConfig config = {0};
-    getGameConfig(&config);
 
     sa.sa_handler = sigWinchHandler;
     sigemptyset(&sa.sa_mask);
@@ -307,7 +296,7 @@ int screenTooSmallPainting(GameAllRunningData *data) {
     sigdelset(&set, SIGWINCH);
     sigdelset(&set, SIGINT);
 
-    screenTooSmallTip(&config, terminalSize());
+    screenTooSmallTip(terminalSize());
 
     while (1) {
         fd_set rfds;
@@ -322,8 +311,9 @@ int screenTooSmallPainting(GameAllRunningData *data) {
                 if (winCh) {
                     winCh = 0;
                     Point termSize = terminalSize();
-                    if (termSize.x < WIDE + ROCKER_BAR_WIDTH || termSize.y < HIGH) {
-                        screenTooSmallTip(&config, termSize);
+                    if (termSize.x < WIDE + ROCKER_BAR_WIDTH
+                            || termSize.y < HIGH) {
+                        screenTooSmallTip(termSize);
                     } else {
                         break;
                     }
@@ -396,7 +386,7 @@ void gamePausePainting(GameAllRunningData *data, const wchar_t *tip) {
         }
     }
 
-    usleep(500 * 1000);
+    usleep(100 * 1000);
     tcflush(STDIN_FILENO, TCIFLUSH);
 }
 

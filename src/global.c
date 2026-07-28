@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <termios.h>
 
-uint64_t HIGH=20,WIDE=61;
+uint64_t HIGH = 0, WIDE = 0;
 
 struct termios originalTermios;
 

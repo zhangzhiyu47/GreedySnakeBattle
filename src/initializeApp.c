@@ -17,10 +17,6 @@
 
 /// Initialize configuration file and render background
 int initializeApp(GameConfig *config) {
-    int ret = getGameConfig(config);
-    HIGH = config->scrnHigh;
-    WIDE = config->scrnWide;
-
     resetColor();
     Point termSize = terminalSize();
     for (uint64_t i = 0; i < termSize.y * termSize.x / 6 + 1; ++i) {
@@ -28,7 +24,7 @@ int initializeApp(GameConfig *config) {
     }
     clearScreen();
 
-    return ret;
+    return getGameConfig(config);
 }
 
 /**

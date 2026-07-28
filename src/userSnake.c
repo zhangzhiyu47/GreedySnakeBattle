@@ -139,11 +139,12 @@ static int keyboardHit() {
  * @retval 1 Game will be over without pausing.
  */
 int userSnakeMoveDirecControl(GameAllRunningData *data) {
-    char key=0;
+    char key = '\0';
 
     if (atomic_exchange(&needRedraw, false)) {
         Point termSize = terminalSize();
-        if (termSize.x < WIDE || termSize.y < HIGH) {
+        if (termSize.x < WIDE + ROCKER_BAR_WIDTH
+                || termSize.y < HIGH) {
             if (screenTooSmallPainting(data)) {
                 return -1;
             }

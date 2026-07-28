@@ -53,7 +53,8 @@ int getGameConfig(GameConfig *config) {
         fscanf(fp, " foodNum=%lu", &config->foodNum);
 
         getBoolConfig(fp, "isEnableObs", &config->isEnableObs);
-        getBoolConfig(fp, "isEnableEatSlfGmOver", &config->isEnableEatSlfGmOver);
+        getBoolConfig(fp, "isEnableEatSlfGmOver",
+                &config->isEnableEatSlfGmOver);
 
         fscanf(fp, " speed=%lu", &config->speed);
         fscanf(fp, " histryHighestScr=%lu", &config->histryHighestScr);
@@ -62,9 +63,6 @@ int getGameConfig(GameConfig *config) {
         fscanf(fp, " scrnWide=%lu", &config->scrnWide);
 
         fscanf(fp, " obsIQ=%lu", &config->obsIQ);
-
-        HIGH=config->scrnHigh;
-        WIDE=config->scrnWide;
 
         fclose(fp);
     } else {
@@ -93,17 +91,17 @@ int getGameConfig(GameConfig *config) {
 
             fclose(fp);
 
-            config->foodNum=1;
-            config->wallNum=0;
+            config->foodNum = 1;
+            config->wallNum = 0;
 
-            config->isEnableObs=0;
-            config->isEnableEatSlfGmOver=0;
+            config->isEnableObs = 0;
+            config->isEnableEatSlfGmOver = 0;
 
-            config->speed=450000u;
-            config->histryHighestScr=0;
+            config->speed = 450000u;
+            config->histryHighestScr = 0;
 
-            HIGH=config->scrnHigh=termSize.y;
-            WIDE=config->scrnWide=termSize.x - ROCKER_BAR_WIDTH;
+            config->scrnHigh = termSize.y;
+            config->scrnWide = termSize.x - ROCKER_BAR_WIDTH;
 
             config->obsIQ = 3;
 

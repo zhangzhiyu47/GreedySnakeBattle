@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define APP_VERSION "6.2.3"
+#define APP_VERSION "6.2.4"
 #define CONFIG_VERSION "6.0.0"
 
 static const uint64_t MIN_TERMINAL_WIDE = 30;
