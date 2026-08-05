@@ -351,7 +351,8 @@ int screenTooSmallPainting(GameAllRunningData *data) {
 static int checkTerminalSize(GameAllRunningData *data) {
     if (atomic_exchange(&needRedraw, false)) {
         Point termSize = terminalSize();
-        if (termSize.x < WIDE || termSize.y < HIGH) {
+        if (termSize.x < WIDE + ROCKER_BAR_WIDTH
+                || termSize.y < HIGH) {
             if (screenTooSmallPainting(data)) {
                 return -1;
             }
